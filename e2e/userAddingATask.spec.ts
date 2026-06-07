@@ -77,9 +77,10 @@ test.describe("user adding a task", () => {
       await expect(page.getByText("Follow up with Jane")).toBeVisible();
       await expect(page.getByText(/2026/)).toBeVisible();
     } else {
-      await expect(page.getByText(ja.tasks)).toBeVisible();
+      const tasksHeading = page.getByRole("heading", { name: ja.tasks });
+      await expect(tasksHeading).toBeVisible();
 
-      await expect(page.getByText(ja.tasks).locator("..")).toHaveText(
+      await expect(tasksHeading.locator("..")).toHaveText(
         /Follow up with Jane/,
       );
       await menu.goToDashboard();
