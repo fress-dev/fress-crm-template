@@ -7,6 +7,26 @@
 
 ---
 
+## 2026-06-07 | feat/platform-branch-naming-harness | (テスト方針) | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント（人間承認済み） |
+
+### 変更の要約
+
+- `AGENTS.md` に「## テスト」「## 道具作成の方針」を追記（ローカル e2e は関連 spec のみ、フルは CI）
+- `docs/development-workflow.md` のマージコンフリクト解消とテスト手順の同期
+- 差分ベース e2e スクリプトは作らない方針に合わせて未導入
+
+### 指摘・メモ（改善のタネ）
+
+- e2e 実行前は別ターミナルで `make start-e2e` が必要（AGENTS.md に記載）
+
+---
+
 ## 2026-06-07 | feat/platform-branch-naming-harness | rebase | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
 
 | 項目 | 結果 |

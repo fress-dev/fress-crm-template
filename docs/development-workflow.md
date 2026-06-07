@@ -46,7 +46,9 @@ git checkout -b feat/platform-your-task-name   # ベース
 
 # 6. PR 前チェック（CI の e2e 以外 — 推奨）
 make pre-pr
-# 6b. e2e まで含める（Supabase + ビルドが必要。時間がかかる）
+# 6b. 関連 e2e のみ（別ターミナルで make start-e2e 後）— 詳細は AGENTS.md「## テスト」
+# npx playwright test e2e/<対象>.spec.ts
+# 6c. e2e フルスイート（CI 同等。重い — 通常はローカルで回さない）
 # make pre-pr-e2e
 # コミット時は pre-commit で lint-staged（Prettier + ESLint）+ registry 生成が走る
 
@@ -72,11 +74,7 @@ gh pr create --base develop --title "日本語の PR タイトル" \
 | 承認 | — | 計画を確認して OK |
 | 開発 | メインエージェント | — |
 | レビュー | @reviewer（差分モード） | —（結果を `docs/review-log.md` に追記） |
-<<<<<<< HEAD
-| テスト | `make pre-pr`（推奨）/ `make pre-pr-e2e` | — |
-=======
-| テスト | `make pre-pr`（必須推奨）/ `make pre-pr-e2e`（PR 前に e2e まで） | — |
->>>>>>> 363fa1a (e2e CI の JWT 同期と PR 前チェック（make pre-pr）を追加)
+| テスト | `make pre-pr` + 関連 e2e spec のみ（`AGENTS.md` 参照）。フル e2e は CI | — |
 | コミット | メインエージェント | —（メッセージは日本語） |
 | PR | メインエージェント（`gh pr create`） | —（`pr-body-with-review.sh` でレビュー欄を含む） |
 | マージ承認 | — | PR 確認・マージ |
