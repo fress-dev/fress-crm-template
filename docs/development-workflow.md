@@ -72,7 +72,11 @@ gh pr create --base develop --title "日本語の PR タイトル" \
 | 承認 | — | 計画を確認して OK |
 | 開発 | メインエージェント | — |
 | レビュー | @reviewer（差分モード） | —（結果を `docs/review-log.md` に追記） |
+<<<<<<< HEAD
 | テスト | `make pre-pr`（推奨）/ `make pre-pr-e2e` | — |
+=======
+| テスト | `make pre-pr`（必須推奨）/ `make pre-pr-e2e`（PR 前に e2e まで） | — |
+>>>>>>> 363fa1a (e2e CI の JWT 同期と PR 前チェック（make pre-pr）を追加)
 | コミット | メインエージェント | —（メッセージは日本語） |
 | PR | メインエージェント（`gh pr create`） | —（`pr-body-with-review.sh` でレビュー欄を含む） |
 | マージ承認 | — | PR 確認・マージ |

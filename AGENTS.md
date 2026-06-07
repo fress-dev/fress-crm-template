@@ -80,7 +80,7 @@
 | 3 | 承認 | **人間** | 計画を確認して OK を出す。**ここで必ず一度止まる** |
 | 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する（platform / plugin で編集範囲を分ける） |
 | 5 | レビュー | **@reviewer**（差分モード） | 検査後、結果を [`docs/review-log.md`](docs/review-log.md) 先頭に追記してコミットする |
-| 6 | テスト | **メインエージェント** | `make test` と `make test-e2e` を通す |
+| 6 | テスト | **メインエージェント** | PR 前に `make pre-pr`（推奨）。e2e まで確認するなら `make pre-pr-e2e` |
 | 7 | PR | **メインエージェント** | `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"` で PR を作成する（レビュー欄を含む） |
 | 8 | マージ承認 | **人間** | PR を確認してマージする |
 

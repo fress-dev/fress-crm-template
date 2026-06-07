@@ -1,13 +1,22 @@
 import { test as base, expect, type Page } from "@playwright/test";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { ja } from "./ja";
+import {
+  resolveServiceRoleKey,
+  resolveSupabaseUrl,
+} from "./resolveE2eEnv";
 
-const adminSupabase = createClient(
-  process.env.VITE_SUPABASE_URL ?? "http://127.0.0.1:54341",
-  process.env.SERVICE_ROLE_KEY!,
-  { auth: { autoRefreshToken: false, persistSession: false } },
-);
+let adminSupabase: SupabaseClient | null = null;
+
+const getAdminSupabase = () => {
+  if (!adminSupabase) {
+    adminSupabase = createClient(resolveSupabaseUrl(), resolveServiceRoleKey(), {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+  }
+  return adminSupabase;
+};
 
 // Tables in FK-safe deletion order (children before parents)
 const TABLES = [
@@ -26,13 +35,15 @@ const TABLES = [
 async function resetDb() {
   for (const table of TABLES) {
     // Supabase client delete need a where clause to get executed, so we use one that will match on all rows (id is not null)
-    await adminSupabase.from(table).delete().not("id", "is", null);
+    await getAdminSupabase().from(table).delete().not("id", "is", null);
   }
 
   // Delete all auth users (cascades to sales via DB trigger)
-  const { data } = await adminSupabase.auth.admin.listUsers();
+  const { data } = await getAdminSupabase().auth.admin.listUsers();
   await Promise.all(
-    data.users.map((user) => adminSupabase.auth.admin.deleteUser(user.id)),
+    data.users.map((user) =>
+      getAdminSupabase().auth.admin.deleteUser(user.id),
+    ),
   );
 }
 
@@ -43,7 +54,7 @@ async function createUser({
   email: string;
   password: string;
 }) {
-  const { data, error } = await adminSupabase.auth.admin.createUser({
+  const { data, error } = await getAdminSupabase().auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -68,7 +79,7 @@ async function createSales({
   password: string;
 }) {
   const { data: userData, error: userError } =
-    await adminSupabase.auth.admin.createUser({
+    await getAdminSupabase().auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -78,7 +89,7 @@ async function createSales({
     throw new Error(`Failed to create sales: ${userError.message}`);
   }
 
-  const { data, error } = await adminSupabase
+  const { data, error } = await getAdminSupabase()
     .from("sales")
     .update({ first_name, last_name, administrator: false })
     .eq("user_id", userData.user?.id)
@@ -107,7 +118,7 @@ async function createNotes({
 }) {
   if (notes.length === 0) return;
 
-  const { error } = await adminSupabase.from("contact_notes").insert(
+  const { error } = await getAdminSupabase().from("contact_notes").insert(
     notes.map(({ text, date, status = "cold" }) => ({
       contact_id: contactId,
       sales_id: salesId,
@@ -129,7 +140,7 @@ async function createCompany({
   name: string;
   salesId: string | number;
 }) {
-  const { data, error } = await adminSupabase
+  const { data, error } = await getAdminSupabase()
     .from("companies")
     .insert({ name, sales_id: salesId })
     .select("id")
@@ -161,7 +172,7 @@ async function createContact({
     status?: "cold" | "warm" | "hot";
   }[];
 }) {
-  const { data, error } = await adminSupabase
+  const { data, error } = await getAdminSupabase()
     .from("contacts")
     .insert({
       first_name,

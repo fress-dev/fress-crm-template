@@ -7,6 +7,35 @@
 
 ---
 
+## 2026-06-07 | feat/platform-branch-naming-harness | (e2e/pre-pr) | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS**（ローカル typecheck） |
+| 実施者 | メインエージェント |
+
+### 検査結果
+
+| 観点 | 結果 | メモ |
+|------|------|------|
+| コア保護 | OK | e2e/fixtures のみ。コア未変更 |
+| CI 失敗原因 | 特定 | `.env.e2e` の `SERVICE_ROLE_KEY` プレースホルダが JWT エラーの原因 |
+| 対応 | 実装 | `sync-e2e-env.sh` + `global-setup` + `make pre-pr` |
+
+### 変更の要約
+
+- CI: `make test-e2e-ci` 前に e2e Supabase の service role key を同期
+- `e2e/resolveE2eEnv.ts` でプレースホルダ時に status からキー取得
+- PR 前: `make pre-pr`（lint/typecheck/unit/build）、`make pre-pr-e2e` で e2e まで
+
+### 指摘・メモ（改善のタネ）
+
+- 日本語化 PR（#1）マージ後は e2e 文言も develop と揃える必要あり
+- PR 前に `make pre-pr-e2e` を回せば CI e2e 失敗を事前検知できる
+
+---
+
 ## 2026-06-07 | feat/platform-branch-naming-harness | 983007d | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
 
 | 項目 | 結果 |
