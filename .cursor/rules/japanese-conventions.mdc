@@ -1,0 +1,34 @@
+---
+description: コミット・PR・カスタムコードのコメントは日本語で書く
+alwaysApply: true
+---
+
+# 言語・表記規約
+
+## コミットメッセージ
+
+- **件名・本文とも日本語**で書く（why を中心に 1〜2 文）。
+- 英語のみの件名（例: `Add feature`）は使わない。
+
+## PR
+
+- **タイトル・本文（Summary / Test plan 等）を日本語**で書く。
+- テンプレートは [`.github/pull_request_template.md`](../../.github/pull_request_template.md) に従う。
+
+## ソースコメント（日本語にする範囲）
+
+次のパスで追加・変更するコメントは **日本語**（`//`、`/* */`、JSDoc、SQL `--`）:
+
+- `src/custom/**`
+- 新規 `supabase/migrations/*`
+- `src/App.tsx` の追記部分
+- 新規 `supabase/functions/**`
+
+## 英語のままにするもの
+
+- **識別子**（変数名・関数名・型名・ファイル名）は英語（既存慣習に合わせる）。
+- **コア**（`src/root/**`、`src/components/**` 既存、既存 migrations）の既存コメントは**変更しない**（英語のまま触らない）。
+
+## チャット応答
+
+- このリポジトリでの説明・報告は日本語で行う。

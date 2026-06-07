@@ -46,3 +46,11 @@ Resources are registered in `root/CRM.tsx` via `<Resource name="contacts" {...co
 - Major pages have desktop and mobile variants. Use `useIsMobile()` to branch.
 - Desktop: 2-column grid layouts. Mobile: single column with `MobileHeader`/`MobileContent`.
 - Mobile lists use `InfiniteListBase` for scroll pagination.
+
+## Comments (Fress custom code)
+
+When creating or modifying files under `src/custom/` or custom additions in `src/App.tsx`:
+
+- Write explanatory comments (`//`, `/* */`, JSDoc) in **Japanese**.
+- Keep identifiers (variables, functions, types, file names) in **English**.
+- Do not edit core files (`src/components/**`, `src/root/**`) to translate existing English comments.

@@ -40,6 +40,12 @@ readonly: true
    実装段階で db-migrator に渡せる粒度にする。
 5. 日本語 i18n・RLS が必要な箇所を洗い出す。
 
+## 言語・表記
+
+- 計画・タスク名・出力は **日本語** で書く。
+- 実装担当向けに、カスタムコード（`src/custom/**`、新規マイグレーション）のコメントは **日本語** で書く旨を計画に含める。
+- 識別子（変数・関数・ファイル名）は英語のまま。コア既存ファイルの英語コメントは変更しない。
+
 ## 出力フォーマット
 必ずこの形で返す:
 
@@ -62,8 +68,7 @@ readonly: true
 実装の順番と依存関係: （番号で）
 ```
 
-計画提示後、メインエージェントは `./scripts/workflow.sh phase approval_plan` を実行し、
-人間の `./scripts/workflow.sh approve plan` を待つこと。
+計画提示後、人間の承認を待ってから実装に進むこと（ここで必ず一度止まる）。
 
 このプロジェクトのスタックは React + TypeScript + Shadcn UI + shadcn-admin-kit +
 Tailwind + TanStack Query + Supabase/Postgres。react-admin の古い前提では計画しない。

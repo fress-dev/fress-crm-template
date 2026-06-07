@@ -19,3 +19,11 @@ Edge function conventions:
 
 Other conventions:
 - New tables need RLS policies and the auto-set `sales_id` trigger (see migration `20260108160722`)
+
+## Comments (Fress custom code)
+
+When creating new migrations, edge functions, or other backend additions:
+
+- Write SQL comments (`--`) and inline code comments in **Japanese**.
+- Keep SQL object names and file names in **English** (snake_case).
+- Do not edit existing migration files to translate comments.
