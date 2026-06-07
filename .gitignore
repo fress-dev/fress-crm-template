@@ -41,6 +41,7 @@ public/r/
 
 !supabase/functions/.env
 .claude/settings.local.json
+.cursor/workflow-state.json
 
 # Playwright
 node_modules/

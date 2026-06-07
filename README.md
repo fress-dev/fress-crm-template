@@ -29,22 +29,11 @@ make start-supabase          # または make start
 make start-app               # start-supabase 済みなら
 ```
 
-### CI ワークフローを push する
-
-GitHub Actions ファイルの push には `workflow` スコープが必要です。
-
-```sh
-gh auth refresh -h github.com -s workflow
-git add .github/workflows/
-git commit -m "Add CI workflows"
-git push origin main
-```
-
 ### 新規プロジェクトを始める
 
 GitHub の「Use this template」からリポジトリを作成するか、fork 後に `origin` を自分のリポジトリ URL に差し替えてください。
 
-拡張ルールは [AGENTS.md](./AGENTS.md) を参照。
+拡張ルールは [AGENTS.md](./AGENTS.md)、開発フローは [docs/development-workflow.md](./docs/development-workflow.md)、ハーネス全体は [docs/ai-development-harness.md](./docs/ai-development-harness.md) を参照。
 
 ---
 

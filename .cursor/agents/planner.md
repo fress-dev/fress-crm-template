@@ -1,6 +1,6 @@
 ---
 name: planner
-description: 機能要望を「どの縫い目で実装するか」の方針に変換する設計役。新機能の着手前に使う。コアを触らない実装計画を立てるが、実装はしない。
+description: 機能要望を「どの縫い目で実装するか」の方針に変換する設計役。開発フローの plan フェーズで使う。コアを触らない実装計画を立てるが、実装はしない。
 model: inherit
 readonly: true
 ---
@@ -61,6 +61,9 @@ readonly: true
 
 実装の順番と依存関係: （番号で）
 ```
+
+計画提示後、メインエージェントは `./scripts/workflow.sh phase approval_plan` を実行し、
+人間の `./scripts/workflow.sh approve plan` を待つこと。
 
 このプロジェクトのスタックは React + TypeScript + Shadcn UI + shadcn-admin-kit +
 Tailwind + TanStack Query + Supabase/Postgres。react-admin の古い前提では計画しない。

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/workflow-session-start.sh"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/workflow-gate-shell.sh",
+        "matcher": "git commit|git push|git checkout|git switch|gh pr create"
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/workflow-stop-followup.sh",
+        "loop_limit": 3
+      }
+    ]
+  }
+}

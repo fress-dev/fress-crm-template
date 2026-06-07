@@ -39,6 +39,18 @@
 4. Supabase 側は新規テーブル・ビュー・RLS ポリシー・Edge Function の **追加** で対応
 5. 上記で不可能な場合のみ、コア変更を提案し **必ず人間の承認を得てから** 着手する
 
+## 標準開発フロー
+
+新機能・拡張は **調査 → 計画 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
+
+```sh
+./scripts/workflow.sh start "タスク名"   # develop から feat/* を作成
+```
+
+**`main` は本番相当 — 直接コミットしない。** PR は `feat/*` → `develop`。
+
+詳細: [`docs/development-workflow.md`](docs/development-workflow.md) / [`.cursor/skills/development-workflow/SKILL.md`](.cursor/skills/development-workflow/SKILL.md)
+
 ## 上流追従
 - 上流を `upstream` リモートとして保持する。
 - カスタムは `src/custom/` と新規マイグレーションに隔離し、上流更新は rebase / merge で取り込める状態を維持する。
