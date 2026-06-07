@@ -20,6 +20,8 @@ alwaysApply: true
 
 命名の詳細・並行開発: [`docs/branch-strategy.md`](../../docs/branch-strategy.md)。フックで commit / push / PR / ブランチ作成時に検証する。
 
+レビュー後は [`docs/review-log.md`](../../docs/review-log.md) に追記。PR は `scripts/pr-body-with-review.sh` で本文生成する。
+
 **1ブランチ = 1タスク。** platform と plugin を同じブランチに混ぜない。
 
 ## 言語

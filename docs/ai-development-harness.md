@@ -101,6 +101,8 @@ AI は文脈上「そのファイルを直すのが最短」と判断しがち�
 | [`.cursor/rules/development-workflow.mdc`](../.cursor/rules/development-workflow.mdc) | ブランチ戦略・開発フロー順守（常時適用） |
 | [`.cursor/hooks.json`](../.cursor/hooks.json) | shell ゲート（main 直接 commit/push ブロック、ブランチ命名検証） |
 | [`docs/branch-strategy.md`](./branch-strategy.md) | 業界プラグイン向けブランチ命名・並行開発 |
+| [`docs/review-log.md`](./review-log.md) | @reviewer 検査結果の蓄積（PR 本文にも反映） |
+| [`scripts/pr-body-with-review.sh`](../scripts/pr-body-with-review.sh) | PR 本文 + 最新レビューログの生成 |
 | [`.claude/skills/frontend-dev/`](../.claude/skills/frontend-dev/) | フロント実装のドメイン知識 |
 | [`.claude/skills/backend-dev/`](../.claude/skills/backend-dev/) | バックエンド（Supabase）のドメイン知識 |
 | [`.claude/skills/delete-initial-resource/`](../.claude/skills/delete-initial-resource/) | 組み込みリソース削除手順 |

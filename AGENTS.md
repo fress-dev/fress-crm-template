@@ -79,9 +79,9 @@
 | 2 | 計画 | **@planner** | 縦切り単位にタスクを分解する |
 | 3 | 承認 | **人間** | 計画を確認して OK を出す。**ここで必ず一度止まる** |
 | 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する（platform / plugin で編集範囲を分ける） |
-| 5 | レビュー | **@reviewer**（差分モード） | コア侵食・DoD・縫い目遵守を検査する |
+| 5 | レビュー | **@reviewer**（差分モード） | 検査後、結果を [`docs/review-log.md`](docs/review-log.md) 先頭に追記してコミットする |
 | 6 | テスト | **メインエージェント** | `make test` と `make test-e2e` を通す |
-| 7 | PR | **メインエージェント** | `gh pr create --base develop` で PR を作成する |
+| 7 | PR | **メインエージェント** | `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"` で PR を作成する（レビュー欄を含む） |
 | 8 | マージ承認 | **人間** | PR を確認してマージする |
 
 ### 補足

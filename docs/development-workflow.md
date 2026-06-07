@@ -42,19 +42,21 @@ git checkout -b feat/platform-your-task-name   # ベース
 # 4. 実装（メインエージェント / 必要なら @db-migrator）
 
 # 5. レビュー（@reviewer、差分モード）
+#    → 結果を docs/review-log.md の先頭に追記してコミット
 
-# 6. テスト
-make test && make test-e2e && npx tsc --noEmit
+# 6. PR 前チェック（CI の e2e 以外 — 推奨）
+make pre-pr
+# 6b. e2e まで含める（Supabase + ビルドが必要。時間がかかる）
+# make pre-pr-e2e
+# コミット時は pre-commit で lint-staged（Prettier + ESLint）+ registry 生成が走る
 
-# 6b. （任意）PR 前の一括チェック — コミット時は pre-commit が自動実行
-npm run verify
-
-# 7. コミット（件名・本文は日本語）
-#    → pre-commit で lint-staged（Prettier + ESLint）+ registry 生成が走る
+# 7. コミット（件名・本文は日本語。review-log 追記も含める）
 git commit -m "変更内容を日本語で記載"
 
 # 8. PR 作成（タイトル・本文も日本語、マージ先は develop）
-gh pr create --base develop --title "日本語の PR タイトル" --body-file .github/pull_request_template.md
+#    本文には最新のレビューログが含まれる
+gh pr create --base develop --title "日本語の PR タイトル" \
+  --body "$(./scripts/pr-body-with-review.sh)"
 
 # 9. マージ（人間が PR を確認してマージ）
 ```
@@ -69,10 +71,10 @@ gh pr create --base develop --title "日本語の PR タイトル" --body-file .
 | 計画 | @planner | — |
 | 承認 | — | 計画を確認して OK |
 | 開発 | メインエージェント | — |
-| レビュー | @reviewer（差分モード） | — |
-| テスト | `make test` / `make test-e2e` | — |
+| レビュー | @reviewer（差分モード） | —（結果を `docs/review-log.md` に追記） |
+| テスト | `make pre-pr`（推奨）/ `make pre-pr-e2e` | — |
 | コミット | メインエージェント | —（メッセージは日本語） |
-| PR | メインエージェント（`gh pr create`） | —（タイトル・本文は日本語） |
+| PR | メインエージェント（`gh pr create`） | —（`pr-body-with-review.sh` でレビュー欄を含む） |
 | マージ承認 | — | PR 確認・マージ |
 
 ## 自動化（フック）
@@ -85,6 +87,7 @@ gh pr create --base develop --title "日本語の PR タイトル" --body-file .
 
 ## 関連
 
+- [review-log.md](./review-log.md) — エージェントレビューの蓄積ログ
 - [branch-strategy.md](./branch-strategy.md) — ブランチ命名・並行開発
 - [AGENTS.md](../AGENTS.md) — メインエージェント向けマスター指示（末尾の「## 開発フロー」）
 - [ai-development-harness.md](./ai-development-harness.md) — ハーネス全体
