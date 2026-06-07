@@ -1,6 +1,8 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
+import { ja } from "./ja";
+
 const adminSupabase = createClient(
   process.env.VITE_SUPABASE_URL ?? "http://127.0.0.1:54341",
   process.env.SERVICE_ROLE_KEY!,
@@ -195,11 +197,11 @@ async function createContact({
 
 const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
   goToDashboard: async () => {
-    await page.getByRole("link", { name: "Dashboard" }).click();
+    await page.getByRole("link", { name: ja.dashboard }).click();
     await page.waitForLoadState("networkidle");
   },
   goToContacts: async () => {
-    await page.getByRole("link", { name: "Contacts" }).click();
+    await page.getByRole("link", { name: ja.contacts }).click();
     await page.waitForLoadState("networkidle");
   },
 });

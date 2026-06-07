@@ -109,6 +109,8 @@ test-e2e: start-e2e
 	npx playwright test --ui
 
 test-e2e-ci: start-e2e-ci
+	@chmod +x scripts/sync-e2e-env.sh
+	@./scripts/sync-e2e-env.sh
 	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
 	npx playwright test
 
