@@ -29,7 +29,7 @@ Fress CRM Template における、AI エージェント向けの設定・役割�
 |----------|------|
 | `main` | 本番相当。直接コミット・push 禁止 |
 | `develop` | 開発統合。PR のマージ先 |
-| `feat/*` | タスク作業。`./scripts/workflow.sh start` で自動作成 |
+| `feat/*` | タスク作業。`develop` から手動で作成 |
 
 テンプレートは初期 push 時に履歴を 1 コミットへ整理しているため、上流取り込みでは次が必要な場合があります。
 
@@ -58,14 +58,15 @@ git merge upstream/main --allow-unrelated-histories
 調査 → 計画 → 【人間承認】→ 開発 → レビュー → テスト → PR → 【人間マージ】
 ```
 
-オーケストレーション: [`docs/development-workflow.md`](./development-workflow.md) / `./scripts/workflow.sh`
+オーケストレーション: [`AGENTS.md`](../AGENTS.md) 末尾の「## 開発フロー」/ [`docs/development-workflow.md`](./development-workflow.md)
 
 | 原則 | 説明 |
 |------|------|
-| フェーズ順守 | `workflow.sh` + フックで調査〜PR の順序を強制 |
-| 計画と実装を分離 | いきなりコードを書かず、`researcher` → `planner` で先に決める |
+| フェーズ順守 | AGENTS.md の開発フロー + フックで調査〜PR の順序を守る |
+| 計画と実装を分離 | いきなりコードを書かず、`@Explore` → `@planner` で先に決める |
 | 検査も別役割 | 実装者に自己レビューさせない（`reviewer` は readonly） |
-| 人間承認ゲート | 計画承認（`approve plan`）とマージ承認（`approve merge`） |
+| 人間承認ゲート | 計画承認とマージ承認（いずれも人間が判断） |
+| 状態は git で表現 | ブランチ（`feat/*`）と PR で進捗を管理。状態ファイルは使わない |
 | 完了は機械的判定 | DoD を `reviewer` + テスト + フックで担保 |
 | 失敗からルールを増やす | 同じミスが 2 回出たら `AGENTS.md` か `.cursor/rules/` に追記 |
 
@@ -88,15 +89,11 @@ AI は文脈上「そのファイルを直すのが最短」と判断しがち�
 |------|------|
 | [`AGENTS.md`](../AGENTS.md) | メインエージェント向けマスター指示（コマンド・規約・DoD） |
 | [`.cursor/rules/core-protection.mdc`](../.cursor/rules/core-protection.mdc) | **常時適用**ルール。コアパス編集禁止 |
-| [`.cursor/agents/researcher.md`](../.cursor/agents/researcher.md) | 調査専任サブエージェント |
 | [`.cursor/agents/planner.md`](../.cursor/agents/planner.md) | 設計専任サブエージェント |
 | [`.cursor/agents/reviewer.md`](../.cursor/agents/reviewer.md) | レビュー専任サブエージェント |
 | [`.cursor/agents/db-migrator.md`](../.cursor/agents/db-migrator.md) | DB マイグレーション専任サブエージェント |
-| [`.cursor/agents/pr-publisher.md`](../.cursor/agents/pr-publisher.md) | PR 作成専任サブエージェント |
-| [`.cursor/skills/development-workflow/`](../.cursor/skills/development-workflow/) | 開発フロー全体のオーケストレーション |
-| [`.cursor/rules/development-workflow.mdc`](../.cursor/rules/development-workflow.mdc) | フェーズ順守ルール（常時適用） |
-| [`.cursor/hooks.json`](../.cursor/hooks.json) | sessionStart / shell ゲート / stop follow-up |
-| [`scripts/workflow.sh`](../scripts/workflow.sh) | フェーズ状態管理 CLI |
+| [`.cursor/rules/development-workflow.mdc`](../.cursor/rules/development-workflow.mdc) | ブランチ戦略・開発フロー順守（常時適用） |
+| [`.cursor/hooks.json`](../.cursor/hooks.json) | shell ゲート（main 直接 commit/push ブロック等） |
 | [`.claude/skills/frontend-dev/`](../.claude/skills/frontend-dev/) | フロント実装のドメイン知識 |
 | [`.claude/skills/backend-dev/`](../.claude/skills/backend-dev/) | バックエンド（Supabase）のドメイン知識 |
 | [`.claude/skills/delete-initial-resource/`](../.claude/skills/delete-initial-resource/) | 組み込みリソース削除手順 |
@@ -151,13 +148,15 @@ git config user.email "fress-dev@users.noreply.github.com"
 
 Cursor が自動認識する専門役です。**`.cursor/rules` は継承しない**ため、各ファイル内にコア保護の要点を直接記載しています。
 
+調査はビルトインの **@Explore** を使う（専用サブエージェントは置かない）。
+
 | 名前 | 役割 | 書き込み | フェーズ |
 |------|------|----------|----------|
-| **researcher** | 縫い目・既存パターン・リスクの調査 | しない（readonly） | research |
-| **planner** | 縫い目ベースの実装計画 | しない（readonly） | plan |
-| **reviewer** | コア侵食・DoD・CRM 固有観点を検査 | しない（readonly） | review |
-| **db-migrator** | 追加専用マイグレーション・RLS・型再生成 | する | develop（DB 時） |
-| **pr-publisher** | reviewer PASS 後の PR 作成 | する | pr |
+| **planner** | 縦切り単位の実装計画（縫い目ベース） | しない（readonly） | 計画 |
+| **reviewer** | コア侵食・DoD・CRM 固有観点を検査（差分モード） | しない（readonly） | レビュー |
+| **db-migrator** | 追加専用マイグレーション・RLS・型再生成 | する | 開発（DB 時） |
+
+PR 作成は **メインエージェント** が `gh pr create --base develop` で行う。
 
 #### planner の出力
 
@@ -208,15 +207,15 @@ Cursor が自動認識する専門役です。**`.cursor/rules` は継承しな�
 
 ```mermaid
 flowchart LR
-  A[機能要望] --> B[researcher]
+  A[機能要望] --> B[Explore]
   B --> C[planner]
   C --> D{人間承認}
-  D -->|approve plan| E[develop]
+  D -->|OK| E[feat/* で開発]
   E --> F[reviewer]
   F --> G{PASS?}
   G -->|No| E
   G -->|Yes| H[test]
-  H --> I[pr-publisher]
+  H --> I[gh pr create]
   I --> J{人間マージ}
   J --> K[done]
 ```

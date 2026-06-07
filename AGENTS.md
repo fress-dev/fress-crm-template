@@ -43,13 +43,11 @@
 
 新機能・拡張は **調査 → 計画 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
 
-```sh
-./scripts/workflow.sh start "タスク名"   # develop から feat/* を作成
-```
+`develop` から `feat/*` ブランチを手動で作成して作業する。
 
 **`main` は本番相当 — 直接コミットしない。** PR は `feat/*` → `develop`。
 
-詳細: [`docs/development-workflow.md`](docs/development-workflow.md) / [`.cursor/skills/development-workflow/SKILL.md`](.cursor/skills/development-workflow/SKILL.md)
+詳細: 本ファイル末尾の「## 開発フロー」および [`docs/development-workflow.md`](docs/development-workflow.md)
 
 ## 上流追従
 - 上流を `upstream` リモートとして保持する。
@@ -65,3 +63,24 @@
 ## 失敗時の学習（ハーネスの育て方）
 - エージェントが同じミスを2回したら、その防止策を本ファイルか `.cursor/rules/` に恒久ルールとして追記する。
 - ルールは短く具体的に。「決済まわりで使う」ではなく「Stripe Webhook を扱うとき」のように発火条件を明示する。
+
+## 開発フロー
+
+新機能・拡張は次の 8 フェーズで進める。フェーズの状態は **git ブランチと PR** で表現する（状態管理ファイルは使わない）。
+
+| # | フェーズ | 担当 | 内容 |
+|---|----------|------|------|
+| 1 | 調査 | **@Explore**（ビルトイン） | 現状を調べる。実装はしない |
+| 2 | 計画 | **@planner** | 縦切り単位にタスクを分解する |
+| 3 | 承認 | **人間** | 計画を確認して OK を出す。**ここで必ず一度止まる** |
+| 4 | 開発 | **メインエージェント** | `develop` から `feat/*` を切り、`src/custom/` 配下のみで実装する |
+| 5 | レビュー | **@reviewer**（差分モード） | コア侵食・DoD・縫い目遵守を検査する |
+| 6 | テスト | **メインエージェント** | `make test` と `make test-e2e` を通す |
+| 7 | PR | **メインエージェント** | `gh pr create --base develop` で PR を作成する |
+| 8 | マージ承認 | **人間** | PR を確認してマージする |
+
+### 補足
+
+- **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/*` → PR → `develop`）。
+- **サブエージェント（@Explore / @planner / @reviewer 等）は `.cursor/rules` を継承しない。** コア保護の要点は本ファイル（および各 `.cursor/agents/*.md`）に記載されている前提で動くこと。
+- DB 変更が必要な場合は **@db-migrator** を開発フェーズで呼び出す（追加専用マイグレーションのみ）。

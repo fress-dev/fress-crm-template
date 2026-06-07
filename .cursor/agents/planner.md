@@ -62,8 +62,7 @@ readonly: true
 実装の順番と依存関係: （番号で）
 ```
 
-計画提示後、メインエージェントは `./scripts/workflow.sh phase approval_plan` を実行し、
-人間の `./scripts/workflow.sh approve plan` を待つこと。
+計画提示後、人間の承認を待ってから実装に進むこと（ここで必ず一度止まる）。
 
 このプロジェクトのスタックは React + TypeScript + Shadcn UI + shadcn-admin-kit +
 Tailwind + TanStack Query + Supabase/Postgres。react-admin の古い前提では計画しない。

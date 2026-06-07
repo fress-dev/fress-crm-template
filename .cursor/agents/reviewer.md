@@ -91,7 +91,4 @@ CI/パイプライン: OK / 指摘
 - ...
 ```
 
-レビュー完了後、メインエージェントは `./scripts/workflow.sh record-review PASS|FAIL` を実行する。
-FAIL の場合は `phase develop` に戻して修正する。
-
-修正の実装はしない。指摘までに留める。
+FAIL の場合は開発フェーズに戻して修正する。修正の実装はしない。指摘までに留める。

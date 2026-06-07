@@ -1,43 +1,22 @@
 ---
-description: 標準開発フロー — 調査からマージまでのフェーズ順守と承認ゲート
+description: ブランチ戦略と開発フロー順守（状態ファイルなし・git/PR で管理）
 alwaysApply: true
 ---
 
 # 開発フロー（必須）
 
-新機能・拡張・日本語化など **コード変更を伴う作業** は、次の順序に従う。
-
-```
-調査 → 計画 → 【人間承認】→ 開発 → レビュー → テスト → PR → 【人間マージ承認】
-```
+新機能・拡張は AGENTS.md 末尾の「## 開発フロー」に従う。フェーズの状態は git ブランチと PR で表現する（状態管理ファイルは使わない）。
 
 ## ブランチ戦略
 
 | ブランチ | 用途 |
 |----------|------|
 | `main` | 本番相当。**直接コミット・push 禁止** |
-| `develop` | 開発統合。PR のマージ先 |
-| `feat/*` | タスク作業。`workflow.sh start` で自動作成 |
-
-## 開始
-
-作業開始時に `./scripts/workflow.sh start "<タスク名>"` を実行する（`feat/*` ブランチを切る）。
-`main` にいる状態でコミット・実装しない。
-
-## フェーズ遷移
-
-- 調査: `@researcher` → `phase plan`
-- 計画: `@planner` → `phase approval_plan` → **人間の `approve plan` を待つ**
-- 開発: 実装のみ → `phase review`
-- レビュー: `@reviewer` → `record-review PASS` のみ次へ
-- テスト: `make test` / `make test-e2e` → `record-tests pass` → `phase pr`
-- PR: `@pr-publisher` → `record-pr`
-- マージ: **人間が PR を確認・マージ** → `approve merge`
-
-詳細: `.cursor/skills/development-workflow/SKILL.md`
+| `develop` | 開発統合。日常の PR マージ先 |
+| `feat/*` | タスク作業。`develop` から手動で作成 |
 
 ## 禁止
 
-- `approval_plan` を飛ばして開発しない
-- `reviewer` PASS 前に PR を作らない
-- コアパス（`src/root/**`、既存 `src/components/**`、既存 migrations）を編集しない
+- `main` 上でのコミット・日常開発
+- `approval_plan`（人間の計画承認）を飛ばした実装
+- コアパス（`src/root/**`、既存 `src/components/**`、既存 migrations）の編集
