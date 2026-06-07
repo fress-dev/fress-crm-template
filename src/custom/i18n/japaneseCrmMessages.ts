@@ -151,8 +151,7 @@ export const japaneseCrmMessages: CrmMessages = {
       bulk_tag: {
         action: "ラベルを付ける",
         back: "ラベル一覧に戻る",
-        create_description:
-          "新しいラベルを作り、選んだ担当者に付けます。",
+        create_description: "新しいラベルを作り、選んだ担当者に付けます。",
         description:
           "既にあるラベルを選ぶか、新しいラベルを作って担当者に付けてください。",
         empty: "ラベルがありません。先にラベルを作ってください。",
@@ -287,7 +286,8 @@ export const japaneseCrmMessages: CrmMessages = {
         attach_document: "ファイルを添付",
       },
       validation: {
-        note_or_attachment_required: "メモかファイルのどちらかを入力してください",
+        note_or_attachment_required:
+          "メモかファイルのどちらかを入力してください",
       },
     },
     sales: {
@@ -301,8 +301,7 @@ export const japaneseCrmMessages: CrmMessages = {
       },
       create: {
         error: "利用者の登録中にエラーが起きました。",
-        success:
-          "利用者を登録しました。パスワード設定のメールが届きます。",
+        success: "利用者を登録しました。パスワード設定のメールが届きます。",
         title: "新しい利用者を登録",
       },
       edit: {
@@ -475,8 +474,7 @@ export const japaneseCrmMessages: CrmMessages = {
         complete: "取り込みが完了しました。",
         failed: "失敗",
         imported: "取り込み済み",
-        in_progress:
-          "取り込み中です。この画面から移動しないでください。",
+        in_progress: "取り込み中です。この画面から移動しないでください。",
         some_failed: "一部のデータは取り込めませんでした。",
         table_caption: "取り込みの状況",
       },
@@ -491,8 +489,7 @@ export const japaneseCrmMessages: CrmMessages = {
       deals: {
         categories: "商談の種類",
         currency: "通貨",
-        pipeline_help:
-          "トップ画面に表示する商談の段階を選んでください。",
+        pipeline_help: "トップ画面に表示する商談の段階を選んでください。",
         pipeline_statuses: "表示する段階",
         stages: "商談の段階",
       },
@@ -548,8 +545,7 @@ export const japaneseCrmMessages: CrmMessages = {
       password: {
         change: "パスワードを変更",
       },
-      password_reset_sent:
-        "パスワード再設定のメールを送信しました",
+      password_reset_sent: "パスワード再設定のメールを送信しました",
       record_not_found: "データが見つかりません",
       title: "個人設定",
       updated: "個人設定を更新しました",

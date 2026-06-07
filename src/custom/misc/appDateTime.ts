@@ -51,7 +51,10 @@ export const toStorageIsoFromTokyoInput = (value: string): string => {
   return new Date(`${normalized}+09:00`).toISOString();
 };
 
-export const differenceInCalendarDaysTokyo = (left: Date, right: Date): number => {
+export const differenceInCalendarDaysTokyo = (
+  left: Date,
+  right: Date,
+): number => {
   const a = getZonedParts(left);
   const b = getZonedParts(right);
   const dayA = Date.UTC(Number(a.year), Number(a.month) - 1, Number(a.day));

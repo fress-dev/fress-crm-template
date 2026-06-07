@@ -6,7 +6,9 @@ import { mergePlainJapaneseConfiguration } from "./mergePlainJapaneseConfigurati
 
 /** localStorage に残った英語設定を、起動時に日本語へ差し替える */
 export const bootstrapPlainJapaneseStore = (store: Store): void => {
-  const stored = store.getItem<Record<string, unknown>>(CONFIGURATION_STORE_KEY);
+  const stored = store.getItem<Record<string, unknown>>(
+    CONFIGURATION_STORE_KEY,
+  );
   store.setItem(
     CONFIGURATION_STORE_KEY,
     mergePlainJapaneseConfiguration(stored ?? {}),

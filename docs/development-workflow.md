@@ -34,7 +34,11 @@ git checkout -b feat/your-task-name
 # 6. テスト
 make test && make test-e2e && npx tsc --noEmit
 
+# 6b. （任意）PR 前の一括チェック — コミット時は pre-commit が自動実行
+npm run verify
+
 # 7. コミット（件名・本文は日本語）
+#    → pre-commit で lint-staged（Prettier + ESLint）+ registry 生成が走る
 git commit -m "変更内容を日本語で記載"
 
 # 8. PR 作成（タイトル・本文も日本語、マージ先は develop）

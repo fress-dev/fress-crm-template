@@ -91,8 +91,7 @@ const NoteCreateButton = ({
     update(reference, {
       id: (record && record.id) as unknown as Identifier,
       data: {
-        last_seen:
-          reference === "contacts" ? serializeNoteDate() : undefined,
+        last_seen: reference === "contacts" ? serializeNoteDate() : undefined,
         status: data.status,
       },
       previousData: record,

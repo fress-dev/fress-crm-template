@@ -1,5 +1,10 @@
 import { FileText } from "lucide-react";
-import { useGetIdentity, useGetList, useLocaleState, useTranslate } from "ra-core";
+import {
+  useGetIdentity,
+  useGetList,
+  useLocaleState,
+  useTranslate,
+} from "ra-core";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { TextField } from "@/components/admin/text-field";
 import { Card, CardContent } from "@/components/ui/card";

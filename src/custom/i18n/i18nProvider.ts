@@ -11,7 +11,8 @@ import { japaneseCrmMessages } from "./japaneseCrmMessages";
 const raSupabaseJapaneseMessagesOverride = {
   "ra-supabase": {
     auth: {
-      password_reset: "パスワード再設定用のメールをお送りしました。メールをご確認ください。",
+      password_reset:
+        "パスワード再設定用のメールをお送りしました。メールをご確認ください。",
       forgot_password: "パスワードをお忘れですか？",
       forgot_password_details:
         "登録したメールアドレスを入力してください。再設定の手順をお送りします。",
