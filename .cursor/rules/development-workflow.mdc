@@ -15,8 +15,13 @@ alwaysApply: true
 | `develop` | 開発統合。日常の PR マージ先 |
 | `feat/*` | タスク作業。`develop` から手動で作成 |
 
+## 言語
+
+コミット・PR・カスタム側コメントは日本語。詳細は `japanese-conventions.mdc`。
+
 ## 禁止
 
 - `main` 上でのコミット・日常開発
 - `approval_plan`（人間の計画承認）を飛ばした実装
 - コアパス（`src/root/**`、既存 `src/components/**`、既存 migrations）の編集
+- コア既存ファイルのコメントを日本語化するための編集

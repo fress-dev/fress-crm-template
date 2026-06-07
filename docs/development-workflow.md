@@ -34,11 +34,16 @@ git checkout -b feat/your-task-name
 # 6. テスト
 make test && make test-e2e && npx tsc --noEmit
 
-# 7. PR 作成（マージ先は develop）
-gh pr create --base develop
+# 7. コミット（件名・本文は日本語）
+git commit -m "変更内容を日本語で記載"
 
-# 8. マージ（人間が PR を確認してマージ）
+# 8. PR 作成（タイトル・本文も日本語、マージ先は develop）
+gh pr create --base develop --title "日本語の PR タイトル" --body-file .github/pull_request_template.md
+
+# 9. マージ（人間が PR を確認してマージ）
 ```
+
+コミット・PR・`src/custom/**` のソースコメントは日本語。詳細は [AGENTS.md](../AGENTS.md) の「## 言語・表記規約」。
 
 ## フェーズと担当
 
@@ -50,7 +55,8 @@ gh pr create --base develop
 | 開発 | メインエージェント | — |
 | レビュー | @reviewer（差分モード） | — |
 | テスト | `make test` / `make test-e2e` | — |
-| PR | メインエージェント（`gh pr create`） | — |
+| コミット | メインエージェント | —（メッセージは日本語） |
+| PR | メインエージェント（`gh pr create`） | —（タイトル・本文は日本語） |
 | マージ承認 | — | PR 確認・マージ |
 
 ## 自動化（フック）

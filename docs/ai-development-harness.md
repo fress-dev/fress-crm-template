@@ -88,6 +88,7 @@ AI は文脈上「そのファイルを直すのが最短」と判断しがち�
 | パス | 役割 |
 |------|------|
 | [`AGENTS.md`](../AGENTS.md) | メインエージェント向けマスター指示（コマンド・規約・DoD） |
+| [`.cursor/rules/japanese-conventions.mdc`](../.cursor/rules/japanese-conventions.mdc) | **常時適用**ルール。コミット・PR・カスタムコメントは日本語 |
 | [`.cursor/rules/core-protection.mdc`](../.cursor/rules/core-protection.mdc) | **常時適用**ルール。コアパス編集禁止 |
 | [`.cursor/agents/planner.md`](../.cursor/agents/planner.md) | 設計専任サブエージェント |
 | [`.cursor/agents/reviewer.md`](../.cursor/agents/reviewer.md) | レビュー専任サブエージェント |
@@ -136,6 +137,18 @@ git config user.email "fress-dev@users.noreply.github.com"
 
 `gh auth login` のアカウントと commit Author は別です。push 権限と Contributors 表示は一致しません。
 
+### 言語・表記規約
+
+| 対象 | 言語 |
+|------|------|
+| コミットメッセージ（件名・本文） | 日本語 |
+| PR（タイトル・本文） | 日本語 |
+| `src/custom/**`、新規マイグレーション等のコメント | 日本語 |
+| 変数・関数名・ファイル名 | 英語（既存慣習） |
+| コア既存ファイルのコメント | 変更しない（英語のまま） |
+
+詳細: [`AGENTS.md`](../AGENTS.md) の「## 言語・表記規約」/ [`.cursor/rules/japanese-conventions.mdc`](../.cursor/rules/japanese-conventions.mdc)
+
 ---
 
 ## 4. エージェント一覧
@@ -150,11 +163,11 @@ Cursor が自動認識する専門役です。**`.cursor/rules` は継承しな�
 
 調査はビルトインの **@Explore** を使う（専用サブエージェントは置かない）。
 
-| 名前 | 役割 | 書き込み | フェーズ |
-|------|------|----------|----------|
-| **planner** | 縦切り単位の実装計画（縫い目ベース） | しない（readonly） | 計画 |
-| **reviewer** | コア侵食・DoD・CRM 固有観点を検査（差分モード） | しない（readonly） | レビュー |
-| **db-migrator** | 追加専用マイグレーション・RLS・型再生成 | する | 開発（DB 時） |
+| 名前 | 役割 | 書き込み | フェーズ | 言語 |
+|------|------|----------|----------|------|
+| **planner** | 縦切り単位の実装計画（縫い目ベース） | しない（readonly） | 計画 | 出力は日本語 |
+| **reviewer** | コア侵食・DoD・言語規約を検査（差分モード） | しない（readonly） | レビュー | 出力は日本語 |
+| **db-migrator** | 追加専用マイグレーション・RLS・型再生成 | する | 開発（DB 時） | SQL コメントは日本語 |
 
 PR 作成は **メインエージェント** が `gh pr create --base develop` で行う。
 
@@ -170,6 +183,7 @@ PR 作成は **メインエージェント** が `gh pr create --base develop` �
 - **コア保護:** 禁止パスへの diff があれば即 FAIL
 - **拡張パターン:** 新規コードが `src/custom/` に閉じているか
 - **CRM 固有:** RLS、`security_invoker`、PII ログ漏洩
+- **言語規約:** カスタム側コメント・コミット・PR が日本語か。コアコメントの日本語化編集がないか
 - **日本向け i18n:** 請求・適格請求書・消費税・屋号・敬称・住所形式など
 - **データ取得:** TanStack Query の作法、古い react-admin API の不使用
 - **DoD:** `make test` / `make test-e2e` / `tsc` / コア diff 空

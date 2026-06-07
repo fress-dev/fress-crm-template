@@ -84,3 +84,37 @@
 - **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/*` → PR → `develop`）。
 - **サブエージェント（@Explore / @planner / @reviewer 等）は `.cursor/rules` を継承しない。** コア保護の要点は本ファイル（および各 `.cursor/agents/*.md`）に記載されている前提で動くこと。
 - DB 変更が必要な場合は **@db-migrator** を開発フェーズで呼び出す（追加専用マイグレーションのみ）。
+
+## 言語・表記規約
+
+コミット・PR・カスタム側のソースコメントは **日本語** で書く。詳細は [`.cursor/rules/japanese-conventions.mdc`](.cursor/rules/japanese-conventions.mdc)。
+
+### コミットメッセージ
+
+- 件名・本文とも日本語（変更の理由を簡潔に）。
+- 例:
+
+```
+見積もり一覧を custom 配下に追加
+
+縫い目で List コンポーネントを差し替え、コアは未変更。
+```
+
+### PR
+
+`gh pr create --base develop` ではタイトル・本文を日本語で書く。`.github/pull_request_template.md` をベースにする。
+
+### ソースコメント
+
+| 対象 | コメント言語 |
+|------|-------------|
+| `src/custom/**` | 日本語 |
+| 新規 `supabase/migrations/*` | 日本語（SQL `--` 含む） |
+| `src/App.tsx` の追記部分 | 日本語 |
+| コア既存ファイル | **触らない**（英語コメントを日本語化しない） |
+
+変数名・関数名・ファイル名は **英語** のまま（既存慣習に合わせる）。
+
+### グローバル設定との関係
+
+Cursor のユーザールールで英語コミットが指定されていても、**本リポジトリでは本節が優先**する。

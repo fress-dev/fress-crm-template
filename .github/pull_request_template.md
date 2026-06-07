@@ -1,19 +1,20 @@
-## Problem
+## 概要
 
-_Describe the problem this PR solves_
+_この PR で何を解決・追加したか（縫い目で実現した理由を含む）_
 
-## Solution
+## コア保護
 
-_Describe the solution this PR implements_
+- [ ] コアパス（`src/root/**`、既存 `src/components/**`、既存 migrations）の diff は空
 
-## How To Test
+## テスト
 
-_Describe the steps required to test the changes_
+_変更の確認手順_
 
-## Additional Checks
+- [ ] `make test`
+- [ ] `make test-e2e`
+- [ ] `npx tsc --noEmit`
+- [ ] `@reviewer` PASS
 
-- [ ] The **documentation** is up to date
-- [ ] Tested with **fakerest** provider (see [related documentation](https://github.com/marmelab/atomic-crm/blob/main/doc/developer/data-providers.md))
-- [ ] Tested with **Mobile** resolution
+## 補足
 
-Also, please make sure to read the [contributing guidelines](https://github.com/marmelab/atomic-crm/tree/main?tab=contributing-ov-file#readme).
+_レビュアー向けの注意点があれば記載_
