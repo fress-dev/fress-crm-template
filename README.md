@@ -11,9 +11,33 @@
 
 ### 上流の更新を取り込む
 
+初回は履歴が分岐しているため `--allow-unrelated-histories` が必要な場合があります。
+
 ```sh
 git fetch upstream
-git merge upstream/main   # または git rebase upstream/main
+git merge upstream/main --allow-unrelated-histories
+```
+
+### ローカル開発のセットアップ
+
+`.env` には GitHub Push Protection 回避用のプレースホルダーが入っています。Supabase 起動後に実キーへ同期してください。
+
+```sh
+make install
+make start-supabase          # または make start
+./scripts/sync-local-env.sh  # .env.development / supabase/functions/.env を更新
+make start-app               # start-supabase 済みなら
+```
+
+### CI ワークフローを push する
+
+GitHub Actions ファイルの push には `workflow` スコープが必要です。
+
+```sh
+gh auth refresh -h github.com -s workflow
+git add .github/workflows/
+git commit -m "Add CI workflows"
+git push origin main
 ```
 
 ### 新規プロジェクトを始める
