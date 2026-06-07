@@ -43,11 +43,16 @@
 
 新機能・拡張は **調査 → 計画 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
 
-`develop` から `feat/*` ブランチを手動で作成して作業する。
+`develop` から作業ブランチを手動で作成する。命名は次のいずれか:
 
-**`main` は本番相当 — 直接コミットしない。** PR は `feat/*` → `develop`。
+- `feat/platform-<内容>` … ベース・全業界共通
+- `feat/plugin-realestate-<内容>` … 不動産プラグイン
+- `feat/plugin-beauty-<内容>` … 美容プラグイン
+- `fix/<内容>` … バグ修正
 
-詳細: 本ファイル末尾の「## 開発フロー」および [`docs/development-workflow.md`](docs/development-workflow.md)
+**`main` は本番相当 — 直接コミットしない。** PR は作業ブランチ → `develop`。
+
+詳細: [`docs/branch-strategy.md`](docs/branch-strategy.md)、[`docs/development-workflow.md`](docs/development-workflow.md)
 
 ## 上流追従
 - 上流を `upstream` リモートとして保持する。
@@ -73,7 +78,7 @@
 | 1 | 調査 | **@Explore**（ビルトイン） | 現状を調べる。実装はしない |
 | 2 | 計画 | **@planner** | 縦切り単位にタスクを分解する |
 | 3 | 承認 | **人間** | 計画を確認して OK を出す。**ここで必ず一度止まる** |
-| 4 | 開発 | **メインエージェント** | `develop` から `feat/*` を切り、`src/custom/` 配下のみで実装する |
+| 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する（platform / plugin で編集範囲を分ける） |
 | 5 | レビュー | **@reviewer**（差分モード） | コア侵食・DoD・縫い目遵守を検査する |
 | 6 | テスト | **メインエージェント** | `make test` と `make test-e2e` を通す |
 | 7 | PR | **メインエージェント** | `gh pr create --base develop` で PR を作成する |
@@ -81,7 +86,8 @@
 
 ### 補足
 
-- **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/*` → PR → `develop`）。
+- **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/platform-*` / `feat/plugin-*` / `fix/*` → PR → `develop`）。
+- **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/branch-strategy.md`](docs/branch-strategy.md)。
 - **サブエージェント（@Explore / @planner / @reviewer 等）は `.cursor/rules` を継承しない。** コア保護の要点は本ファイル（および各 `.cursor/agents/*.md`）に記載されている前提で動くこと。
 - DB 変更が必要な場合は **@db-migrator** を開発フェーズで呼び出す（追加専用マイグレーションのみ）。
 

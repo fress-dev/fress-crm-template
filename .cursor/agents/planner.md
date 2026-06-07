@@ -32,6 +32,19 @@ readonly: true
 5. 上記で不可能な場合のみ、コア変更を「要承認事項」として明示し、人間に判断を仰ぐ
    （勝手に計画へ組み込まない）
 
+## ブランチ命名（計画に必ず含める）
+
+タスクごとに推奨ブランチ名を1つ示す。`develop` から作成。
+
+| 種別 | プレフィックス | 例 |
+|------|----------------|-----|
+| ベース・全業界共通 | `feat/platform-<内容>` | `feat/platform-plugin-registry` |
+| 不動産プラグイン | `feat/plugin-realestate-<内容>` | `feat/plugin-realestate-properties` |
+| 美容プラグイン | `feat/plugin-beauty-<内容>` | `feat/plugin-beauty-appointments` |
+| バグ修正 | `fix/<内容>` | `fix/dashboard-date-tz` |
+
+platform と plugin を**同一ブランチにまとめない**。詳細: `docs/branch-strategy.md`
+
 ## 進め方
 1. 要望を確認し、不明点があれば**1つだけ**質問してから進める。
 2. 機能を**小さな縦切り**に分解する。1タスク＝1つの縫い目で完結する単位を目指す。
@@ -56,8 +69,9 @@ readonly: true
 
 タスク分解（縦切り順）:
 1. [タスク名]
+   - 推奨ブランチ: feat/platform-... / feat/plugin-realestate-... / feat/plugin-beauty-... / fix/...
    - 使う縫い目: props注入 / コンポーネント差し替え / カスタムフィールド / カスタムページ / Supabase追加
-   - 触るファイル（すべて src/custom/ 配下 or 新規マイグレーション）
+   - 触るファイル（platform は共通層、plugin は各 plugins/ 配下 or 新規マイグレーション）
    - DB変更: あり（db-migrator へ・概要）/ なし
    - i18n: 必要な訳キー / なし
    - RLS: 必要 / 不要

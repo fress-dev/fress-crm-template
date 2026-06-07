@@ -29,7 +29,12 @@ Fress CRM Template における、AI エージェント向けの設定・役割�
 |----------|------|
 | `main` | 本番相当。直接コミット・push 禁止 |
 | `develop` | 開発統合。PR のマージ先 |
-| `feat/*` | タスク作業。`develop` から手動で作成 |
+| `feat/platform-<内容>` | ベース・全業界共通 |
+| `feat/plugin-realestate-<内容>` | 不動産プラグインのみ |
+| `feat/plugin-beauty-<内容>` | 美容プラグインのみ |
+| `fix/<内容>` | バグ修正（業界問わず） |
+
+詳細・並行開発: [`docs/branch-strategy.md`](./branch-strategy.md)
 
 テンプレートは初期 push 時に履歴を 1 コミットへ整理しているため、上流取り込みでは次が必要な場合があります。
 
@@ -66,7 +71,7 @@ git merge upstream/main --allow-unrelated-histories
 | 計画と実装を分離 | いきなりコードを書かず、`@Explore` → `@planner` で先に決める |
 | 検査も別役割 | 実装者に自己レビューさせない（`reviewer` は readonly） |
 | 人間承認ゲート | 計画承認とマージ承認（いずれも人間が判断） |
-| 状態は git で表現 | ブランチ（`feat/*`）と PR で進捗を管理。状態ファイルは使わない |
+| 状態は git で表現 | ブランチ（`feat/platform-*` / `feat/plugin-*` / `fix/*`）と PR で進捗を管理。状態ファイルは使わない |
 | 完了は機械的判定 | DoD を `reviewer` + テスト + フックで担保 |
 | 失敗からルールを増やす | 同じミスが 2 回出たら `AGENTS.md` か `.cursor/rules/` に追記 |
 
@@ -94,7 +99,8 @@ AI は文脈上「そのファイルを直すのが最短」と判断しがち�
 | [`.cursor/agents/reviewer.md`](../.cursor/agents/reviewer.md) | レビュー専任サブエージェント |
 | [`.cursor/agents/db-migrator.md`](../.cursor/agents/db-migrator.md) | DB マイグレーション専任サブエージェント |
 | [`.cursor/rules/development-workflow.mdc`](../.cursor/rules/development-workflow.mdc) | ブランチ戦略・開発フロー順守（常時適用） |
-| [`.cursor/hooks.json`](../.cursor/hooks.json) | shell ゲート（main 直接 commit/push ブロック等） |
+| [`.cursor/hooks.json`](../.cursor/hooks.json) | shell ゲート（main 直接 commit/push ブロック、ブランチ命名検証） |
+| [`docs/branch-strategy.md`](./branch-strategy.md) | 業界プラグイン向けブランチ命名・並行開発 |
 | [`.claude/skills/frontend-dev/`](../.claude/skills/frontend-dev/) | フロント実装のドメイン知識 |
 | [`.claude/skills/backend-dev/`](../.claude/skills/backend-dev/) | バックエンド（Supabase）のドメイン知識 |
 | [`.claude/skills/delete-initial-resource/`](../.claude/skills/delete-initial-resource/) | 組み込みリソース削除手順 |
@@ -224,7 +230,7 @@ flowchart LR
   A[機能要望] --> B[Explore]
   B --> C[planner]
   C --> D{人間承認}
-  D -->|OK| E[feat/* で開発]
+  D -->|OK| E[feat/platform-* / feat/plugin-* / fix/* で開発]
   E --> F[reviewer]
   F --> G{PASS?}
   G -->|No| E
