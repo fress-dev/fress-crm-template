@@ -17,16 +17,23 @@ const parseStatusEnv = (status: string, key: string): string | undefined => {
 /** 起動中の e2e Supabase から SERVICE_ROLE_KEY を取得（CI 用） */
 export const resolveServiceRoleKey = (): string => {
   const fromEnv = process.env.SERVICE_ROLE_KEY;
-  if (fromEnv && isJwtShape(fromEnv) && fromEnv !== PLACEHOLDER_SERVICE_ROLE_KEY) {
+  if (
+    fromEnv &&
+    isJwtShape(fromEnv) &&
+    fromEnv !== PLACEHOLDER_SERVICE_ROLE_KEY
+  ) {
     return fromEnv;
   }
 
   try {
-    const status = execSync("npx supabase status -o env --workdir .supabase-e2e", {
-      cwd: ROOT,
-      encoding: "utf8",
-      stdio: ["pipe", "pipe", "ignore"],
-    });
+    const status = execSync(
+      "npx supabase status -o env --workdir .supabase-e2e",
+      {
+        cwd: ROOT,
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"],
+      },
+    );
     const key = parseStatusEnv(status, "SERVICE_ROLE_KEY");
     if (key && isJwtShape(key)) {
       return key;

@@ -2,18 +2,19 @@ import { test as base, expect, type Page } from "@playwright/test";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { ja } from "./ja";
-import {
-  resolveServiceRoleKey,
-  resolveSupabaseUrl,
-} from "./resolveE2eEnv";
+import { resolveServiceRoleKey, resolveSupabaseUrl } from "./resolveE2eEnv";
 
 let adminSupabase: SupabaseClient | null = null;
 
 const getAdminSupabase = () => {
   if (!adminSupabase) {
-    adminSupabase = createClient(resolveSupabaseUrl(), resolveServiceRoleKey(), {
-      auth: { autoRefreshToken: false, persistSession: false },
-    });
+    adminSupabase = createClient(
+      resolveSupabaseUrl(),
+      resolveServiceRoleKey(),
+      {
+        auth: { autoRefreshToken: false, persistSession: false },
+      },
+    );
   }
   return adminSupabase;
 };
@@ -41,9 +42,7 @@ async function resetDb() {
   // Delete all auth users (cascades to sales via DB trigger)
   const { data } = await getAdminSupabase().auth.admin.listUsers();
   await Promise.all(
-    data.users.map((user) =>
-      getAdminSupabase().auth.admin.deleteUser(user.id),
-    ),
+    data.users.map((user) => getAdminSupabase().auth.admin.deleteUser(user.id)),
   );
 }
 
@@ -118,15 +117,17 @@ async function createNotes({
 }) {
   if (notes.length === 0) return;
 
-  const { error } = await getAdminSupabase().from("contact_notes").insert(
-    notes.map(({ text, date, status = "cold" }) => ({
-      contact_id: contactId,
-      sales_id: salesId,
-      text,
-      date,
-      status,
-    })),
-  );
+  const { error } = await getAdminSupabase()
+    .from("contact_notes")
+    .insert(
+      notes.map(({ text, date, status = "cold" }) => ({
+        contact_id: contactId,
+        sales_id: salesId,
+        text,
+        date,
+        status,
+      })),
+    );
 
   if (error) {
     throw new Error(`Failed to create notes: ${error.message}`);

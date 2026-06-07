@@ -7,6 +7,26 @@
 
 ---
 
+## 2026-06-07 | feat/platform-branch-naming-harness | rebase | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- PR #1 マージ後の `develop` に rebase。`docs/README.md`・`fixtures.ts`・`package.json` のコンフリクト解消
+- `fixtures.ts` は日本語メニュー（`ja`）+ `resolveE2eEnv` を統合
+- Prettier 整形済み
+
+### 指摘・メモ（改善のタネ）
+
+- #1 マージ後は platform PR は必ず `git rebase origin/develop` してから push する
+
+---
+
 ## 2026-06-07 | feat/platform-branch-naming-harness | (e2e/pre-pr) | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
 
 | 項目 | 結果 |
