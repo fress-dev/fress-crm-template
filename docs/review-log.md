@@ -7,6 +7,37 @@
 
 ---
 
+## 2026-06-07 | feat/platform-branch-naming-harness | 983007d | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 検査結果
+
+| 観点 | 結果 | メモ |
+|------|------|------|
+| コア保護 | OK | アプリ・migration コードに触れていない |
+| 拡張パターン | OK | ドキュメント・スクリプト・エージェント指示のみ |
+| ブランチ命名 | OK | `feat/platform-branch-naming-harness` |
+| 言語規約 | OK | 日本語 |
+| DoD（テスト） | 対象外 | シェル/ドキュメントのみ |
+
+### 変更の要約
+
+- `docs/review-log.md` でレビュー結果を時系列蓄積
+- `scripts/pr-body-with-review.sh` で PR 本文に最新エントリを自動挿入
+- reviewer / development-workflow / PR テンプレートを更新
+
+### 指摘・メモ（改善のタネ）
+
+- エントリは新しい順に上へ追記すると PR スクリプトが「最新」を取りやすい
+- 将来: FAIL が続く観点は review-log からルールへ昇格する運用を回す
+
+---
+
 ## 2026-06-07 | feat/platform-branch-naming-harness | 4930e55 | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
 
 | 項目 | 結果 |
