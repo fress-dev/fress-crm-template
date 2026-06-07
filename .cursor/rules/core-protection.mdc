@@ -1,0 +1,34 @@
+---
+description: Atomic CRM core protection — extend, never modify the upstream core
+alwaysApply: true
+---
+
+# コア保護ルール（最優先）
+
+このプロジェクトは marmelab/atomic-crm を土台にした拡張実装です。
+上流コア（upstream core）は変更しません。拡張は縫い目で行います。
+
+## 絶対に編集しないパス
+- `src/root/**`
+- 各既存リソースフォルダ（contacts / companies / deals / notes など）の既存ファイル
+- `src/components/**` の既存ファイル
+- 既存の `supabase/migrations/*`（過去のマイグレーションは編集・削除しない）
+
+これらに変更が必要だと判断したら、編集する前に **必ず停止し**、
+「なぜコア変更が必要か」「縫い目側で代替できない理由」を人間に提示して承認を得る。
+
+## 拡張のやり方
+- 新規コード（コンポーネント / ページ / hooks / ロジック）はすべて `src/custom/` に置く。
+- 既存コンポーネントを変えたい場合は、元ファイルを編集せず `<CRM>` の props で
+  自前コンポーネントを差し替える。
+- DB は新規テーブル・ビュー・RLS・Edge Function の **追加** で対応。
+  既存テーブルの意味を変える破壊的マイグレーションは作らない。
+
+## スタックの注意
+- 土台は shadcn-admin-kit（v1.5.0 以降）。react-admin の古い API を前提にしたコードを書かない。
+- UI は Shadcn UI + Tailwind、データ取得は TanStack Query の作法に従う。
+
+## 完了前チェック
+- `make test` / `make test-e2e` が緑であること。
+- コア保護パスの `git diff` が空であること。
+- 上記が満たせない場合は「完了」と宣言しない。

@@ -1,0 +1,55 @@
+# AGENTS.md — Atomic CRM 拡張プロジェクト
+
+> このリポジトリは marmelab/atomic-crm を土台にした、中小企業・個人事業主向け CRM の拡張実装です。
+> 最優先方針：**コア（上流コード）を変更せず、縫い目（props / コンポーネント差し替え / 追加）で拡張する。**
+
+## プロジェクト概要
+- ベース: marmelab/atomic-crm（MIT, リファレンス実装）
+- スタック: React + TypeScript + Shadcn UI + Tailwind CSS + shadcn-admin-kit + TanStack Query + Supabase / Postgres
+- 注意: 一般的な「react-admin ベース」の解説は v1.5.0 以降は当てはまらない。shadcn-admin-kit の API を使うこと。
+
+## コマンド（clone 後に Makefile / package.json で実際の定義を確認して更新すること）
+- 開発起動: `make start`（Vite dev server + ローカル Supabase + Postgres/Docker, http://localhost:5173/）
+- ユニットテスト: `make test`
+- e2e テスト: `make test-e2e`
+- 型チェック: `npx tsc --noEmit`
+- DB マイグレーション適用: `make supabase-migrate-database`
+- Lint: `npm run lint`（定義を確認）
+
+## ディレクトリ規約（最重要）
+- **エントリ**: `src/App.tsx`
+- **設定ハブ**: `src/root/CRM.tsx`（ドメイン設定。原則ここは「読む」だけ。変更が必要なら props 注入で）
+- **カスタム実装の置き場所**: `src/custom/`（無ければ作る）。新規コンポーネント・ページ・hooks・ロジックはすべてここ。
+- **Supabase**: `supabase/migrations/` は **追加のみ**。
+
+### 触ってはいけない（コア）
+- `src/root/**`
+- `src/components/**` および各既存リソースフォルダ（contacts / companies / deals / notes など）の既存ファイル
+- 既存の `supabase/migrations/*`（過去のマイグレーションは絶対に編集しない）
+
+### 触ってよい
+- `src/custom/**`（新規追加するすべて）
+- `src/App.tsx`（`<CRM>` への props 注入・カスタムコンポーネント登録のみ。コアロジックの書き換えは不可）
+- `supabase/migrations/` への **新規** タイムスタンプ付きマイグレーション追加
+
+## 拡張の優先順位（上から順に検討する）
+1. `<CRM>` コンポーネントの props / 設定で実現できないか
+2. コンポーネント差し替え（元ファイルを編集せず props で自前コンポーネントを注入）
+3. カスタムフィールド / カスタムページの **追加**
+4. Supabase 側は新規テーブル・ビュー・RLS ポリシー・Edge Function の **追加** で対応
+5. 上記で不可能な場合のみ、コア変更を提案し **必ず人間の承認を得てから** 着手する
+
+## 上流追従
+- 上流を `upstream` リモートとして保持する。
+- カスタムは `src/custom/` と新規マイグレーションに隔離し、上流更新は rebase / merge で取り込める状態を維持する。
+
+## 完了の定義（Definition of Done）
+作業を「完了」と宣言する前に、必ず以下を満たすこと:
+1. `make test` と `make test-e2e` が緑（コアのテストが落ちていない＝コア挙動を壊していない）
+2. `npx tsc --noEmit` が通る
+3. コアパス（上記「触ってはいけない」）の `git diff` が空であることを確認する
+4. 変更点と「なぜ縫い目側で実現できたか」を1〜2行で要約する
+
+## 失敗時の学習（ハーネスの育て方）
+- エージェントが同じミスを2回したら、その防止策を本ファイルか `.cursor/rules/` に恒久ルールとして追記する。
+- ルールは短く具体的に。「決済まわりで使う」ではなく「Stripe Webhook を扱うとき」のように発火条件を明示する。
