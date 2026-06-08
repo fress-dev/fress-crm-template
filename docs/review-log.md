@@ -1,5 +1,5 @@
 # 移行しました
 
-→ [product/crm-features.md](./product/crm-features.md)
+→ [logs/review-log.md](./logs/review-log.md)
 
 一覧: [docs/README.md](./README.md)

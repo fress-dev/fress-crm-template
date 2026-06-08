@@ -1,4 +1,4 @@
-.PHONY: build help
+.PHONY: build help dev
 
 # Run silently, show output on failure
 run-silent = $1 >/tmp/atomic-crm-$2.log 2>&1 || (cat /tmp/atomic-crm-$2.log && false)
@@ -39,6 +39,8 @@ stop-app-e2e:
 
 start-app-e2e-ci: build-e2e ## start the app pointing to the e2e supabase instance in CI mode (no open, no watch)
 	npx serve -l 5175 -L -s dist &
+
+dev: start ## alias: local dev stack (Supabase + Vite)
 
 start: start-supabase start-app ## start the stack locally
 
@@ -113,6 +115,13 @@ test-e2e-ci: start-e2e-ci
 	@./scripts/sync-e2e-env.sh
 	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
 	npx playwright test
+
+# PR 前の CI 相当チェック（e2e 除く。e2e は make pre-pr-e2e）
+pre-pr:
+	@./scripts/pre-pr-check.sh
+
+pre-pr-e2e: pre-pr
+	$(MAKE) test-e2e-ci
 
 lint:
 	npm run lint
