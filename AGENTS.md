@@ -106,6 +106,7 @@
 
 - **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/platform-*` / `feat/plugin-*` / `fix/*` → PR → `develop`）。
 - **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)。
+- **`feat/plugin-*` の PR では platform（ベース）とハーネス設定（`AGENTS.md`、`.cursor/`、`docs/harness/`、`scripts/workflow-gate*` 等）を一緒に変更しない。** 必要なら `feat/platform-*` / `feat/platform-harness-*` で別 PR。platform を先にマージしてから plugin を着手する。
 - **サブエージェント（@Explore / @planner / @reviewer 等）は `.cursor/rules` を継承しない。** コア保護の要点は本ファイル（および各 `.cursor/agents/*.md`）に記載されている前提で動くこと。
 - DB 変更が必要な場合は **@db-migrator** を開発フェーズで呼び出す（追加専用マイグレーションのみ）。
 
