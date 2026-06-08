@@ -9,6 +9,49 @@
 
 ---
 
+## 2026-06-09 | feat/platform-plugin-registry | プラグインレジストリ実装 | [PR #4](https://github.com/fress-dev/fress-crm-template/pull/4)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **総合**（`docs/workflow/**`・`makefile`・`pre-pr-check.sh` を含むため） |
+| 判定 | **PASS**（軽微なメモあり） |
+| 実施者 | メインエージェント（レビューフェーズ漏れのため事後追記） |
+
+### 変更の要約
+
+- `src/custom/platform/plugin/` — レジストリ・`resolveAppAssembly`・Extension 型
+- `src/custom/platform/tenant/` — 最小型 `TenantConfig` + JSON 読み込み
+- `tenants/default.json` / `noexcuse.json`
+- `vitest.platform.config.ts` + `registry.test.ts`（5 件）
+- `App.tsx` — 組み立て経由に変更（コア非変更）
+- 同ブランチに research 設計書・プラグイン PR 分離ルール docs を含む
+
+### 検査結果
+
+| 観点 | 結果 |
+|------|------|
+| コア保護 | **OK** — `src/components/**` diff なし |
+| 拡張パターン | **OK** — `src/custom/` + `App.tsx` props 注入 |
+| 設計書整合 | **OK** — `platform-plugin-registry.md`（approved）と実装範囲一致 |
+| Unit test | **OK** — `test:unit:platform` 5 件、`pre-pr` に追加済み |
+| e2e | **未追加** — 設計どおり（画面変更なし）。CI 回帰のみ |
+| git 運用 | **OK** — `feat/platform-*`、plugin 業務コードなし |
+| DoD | **△** — `make pre-pr` ローカル確認・関連 e2e 未実施（画面無変更のため e2e 省略は妥当） |
+
+### 指摘・メモ（改善のタネ）
+
+- **プロセス**: 実装〜PR 作成時に @reviewer 未実施・本ログ未追記だった。以降は PR 前に必ず実施する
+- `assembly.enabledPlugins` は App で未使用（将来プラグインマウント用。現時点は設計どおり）
+- `platform-tenant-config` 未マージのまま最小型 TenantConfig で先行。次 PR で拡張予定
+- research docs が本 PR に同梱。PR #3 と内容が重なる場合はマージ順を整理
+
+### 任意の改善提案
+
+- `docs/harness/setup.md` に `VITE_TENANT_ID` の記載（tenant-config PR または follow-up）
+- マージ後 `platform-plugin-registry.md` を `design/archive/` へ移動
+
+---
+
 ## 2026-06-07 | feat/platform-branch-naming-harness | (テスト方針) | [PR #2](https://github.com/fress-dev/fress-crm-template/pull/2)
 
 | 項目 | 結果 |
