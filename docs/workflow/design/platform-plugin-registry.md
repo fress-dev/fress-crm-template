@@ -1,6 +1,6 @@
 # プラグインレジストリと Extension 契約
 
-> **status:** draft  
+> **status:** approved  
 > **層:** コア（platform）  
 > **ブランチ（予定）:** `feat/platform-plugin-registry`  
 > **最終更新:** 2026-06-07  
@@ -167,7 +167,7 @@ type TenantExtension = {
 
 | 日付 | 承認者 | 備考 |
 |------|--------|------|
-| | | |
+| 2026-06-09 | ユーザー依頼により実装着手 | platform-tenant-config 未マージのため TenantConfig は最小型 |
 
 ## 関連
 

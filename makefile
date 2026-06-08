@@ -97,9 +97,12 @@ supabase-deploy:
 	npx supabase db push
 	npx supabase functions deploy
 
-test-unit: test-app test-functions 
+test-unit: test-platform test-app test-functions
 
 test: test-unit
+
+test-platform:
+	npm run test:unit:platform
 
 test-app:
 	npm run test:unit:app
