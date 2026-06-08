@@ -1,5 +1,5 @@
 {
   "id": "default",
-  "plugins": [],
+  "plugins": ["stores"],
   "extensions": []
 }

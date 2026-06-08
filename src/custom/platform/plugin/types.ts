@@ -1,13 +1,29 @@
-/** プラグイン定義。業務画面・ルートは将来 PR で routes / resources を実装する */
+import type { ComponentType } from "react";
+
+/** react-admin Resource に渡す画面コンポーネント */
+export type PluginResourceProps = {
+  list?: ComponentType;
+  create?: ComponentType;
+  edit?: ComponentType;
+  show?: ComponentType;
+  recordRepresentation?: (record: Record<string, unknown>) => string;
+};
+
+export type PluginResourceDefinition = {
+  name: string;
+  props: PluginResourceProps;
+};
+
+/** プラグイン定義 */
 export type PluginDefinition = {
   id: string;
   description?: string;
   dependsOn?: string[];
   /** 将来: React Router のルート定義 */
   routes?: unknown;
-  /** 将来: react-admin Resource 定義 */
-  resources?: unknown;
-  /** 将来: Supabase migration ファイル名の一覧 */
+  /** react-admin Resource 定義 */
+  resources?: PluginResourceDefinition[];
+  /** Supabase migration ファイル名の一覧 */
   migrations?: string[];
 };
 

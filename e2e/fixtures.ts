@@ -26,6 +26,7 @@ const TABLES = [
   "deal_notes",
   "deals",
   "contacts",
+  "stores",
   "companies",
   "tags",
   "favicons_excluded_domains",

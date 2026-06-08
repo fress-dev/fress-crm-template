@@ -5,6 +5,8 @@ import englishMessages from "ra-language-english";
 import { raSupabaseEnglishMessages } from "ra-supabase-language-english";
 import { englishCrmMessages } from "@/components/atomic-crm/providers/commons/englishCrmMessages";
 
+import { storesPluginI18n } from "@/custom/plugins/stores/i18n";
+
 import { japaneseCrmMessages } from "./japaneseCrmMessages";
 
 /** Supabase 認証まわり（公式の日本語パッケージがないため custom で上書き） */
@@ -67,6 +69,7 @@ const japaneseCatalog = mergeTranslations(
   raSupabaseJapaneseMessagesOverride,
   raPlainJapaneseOverride,
   japaneseCrmMessages,
+  storesPluginI18n,
 );
 
 /** 本プロジェクトのデフォルトは日本語。ブラウザが en のときのみ英語を初期表示。 */

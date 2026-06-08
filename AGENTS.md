@@ -9,7 +9,7 @@
 - 注意: 一般的な「react-admin ベース」の解説は v1.5.0 以降は当てはまらない。shadcn-admin-kit の API を使うこと。
 
 ## コマンド（clone 後に Makefile / package.json で実際の定義を確認して更新すること）
-- 開発起動: `make start`（Vite dev server + ローカル Supabase + Postgres/Docker, http://localhost:5173/）
+- 開発起動: `make start` / `make dev`（Supabase 起動 + 未適用マイグレーション適用 + Vite, http://localhost:5173/）
 - ユニットテスト: `make test`
 - e2e テスト: `make test-e2e`
 - 型チェック: `npm run typecheck`（PR 前は `make pre-pr` に含まれる）

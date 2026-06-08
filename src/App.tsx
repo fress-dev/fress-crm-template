@@ -1,7 +1,7 @@
 import { localStorageStore } from "ra-core";
 import { useMemo } from "react";
 
-import { CRM } from "@/components/atomic-crm/root/CRM";
+import { FressCRM } from "@/custom/root/FressCRM";
 import { getDataProvider } from "@/components/atomic-crm/providers/supabase";
 
 import { bootstrapPlainJapaneseStore } from "@/custom/configuration/bootstrapPlainJapaneseStore";
@@ -30,7 +30,7 @@ const App = () => {
   );
 
   return (
-    <CRM
+    <FressCRM
       store={crmStore}
       dataProvider={dataProvider}
       i18nProvider={i18nProvider}
