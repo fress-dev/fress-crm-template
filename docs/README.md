@@ -7,7 +7,7 @@
 ```
 docs/
 ├── harness/          … AI 駆動ハーネス（設定・運用の把握）
-├── workflow/         … 開発手順・ブランチ・機能設計書
+├── workflow/         … 開発手順・ブランチ・調査・機能設計書
 ├── architecture/     … 技術方針（プラグイン層など）
 ├── product/          … 製品・利用者向け機能説明
 └── logs/             … 運用ログ（レビュー履歴）
@@ -29,6 +29,7 @@ docs/
 |-------------|------|
 | [workflow/development.md](./workflow/development.md) | 標準フロー（設計書 → 承認 → 開発 → PR） |
 | [workflow/branch-strategy.md](./workflow/branch-strategy.md) | ブランチ命名・並行開発 |
+| [workflow/research/README.md](./workflow/research/README.md) | 調査・要件定義の土台（Salus 等） |
 | [workflow/design/README.md](./workflow/design/README.md) | 機能設計書（実装前の承認用） |
 
 ### architecture/ — 技術方針
