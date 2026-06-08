@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 開発フロー（必須）
 
-新機能・拡張は AGENTS.md 末尾の「## 開発フロー」に従う。`feat/*` は [`docs/workflow/design/`](../docs/workflow/design/) に設計書（`approved`）を先に作成する（1 設計書 = 1 PR）。[`docs/workflow/design/archive/`](../docs/workflow/design/archive/) は参照しない。フェーズの状態は git ブランチと PR で表現する。
+新機能・拡張は AGENTS.md 末尾の「## 開発フロー」に従う。`feat/*` は [`docs/workflow/design/`](../../docs/workflow/design/) に設計書（`approved`）を先に作成する（1 設計書 = 1 PR）。[`docs/workflow/design/archive/`](../../docs/workflow/design/archive/) は参照しない。フェーズの状態は git ブランチと PR で表現する。
 
 ## ブランチ戦略
 
@@ -13,10 +13,10 @@ alwaysApply: true
 |----------|------|
 | `main` | 本番相当。**直接コミット・push 禁止** |
 | `develop` | 開発統合。日常の PR マージ先 |
-| `feat/platform-<内容>` | ベース・全業界共通。`develop` から作成 |
-| `feat/plugin-realestate-<内容>` | 不動産プラグインのみ |
-| `feat/plugin-beauty-<内容>` | 美容プラグインのみ |
-| `fix/<内容>` | バグ修正（業界問わず） |
+| `feat/platform-<内容>` | コア。`develop` から作成 |
+| `feat/plugin-<機能名>-<内容>` | プラグイン（**優先**） |
+| `feat/plugin-realestate-*` / `feat/plugin-beauty-*` | 機能名で切れない業界専用ドメインのみ |
+| `fix/<内容>` | バグ修正 |
 
 命名の詳細・並行開発: [`docs/workflow/branch-strategy.md`](../../docs/workflow/branch-strategy.md)。フックで commit / push / PR / ブランチ作成時に検証する。
 

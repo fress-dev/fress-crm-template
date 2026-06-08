@@ -1,6 +1,6 @@
 # <機能名>
 
-> **status:** draft | approved | implemented  
+> **status:** draft | approved  
 > **層:** コア | プラグイン | テナント設定 | カスタム層  
 > **ブランチ（予定）:** feat/platform-xxx / feat/plugin-xxx  
 > **最終更新:** YYYY-MM-DD

@@ -56,10 +56,9 @@ readonly: true
 
 ## 【両モード共通】Definition of Done
 
-1. `make test`（ユニット）が緑
+1. `make pre-pr` が緑（または `make test` + `npm run typecheck` + lint）
 2. 関連 e2e spec が緑（フル e2e は CI 任せ。`AGENTS.md` のテスト方針に合わせる）
-3. `npx tsc --noEmit` が通る
-4. コア保護パスの `git diff` が空
+3. コア保護パスの `git diff` が空
 
 ---
 
@@ -109,13 +108,15 @@ FAIL の場合は開発フェーズに戻して修正する。修正の実装は
 
 ---
 
-## レビューログへの追記（必須）
+## レビューログ（reviewer の役割）
 
-検査完了後、**メインエージェントまたは reviewer 自身** が [`docs/logs/review-log.md`](../../docs/logs/review-log.md) を更新する。
+reviewer は **readonly** のため [`docs/logs/review-log.md`](../../docs/logs/review-log.md) は編集しない。上記フォーマットで検査結果を返すだけ。
 
-1. 上記出力フォーマットの内容を、同ファイル先頭（説明直後）に **新しいエントリとして追記** する（新しいほど上）。
+**メインエージェント**がレビュー完了後にログを更新する:
+
+1. reviewer の出力を、同ファイル先頭（説明直後）に **新しいエントリとして追記** する（新しいほど上）。
 2. 見出し形式: `## YYYY-MM-DD | <ブランチ名> | <git rev-parse --short HEAD> | [PR #N](URL)`（PR 未作成時は PR 行を省略可）
 3. 「指摘・メモ（改善のタネ）」に、ハーネス改善につながりそうな気づきを1行でもよいので残す。
 4. `docs/logs/review-log.md` を **レビューと同じブランチにコミット** する（PR 作成前）。
 
-PR 本文には `scripts/pr-body-with-review.sh` で最新エントリが自動挿入される。手動の場合は先頭エントリを「エージェントレビュー」欄へ貼る。
+PR 本文には `scripts/pr-body-with-review.sh` で最新エントリが自動挿入される。

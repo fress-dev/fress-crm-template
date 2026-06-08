@@ -8,11 +8,10 @@ _この PR で何を解決・追加したか（縫い目で実現した理由を
 
 ## テスト
 
-_変更の確認手順_
+_ローカルは `make pre-pr` + 関連 e2e spec のみ。フル e2e は CI_
 
-- [ ] `make test`
-- [ ] `make test-e2e`
-- [ ] `npx tsc --noEmit`
+- [ ] `make pre-pr`
+- [ ] 関連 e2e spec（触った画面）: `npx playwright test e2e/<対象>.spec.ts`
 - [ ] `@reviewer` PASS（[docs/logs/review-log.md](../docs/logs/review-log.md) にエントリ追記済み）
 
 ## 補足

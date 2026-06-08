@@ -27,12 +27,14 @@
 
 ### 編集範囲の目安
 
-| プレフィックス | 主に触る場所 |
-|----------------|--------------|
-| `feat/platform-*` | `src/platform/**`（移行中は `src/custom/` の共通部分）、`App.tsx`、`tenants/`、共通 e2e/i18n |
-| `feat/plugin-<機能名>-*` | `src/plugins/<機能名>/**`、当該 migration |
-| `feat/plugin-realestate-*` | `src/plugins/realestate/**` または `src/plugins/properties/**` 等、不動産専用ドメイン |
-| `feat/plugin-beauty-*` | `src/plugins/beauty/**` または `src/plugins/treatments/**` 等、美容専用ドメイン |
+> **現状:** [AGENTS.md](../../AGENTS.md) に従い、新規コードは `src/custom/**`・`App.tsx`・新規 migration のみ。以下は platform 移行後の目安。
+
+| プレフィックス | 主に触る場所（将来の目安） |
+|----------------|---------------------------|
+| `feat/platform-*` | `src/platform/**`（現状は `src/custom/` の共通部分）、`App.tsx`、共通 e2e/i18n |
+| `feat/plugin-<機能名>-*` | `src/plugins/<機能名>/**`（現状は `src/custom/` 内の機能単位サブフォルダ） |
+| `feat/plugin-realestate-*` | 不動産専用ドメイン（現状は `src/custom/`） |
+| `feat/plugin-beauty-*` | 美容専用ドメイン（現状は `src/custom/`） |
 | `fix/*` | 縫い目内の修正（コア非変更の原則は同じ） |
 
 **1ブランチ = 1つのレビュー可能な単位。** ベース改修と業界プラグインを同じブランチに混ぜない。

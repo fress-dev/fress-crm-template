@@ -10,10 +10,10 @@
 |----------|------|
 | `main` | **本番相当**。直接コミット・push しない |
 | `develop` | 開発統合。日常の PR マージ先 |
-| `feat/platform-<内容>` | ベース・全業界共通 |
-| `feat/plugin-realestate-<内容>` | 不動産プラグインのみ |
-| `feat/plugin-beauty-<内容>` | 美容プラグインのみ |
-| `fix/<内容>` | バグ修正（業界問わず） |
+| `feat/platform-<内容>` | コア |
+| `feat/plugin-<機能名>-<内容>` | プラグイン（**優先**） |
+| `feat/plugin-realestate-*` / `feat/plugin-beauty-*` | 機能名で切れない業界専用ドメインのみ |
+| `fix/<内容>` | バグ修正 |
 
 詳細: [branch-strategy.md](./branch-strategy.md)（命名例・並行開発・編集範囲）
 
@@ -30,10 +30,10 @@ fix/zzz ────────────┘
 ```sh
 # 1. develop を最新にして作業ブランチを作成（プレフィックスを用途に合わせる）
 git checkout develop && git pull
-git checkout -b feat/platform-your-task-name   # ベース
-# git checkout -b feat/plugin-realestate-...   # 不動産
-# git checkout -b feat/plugin-beauty-...      # 美容
-# git checkout -b fix/...                      # バグ修正
+git checkout -b feat/platform-your-task-name      # コア
+# git checkout -b feat/plugin-appointments-form  # プラグイン（優先）
+# git checkout -b feat/plugin-realestate-...      # 業界専用ドメインのみ
+# git checkout -b fix/...                         # バグ修正
 
 # 2. 調査（@Explore）・設計書作成（docs/workflow/design/<機能名>.md、status: draft）
 
@@ -65,7 +65,7 @@ gh pr create --base develop --title "日本語の PR タイトル" \
 #    設計書を docs/workflow/design/archive/ へ移動（以降 AI は参照しない）
 ```
 
-コミット・PR・`src/custom/**` のソースコメントは日本語。詳細は [AGENTS.md](../AGENTS.md) の「## 言語・表記規約」。
+コミット・PR・`src/custom/**` のソースコメントは日本語。詳細は [AGENTS.md](../../AGENTS.md) の「## 言語・表記規約」。
 
 ## フェーズと担当
 

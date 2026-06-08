@@ -12,14 +12,17 @@
 - 開発起動: `make start`（Vite dev server + ローカル Supabase + Postgres/Docker, http://localhost:5173/）
 - ユニットテスト: `make test`
 - e2e テスト: `make test-e2e`
-- 型チェック: `npx tsc --noEmit`
+- 型チェック: `npm run typecheck`（PR 前は `make pre-pr` に含まれる）
 - DB マイグレーション適用: `make supabase-migrate-database`
 - Lint: `npm run lint`（定義を確認）
 
 ## ディレクトリ規約（最重要）
+
+**現状のルールが常に優先。** [`docs/architecture/plugin-architecture.md`](docs/architecture/plugin-architecture.md) の `src/platform/**`・`src/plugins/**`・`tenants/**` は将来の目標レイアウト。platform 移行 PR がマージされるまで、新規コードは `src/custom/**` に置く。
+
 - **エントリ**: `src/App.tsx`
 - **設定ハブ**: `src/root/CRM.tsx`（ドメイン設定。原則ここは「読む」だけ。変更が必要なら props 注入で）
-- **カスタム実装の置き場所**: `src/custom/`（無ければ作る）。新規コンポーネント・ページ・hooks・ロジックはすべてここ。
+- **カスタム実装の置き場所（現状）**: `src/custom/`（無ければ作る）。新規コンポーネント・ページ・hooks・ロジックはすべてここ。
 - **Supabase**: `supabase/migrations/` は **追加のみ**。
 
 ### 触ってはいけない（コア）
@@ -49,9 +52,9 @@
 
 `develop` から作業ブランチを手動で作成する。命名は次のいずれか:
 
-- `feat/platform-<内容>` … ベース・全業界共通
-- `feat/plugin-realestate-<内容>` … 不動産プラグイン
-- `feat/plugin-beauty-<内容>` … 美容プラグイン
+- `feat/platform-<内容>` … コア（レジストリ・テナント設定・組み立て）
+- `feat/plugin-<機能名>-<内容>` … プラグイン（**優先**。例: `feat/plugin-appointments-form`）
+- `feat/plugin-realestate-<内容>` / `feat/plugin-beauty-<内容>` … 機能名で切れない業界専用ドメインのみ
 - `fix/<内容>` … バグ修正
 
 **`main` は本番相当 — 直接コミットしない。** PR は作業ブランチ → `develop`。
@@ -63,10 +66,10 @@
 - カスタムは `src/custom/` と新規マイグレーションに隔離し、上流更新は rebase / merge で取り込める状態を維持する。
 
 ## テスト
-- ローカルでは `npx tsc --noEmit` と `make test` を基本とする。
-- e2e は触った画面の関連ファイルだけ単体で回す:
+- PR 前のローカルゲート: `make pre-pr`（Prettier / lint / `npm run typecheck` / unit / build）
+- e2e は触った画面の関連 spec だけ単体で回す:
     `npx playwright test e2e/<対象>.spec.ts`
-- 全 e2e・全ブラウザはローカルで回さない。PR 時に CI が実行する。
+- **フル e2e（`make test-e2e`）はローカル必須にしない。** PR 時に CI（`make test-e2e-ci`）が実行する。
 
 ## 道具作成の方針
 - 新しいスクリプト／CLI／管理ツールを勝手に作らない。
@@ -75,11 +78,10 @@
 
 ## 完了の定義（Definition of Done）
 作業を「完了」と宣言する前に、必ず以下を満たすこと:
-1. `make test` が緑（コアのテストが落ちていない＝コア挙動を壊していない）
-2. `npx tsc --noEmit` が通る
-3. 触った画面に関連する e2e spec をローカルで実行した（フル e2e は CI に任せる）
-4. コアパス（上記「触ってはいけない」）の `git diff` が空であることを確認する
-5. 変更点と「なぜ縫い目側で実現できたか」を1〜2行で要約する
+1. `make pre-pr` が緑（または同等: `make test` + `npm run typecheck` + lint）
+2. 触った画面に関連する e2e spec をローカルで実行した（フル e2e は CI に任せる）
+3. コアパス（上記「触ってはいけない」）の `git diff` が空であることを確認する
+4. 変更点と「なぜ縫い目側で実現できたか」を1〜2行で要約する
 
 ## 失敗時の学習（ハーネスの育て方）
 - エージェントが同じミスを2回したら、その防止策を本ファイルか `.cursor/rules/` に恒久ルールとして追記する。
@@ -95,7 +97,7 @@
 | 2 | 設計書 | **メインエージェント** | [`docs/workflow/design/<機能名>.md`](docs/workflow/design/) を `draft` で作成（必要なら @planner の分解を反映） |
 | 3 | 設計承認 | **人間** | 設計書を確認して OK。**ここで必ず一度止まる**。OK 後に `approved` に更新 |
 | 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する |
-| 5 | レビュー | **@reviewer**（差分モード） | 検査後、結果を [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
+| 5 | レビュー | **@reviewer** → **メインエージェント** | @reviewer は検査結果のみ返す（readonly）。メインが [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
 | 6 | テスト | **メインエージェント** | `make pre-pr` + 関連 e2e spec のみ（上記「## テスト」参照）。フル e2e は CI |
 | 7 | PR | **メインエージェント** | `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
 | 8 | マージ承認 | **人間** | PR を確認してマージ。設計書を `docs/workflow/design/archive/` へ移動 |

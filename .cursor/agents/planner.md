@@ -38,9 +38,9 @@ readonly: true
 
 | 種別 | プレフィックス | 例 |
 |------|----------------|-----|
-| ベース・全業界共通 | `feat/platform-<内容>` | `feat/platform-plugin-registry` |
-| 不動産プラグイン | `feat/plugin-realestate-<内容>` | `feat/plugin-realestate-properties` |
-| 美容プラグイン | `feat/plugin-beauty-<内容>` | `feat/plugin-beauty-appointments` |
+| コア | `feat/platform-<内容>` | `feat/platform-plugin-registry` |
+| プラグイン（優先） | `feat/plugin-<機能名>-<内容>` | `feat/plugin-appointments-form` |
+| 業界専用ドメイン | `feat/plugin-realestate-*` / `feat/plugin-beauty-*` | `feat/plugin-realestate-property-list` |
 | バグ修正 | `fix/<内容>` | `fix/dashboard-date-tz` |
 
 platform と plugin を**同一ブランチにまとめない**。詳細: `docs/workflow/branch-strategy.md`
@@ -69,9 +69,9 @@ platform と plugin を**同一ブランチにまとめない**。詳細: `docs/
 
 タスク分解（縦切り順）:
 1. [タスク名]
-   - 推奨ブランチ: feat/platform-... / feat/plugin-realestate-... / feat/plugin-beauty-... / fix/...
+   - 推奨ブランチ: feat/platform-... / feat/plugin-<機能名>-... / feat/plugin-realestate-... / fix/...
    - 使う縫い目: props注入 / コンポーネント差し替え / カスタムフィールド / カスタムページ / Supabase追加
-   - 触るファイル（platform は共通層、plugin は各 plugins/ 配下 or 新規マイグレーション）
+   - 触るファイル（現状は `src/custom/**`・`App.tsx`・新規 migration）
    - DB変更: あり（db-migrator へ・概要）/ なし
    - i18n: 必要な訳キー / なし
    - RLS: 必要 / 不要

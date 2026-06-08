@@ -83,7 +83,7 @@ flowchart LR
 | 種類 | 場所 | 内容 |
 |------|------|------|
 | ルール | `.cursor/rules/*.mdc` | フロー・コア保護・日本語規約 |
-| フック | `.cursor/hooks/workflow-gate-shell.sh` | ブランチ名・main 直コミット禁止 |
+| フック | `.cursor/hooks/workflow-gate-shell.sh` | main 直 commit/push 禁止・develop 起点・命名・PR base 検証 |
 | CI | `.github/workflows/check.yml` | lint / test / e2e |
 | スクリプト | `scripts/pre-pr-check.sh` 等 | PR 前チェック・PR 本文生成 |
 
