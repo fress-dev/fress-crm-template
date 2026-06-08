@@ -164,6 +164,12 @@ export const ContactListFilterWithStore = () => {
       </FilterCategory>
 
       <FilterCategory icon={<Store />} label="resources.stores.name">
+        <ToggleFilterButton
+          className="w-full justify-between h-10 md:h-8"
+          label="resources.contacts.filters.no_store"
+          value={{ "store_id@is": null }}
+          size={isMobile ? "lg" : undefined}
+        />
         {stores?.map((record) => (
           <ToggleFilterButton
             className="w-full justify-between h-10 md:h-8"
@@ -284,6 +290,12 @@ export const ContactListFilterSummaryWithStore = () => {
         className="w-auto justify-between h-8"
         label="resources.contacts.filters.managed_by_me"
         value={{ sales_id: identity?.id }}
+      />
+
+      <ActiveFilterButton
+        className="w-auto justify-between h-8"
+        label="resources.contacts.filters.no_store"
+        value={{ "store_id@is": null }}
       />
 
       {stores?.map((record) => (

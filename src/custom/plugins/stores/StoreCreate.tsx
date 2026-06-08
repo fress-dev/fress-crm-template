@@ -3,13 +3,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CancelButton } from "@/components/admin/cancel-button";
 import { SaveButton } from "@/components/admin/form";
 
-import { StoreInputs } from "./StoreInputs";
+import { cleanupStoreForSave, StoreInputs } from "./StoreInputs";
 
 export const StoreCreate = () => {
   const translate = useTranslate();
 
   return (
-    <CreateBase redirect="list">
+    <CreateBase redirect="show" transform={cleanupStoreForSave}>
       <div className="mt-2 flex lg:mr-72">
         <div className="flex-1">
           <Form>

@@ -38,6 +38,10 @@ const overrides: Array<{ pattern: RegExp; replacement: string }> = [
     pattern: /atomic-crm\/contacts\/ContactListFilter\.tsx$/,
     replacement: "src/custom/plugins/stores/ContactListFilter.tsx",
   },
+  {
+    pattern: /atomic-crm\/layout\/MobileNavigation\.tsx$/,
+    replacement: "src/custom/layout/FressMobileNavigation.tsx",
+  },
 ];
 
 const resolveCandidate = (source: string, importer: string, root: string) => {
