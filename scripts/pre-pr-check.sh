@@ -15,6 +15,7 @@ echo "==> Typecheck"
 npm run typecheck
 
 echo "==> Unit tests"
+npm run test:unit:platform
 npm run test:unit:app
 
 echo "==> Build"
