@@ -43,7 +43,7 @@ readonly: true
 | 業界専用ドメイン | `feat/plugin-realestate-*` / `feat/plugin-beauty-*` | `feat/plugin-realestate-property-list` |
 | バグ修正 | `fix/<内容>` | `fix/dashboard-date-tz` |
 
-platform と plugin を**同一ブランチにまとめない**。詳細: `docs/workflow/branch-strategy.md`
+platform と plugin を**同一ブランチにまとめない**。`feat/plugin-*` にハーネス変更も含めない（必要なら `feat/platform-harness-*` で別 PR）。詳細: `docs/workflow/branch-strategy.md`
 
 ## 進め方
 1. 要望を確認し、不明点があれば**1つだけ**質問してから進める。
