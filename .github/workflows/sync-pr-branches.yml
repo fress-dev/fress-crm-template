@@ -1,0 +1,46 @@
+# develop 更新時に、develop 向けのオープン PR へ develop をマージする。
+# 設計書・調査ドキュメントのコンフリクトのみ自動解消（feature ブランチ側を優先）。
+name: Sync PR branches with develop
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: オープン PR に develop をマージ
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          prs="$(gh pr list --base develop --state open --json number,headRefName --jq '.[] | "\(.number) \(.headRefName)"')"
+          if [[ -z "$prs" ]]; then
+            echo "オープン PR なし"
+            exit 0
+          fi
+          while read -r number head; do
+            [[ -z "$number" ]] && continue
+            echo "==> PR #${number} (${head})"
+            git fetch origin "${head}" develop
+            git checkout -B "${head}" "origin/${head}"
+            chmod +x scripts/merge-develop-resolve-docs.sh
+            if ./scripts/merge-develop-resolve-docs.sh; then
+              git push origin "${head}"
+              gh pr comment "${number}" --body "🤖 \`develop\` をマージしました（[sync-pr-branches workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})）。"
+            else
+              gh pr comment "${number}" --body "⚠️ \`develop\` のマージでコンフリクトが残りました。手動解消が必要です。"
+            fi
+            git checkout develop
+          done <<< "$prs"

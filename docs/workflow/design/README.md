@@ -57,7 +57,7 @@
 | 設計書 | 層 | status | 備考 |
 |--------|-----|--------|------|
 | [platform-tenant-config.md](./platform-tenant-config.md) | コア（platform） | **draft** | **noexcuse CRM** 表示・テナント JSON。先に承認 |
-| [platform-plugin-registry.md](./platform-plugin-registry.md) | コア（platform） | **approved** | 本 PR で実装 |
+| [platform-plugin-registry.md](./platform-plugin-registry.md) | コア（platform） | **approved** | 本 PR で実装済み |
 | [plugin-stores.md](./plugin-stores.md) | プラグイン | **draft** | 船橋店・千葉店等。Phase 2 で店舗権限 |
 
 ## 関連
