@@ -17,6 +17,8 @@
 
 詳細: [branch-strategy.md](./branch-strategy.md)（命名例・並行開発・編集範囲）
 
+**プラグイン PR の分離:** `feat/plugin-*` では platform（ベース）とハーネス設定を一緒に変更しない。必要なら別ブランチ・別 PR。platform を先に `develop` へマージしてから plugin を着手する。
+
 ```
 feat/platform-xxx ──┐
 feat/plugin-*-yyy ──┼──PR──► develop ──（リリース時）──► main

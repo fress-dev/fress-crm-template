@@ -138,7 +138,7 @@ docs に書いてあるがフックで止められない項目があれば **FAI
 - **アーキテクチャ整合性**：[`docs/architecture/plugin-architecture.md`](../../docs/architecture/plugin-architecture.md) と実装・docs の層の説明が一致しているか。
 - **設計・ハーネス運用**：[`docs/harness/README.md`](../../docs/harness/README.md)・[`docs/workflow/design/README.md`](../../docs/workflow/design/README.md) — 1PR=1設計書・archive 非参照の運用か。
 - **コア⇄customの境界**：上流追従を妨げる結合がないか。
-- **git / ブランチ運用**：platform と plugin の変更が1 PR に混在していないか。
+- **git / ブランチ運用**：platform と plugin の変更が1 PR に混在していないか。`feat/plugin-*` にハーネス（`AGENTS.md`、`.cursor/`、`docs/harness/`、`scripts/workflow-gate*`）や platform 用パス（`src/custom/platform/`、`tenants/`）の変更が含まれていないか — 含まれる場合は **要修正**（別 PR に分離）。
 - **CI / パイプライン**：`.github/workflows/*` が test / e2e / typecheck をゲートしているか。
 - **依存関係**：不要・脆弱な依存が増えていないか。
 

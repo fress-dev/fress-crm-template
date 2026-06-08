@@ -39,6 +39,33 @@
 
 **1ブランチ = 1つのレビュー可能な単位。** ベース改修と業界プラグインを同じブランチに混ぜない。
 
+## PR の分離（プラグイン開発時）
+
+`feat/plugin-*` の PR では、**ベース（platform）とハーネス設定を一緒に変更しない。** 必要なら別ブランチ・別 PR に分ける。
+
+| PR の種類 | ブランチ例 | 主に触るパス |
+|----------|-----------|-------------|
+| プラグイン | `feat/plugin-stores-master` | 当該プラグイン配下、`App.tsx` は原則触らない |
+| ベース（platform） | `feat/platform-plugin-registry` | `src/custom/platform/`、`tenants/`、`App.tsx` の組み立て |
+| ハーネス | `feat/platform-harness-*` | `AGENTS.md`、`.cursor/`、`scripts/workflow-gate*`、`docs/harness/` |
+
+### 混在禁止
+
+| 混ぜない組み合わせ | 理由 |
+|-------------------|------|
+| `feat/plugin-*` + `feat/platform-*` の変更 | レビュー・ロールバック・依存順序が崩れる |
+| `feat/plugin-*` + ハーネス変更 | 全 PR に効く設定が業務 PR に紛れ込む |
+
+### プラグインが platform の土台を要するとき
+
+1. **先に** platform PR を `develop` へマージする（推奨）
+2. その後、plugin ブランチを `develop` から（または rebase して）切る
+3. 「ついでに registry も直す」「ついでに AGENTS も直す」は **別 PR** にする
+
+### ハーネス PR の命名
+
+ハーネス専用の変更は `feat/platform-harness-<内容>` を使う（例: `feat/platform-harness-reviewer-plugin-isolation`）。`fix/*` は単純なバグ修正のみ。
+
 ## 作成例
 
 ```sh
