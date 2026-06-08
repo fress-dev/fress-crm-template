@@ -8,6 +8,7 @@ export const storesPlugin: PluginDefinition = {
   migrations: [
     "20260607120000_stores_plugin.sql",
     "20260609120000_stores_validation.sql",
+    "20260609140000_contacts_summary_store_id.sql",
   ],
   resources: [{ name: "stores", props: storesResource }],
 };

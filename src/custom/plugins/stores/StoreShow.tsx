@@ -10,6 +10,7 @@ import {
 } from "ra-core";
 import { useEffect, useState } from "react";
 
+import { countContactsForStore } from "./countContactsForStore";
 import { StoreDeleteButton } from "./StoreDeleteButton";
 import type { Store } from "./types";
 
@@ -21,13 +22,7 @@ const StoreContactCount = () => {
 
   useEffect(() => {
     if (!record?.id) return;
-    void dataProvider
-      .getList("contacts", {
-        filter: { store_id: record.id },
-        pagination: { page: 1, perPage: 1 },
-        sort: { field: "id", order: "ASC" },
-      })
-      .then(({ total }) => setCount(total ?? 0));
+    void countContactsForStore(dataProvider, record.id).then(setCount);
   }, [dataProvider, record?.id]);
 
   if (count === null) return null;
