@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: 変更の検査役。既定は直近差分のレビュー。「総合レビュー」「architecture review」「全体を見て」と頼まれたら横断モードで設計・依存・パイプラインまで見る。コードは修正せず検査結果だけを返す。開発フローの review フェーズで使う。
+description: 変更の検査役。既定は直近差分のレビュー。ハーネス関連ファイルの変更時は総合モード必須。「総合レビュー」「architecture review」「全体を見て」でも総合モード。コードは修正せず検査結果だけを返す。開発フローの review フェーズで使う。
 model: inherit
 readonly: true
 ---
@@ -15,10 +15,34 @@ readonly: true
 
 ## 2つのモード
 
-- **差分モード（既定）**：直近の変更（縦切り1本）の差分を検査する。
-- **総合モード**：「総合レビュー」「全体を見て」「architecture review」等と指示された
-  ときに発動。差分だけでなく、横断的な整合性まで見る。
-  どちらのモードでも、まず冒頭にどちらで実行したかを明記する。
+- **差分モード（既定）**：直近の変更（縦切り1本）の差分を検査する。`src/custom/**` やアプリ実装が中心の PR 向け。
+- **総合モード**：ハーネス・docs・ルール・フックの横断整合性を検査する。**下記の発火条件のいずれかで必須。**
+  どちらのモードでも、まず冒頭に **モード名と発火理由** を明記する。
+
+### 総合モードの発火条件（いずれかで必須）
+
+次の **A または B** に該当するときは、依頼の言い方に関わらず **総合モードでレビューする**。
+差分モードのみで PASS としない。
+
+**A. 変更パス（ハーネス変更）** — `git diff develop...HEAD` に次のいずれかが含まれる:
+
+| パス | 例 |
+|------|-----|
+| `AGENTS.md` | マスター指示 |
+| `.cursor/agents/**` | reviewer / planner 等 |
+| `.cursor/rules/**` | development-workflow / core-protection 等 |
+| `.cursor/hooks/**` | workflow-gate-shell.sh |
+| `.github/pull_request_template.md` | PR テンプレート |
+| `docs/harness/**` | ハーネス把握用 |
+| `docs/workflow/**`（`design/archive/` を除く） | 手順・ブランチ・設計フロー |
+| `docs/architecture/**` | プラグイン方針 |
+| `scripts/pr-body-with-review.sh` | レビューログ連携 |
+
+**B. 明示依頼** — 人間またはメインエージェントが次のいずれかを含む:
+
+- 「総合レビュー」「全体を見て」「architecture review」「ハーネス整合性」
+
+メインエージェントは、上記 A に該当する PR では `@reviewer` 呼び出し時に **「総合レビュー。ハーネス横断の整合性を見て」** と依頼文に含める。
 
 ---
 
@@ -64,10 +88,57 @@ readonly: true
 
 ## 【総合モードのみ】横断的な検査
 
-- **アーキテクチャ整合性**：`src/custom/` 内の構造が一貫しているか。[`docs/architecture/plugin-architecture.md`](../../docs/architecture/plugin-architecture.md)（コア・プラグイン・テナント設定・カスタム層）に沿っているか。
-- **設計・ハーネス運用**：[`docs/harness/README.md`](../../docs/harness/README.md)・[`docs/workflow/design/README.md`](../../docs/workflow/design/README.md) と AGENTS.md / rules / フックの記述が矛盾していないか。設計書は 1PR=1本・マージ後 archive・archive 非参照の運用か。
+総合モードでは、差分に加え **複数ファイルを突き合わせる**。表の各項目を確認し、出力フォーマットに結果を記載する。
+
+### 1. 単一の正（AGENTS.md）
+
+- [`AGENTS.md`](../../AGENTS.md) を正とし、rules / docs / エージェント指示 / PR テンプレートと **矛盾がないか**。
+- **ディレクトリ規約**：現状は `src/custom/**` が正。`docs/architecture/` や `branch-strategy` の将来パス（`src/platform/**` 等）と AGENTS の「触ってよい」が食い違っていないか。
+- **ブランチ命名**：`feat/plugin-<機能名>-*` 優先が AGENTS / rules / planner / docs で一致しているか（`plugin-realestate` 中心の旧表記が残っていないか）。
+
+### 2. DoD・テスト方針の一致
+
+次がすべて同じ方針か（ローカル: `make pre-pr` + 関連 e2e spec のみ。フル e2e は CI）:
+
+- `AGENTS.md`（テスト・DoD）
+- `.cursor/rules/core-protection.mdc`
+- `.github/pull_request_template.md`
+- `reviewer.md` 自身の DoD 節
+
+型チェックは **`npm run typecheck`**（`make pre-pr` 内）で統一されているか。`npx tsc --noEmit` だけを要求する記述が残っていないか。
+
+### 3. フックと docs の実効性
+
+[`workflow-gate-shell.sh`](../../.cursor/hooks/workflow-gate-shell.sh) の実装と、docs / AGENTS の記述が **実際に守れるレベルで一致** しているか。少なくとも次をスクリプト上で確認する:
+
+| docs の約束 | フックで検証されているか |
+|-------------|-------------------------|
+| `main` への直接 commit 禁止 | `main` 上の `git commit` を deny |
+| `main` への push 禁止（`git push` 含む） | `main` 上の `git push` 全般を deny |
+| 作業ブランチから `main` への push 禁止 | `HEAD:main` / `origin main` 等を deny |
+| PR base は `develop` のみ | `--base main` 等を deny。`--base develop` のみ allow |
+| 作業ブランチは `develop` 起点 | `develop` 以外からの `checkout -b feat/*` を deny（明示 `... develop` は可） |
+| 命名規則 `feat/platform-*` / `feat/plugin-*` / `fix/*` | `is_valid_work_branch` と一致 |
+
+docs に書いてあるがフックで止められない項目があれば **FAIL**（または重大な指摘）とする。
+
+### 4. リンク・パス
+
+- `.cursor/rules/*.mdc` から `docs/` への相対リンクが正しいか（`../docs/` と `../../docs/` の取り違え）。
+- `docs/workflow/*.md` から `AGENTS.md` へのリンクが `../../AGENTS.md` か。
+- 設計書 `_template.md` の `status` が [design/README.md](../../docs/workflow/design/README.md) の定義（`draft` | `approved`）と一致しているか。
+
+### 5. レビュー運用の自己矛盾
+
+- 本ファイル（reviewer）が `readonly: true` なのに、reviewer 自身が `review-log` を編集する指示が残っていないか。
+- メインが `review-log` に PASS を書くとき、**本 reviewer の出力フォーマットを省略していないか**（要約だけの自己申告 PASS は指摘）。
+
+### 6. その他（従来の総合観点）
+
+- **アーキテクチャ整合性**：[`docs/architecture/plugin-architecture.md`](../../docs/architecture/plugin-architecture.md) と実装・docs の層の説明が一致しているか。
+- **設計・ハーネス運用**：[`docs/harness/README.md`](../../docs/harness/README.md)・[`docs/workflow/design/README.md`](../../docs/workflow/design/README.md) — 1PR=1設計書・archive 非参照の運用か。
 - **コア⇄customの境界**：上流追従を妨げる結合がないか。
-- **git / ブランチ運用**：ブランチ名が `feat/platform-*` / `feat/plugin-*` / `fix/*` に合っているか。platform と plugin の変更が1 PR に混在していないか。コア保護パスに紛れ込んだ差分がないか。
+- **git / ブランチ運用**：platform と plugin の変更が1 PR に混在していないか。
 - **CI / パイプライン**：`.github/workflows/*` が test / e2e / typecheck をゲートしているか。
 - **依存関係**：不要・脆弱な依存が増えていないか。
 
@@ -82,6 +153,7 @@ readonly: true
 
 ```
 モード: 差分 / 総合
+発火理由: （例: ハーネス変更 — AGENTS.md + workflow-gate-shell.sh / 明示依頼「総合レビュー」）
 判定: PASS / FAIL
 
 コア保護: OK / NG（該当ファイルと行）
@@ -90,7 +162,12 @@ CRM観点（RLS / i18n / Query）: 各 OK / 指摘あり
 言語規約（コメント / コミット / PR）: OK / 指摘あり
 DoD: 各項目 ✓ / ✗
 
-【総合モードのみ】
+【総合モードのみ — すべて記載】
+AGENTS基準の横断一致: OK / 指摘
+DoD・テスト方針の一致: OK / 指摘
+フックとdocsの実効性: OK / 指摘（未検証の禁止事項があれば列挙）
+リンク・パス: OK / 指摘
+レビュー運用の自己矛盾: OK / 指摘
 アーキ整合性: OK / 指摘
 コア境界・上流追従: OK / 指摘
 git運用: OK / 指摘
@@ -116,7 +193,9 @@ reviewer は **readonly** のため [`docs/logs/review-log.md`](../../docs/logs/
 
 1. reviewer の出力を、同ファイル先頭（説明直後）に **新しいエントリとして追記** する（新しいほど上）。
 2. 見出し形式: `## YYYY-MM-DD | <ブランチ名> | <git rev-parse --short HEAD> | [PR #N](URL)`（PR 未作成時は PR 行を省略可）
-3. 「指摘・メモ（改善のタネ）」に、ハーネス改善につながりそうな気づきを1行でもよいので残す。
-4. `docs/logs/review-log.md` を **レビューと同じブランチにコミット** する（PR 作成前）。
+3. **総合モードのとき**は、上記出力フォーマットの「【総合モードのみ】」欄を **省略せず** 転記する。要約だけの PASS は不可。
+4. ハーネス変更 PR（発火条件 A）で総合モードを経ずに PASS にしない。
+5. 「指摘・メモ（改善のタネ）」に、ハーネス改善につながりそうな気づきを1行でもよいので残す。
+6. `docs/logs/review-log.md` を **レビューと同じブランチにコミット** する（PR 作成前）。
 
 PR 本文には `scripts/pr-body-with-review.sh` で最新エントリが自動挿入される。
