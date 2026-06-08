@@ -13,7 +13,7 @@ _変更の確認手順_
 - [ ] `make test`
 - [ ] `make test-e2e`
 - [ ] `npx tsc --noEmit`
-- [ ] `@reviewer` PASS（[docs/review-log.md](../docs/review-log.md) にエントリ追記済み）
+- [ ] `@reviewer` PASS（[docs/logs/review-log.md](../docs/logs/review-log.md) にエントリ追記済み）
 
 ## 補足
 

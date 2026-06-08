@@ -57,7 +57,7 @@ readonly: true
 ## 【両モード共通】Definition of Done
 
 1. `make test`（ユニット）が緑
-2. `make test-e2e` が緑
+2. 関連 e2e spec が緑（フル e2e は CI 任せ。`AGENTS.md` のテスト方針に合わせる）
 3. `npx tsc --noEmit` が通る
 4. コア保護パスの `git diff` が空
 
@@ -65,11 +65,17 @@ readonly: true
 
 ## 【総合モードのみ】横断的な検査
 
-- **アーキテクチャ整合性**：`src/custom/` 内の構造が一貫しているか。
+- **アーキテクチャ整合性**：`src/custom/` 内の構造が一貫しているか。[`docs/architecture/plugin-architecture.md`](../../docs/architecture/plugin-architecture.md)（コア・プラグイン・テナント設定・カスタム層）に沿っているか。
+- **設計・ハーネス運用**：[`docs/harness/README.md`](../../docs/harness/README.md)・[`docs/workflow/design/README.md`](../../docs/workflow/design/README.md) と AGENTS.md / rules / フックの記述が矛盾していないか。設計書は 1PR=1本・マージ後 archive・archive 非参照の運用か。
 - **コア⇄customの境界**：上流追従を妨げる結合がないか。
 - **git / ブランチ運用**：ブランチ名が `feat/platform-*` / `feat/plugin-*` / `fix/*` に合っているか。platform と plugin の変更が1 PR に混在していないか。コア保護パスに紛れ込んだ差分がないか。
 - **CI / パイプライン**：`.github/workflows/*` が test / e2e / typecheck をゲートしているか。
 - **依存関係**：不要・脆弱な依存が増えていないか。
+
+## 【差分モード】設計書が PR に含まれる場合
+
+- `docs/workflow/design/*.md`（draft/approved）と実装のスコープ・層の割り当てが一致しているか。
+- マージ後に `docs/workflow/design/archive/` へ移動する想定か（`archive/` を実装参照に使っていないか）。
 
 ---
 
@@ -105,11 +111,11 @@ FAIL の場合は開発フェーズに戻して修正する。修正の実装は
 
 ## レビューログへの追記（必須）
 
-検査完了後、**メインエージェントまたは reviewer 自身** が [`docs/review-log.md`](../../docs/review-log.md) を更新する。
+検査完了後、**メインエージェントまたは reviewer 自身** が [`docs/logs/review-log.md`](../../docs/logs/review-log.md) を更新する。
 
 1. 上記出力フォーマットの内容を、同ファイル先頭（説明直後）に **新しいエントリとして追記** する（新しいほど上）。
 2. 見出し形式: `## YYYY-MM-DD | <ブランチ名> | <git rev-parse --short HEAD> | [PR #N](URL)`（PR 未作成時は PR 行を省略可）
 3. 「指摘・メモ（改善のタネ）」に、ハーネス改善につながりそうな気づきを1行でもよいので残す。
-4. `docs/review-log.md` を **レビューと同じブランチにコミット** する（PR 作成前）。
+4. `docs/logs/review-log.md` を **レビューと同じブランチにコミット** する（PR 作成前）。
 
 PR 本文には `scripts/pr-body-with-review.sh` で最新エントリが自動挿入される。手動の場合は先頭エントリを「エージェントレビュー」欄へ貼る。

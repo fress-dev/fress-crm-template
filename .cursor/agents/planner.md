@@ -43,7 +43,7 @@ readonly: true
 | 美容プラグイン | `feat/plugin-beauty-<内容>` | `feat/plugin-beauty-appointments` |
 | バグ修正 | `fix/<内容>` | `fix/dashboard-date-tz` |
 
-platform と plugin を**同一ブランチにまとめない**。詳細: `docs/branch-strategy.md`
+platform と plugin を**同一ブランチにまとめない**。詳細: `docs/workflow/branch-strategy.md`
 
 ## 進め方
 1. 要望を確認し、不明点があれば**1つだけ**質問してから進める。

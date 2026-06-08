@@ -39,9 +39,13 @@
 4. Supabase 側は新規テーブル・ビュー・RLS ポリシー・Edge Function の **追加** で対応
 5. 上記で不可能な場合のみ、コア変更を提案し **必ず人間の承認を得てから** 着手する
 
+プラグイン・テナント設定・カスタム層の設計判断に迷ったら [`docs/architecture/plugin-architecture.md`](docs/architecture/plugin-architecture.md) を先に読む。
+
+機能実装の依頼を受けたら、**先に [`docs/workflow/design/`](docs/workflow/design/) に設計書を書く**（[_template.md`](docs/workflow/design/_template.md) を使用）。**1 設計書 = 1 PR**。大きな依頼は分割案を提示してから各設計書を draft で作成する。`status: approved` になるまで**実装しない**。マージ後は設計書を `docs/workflow/design/archive/` へ移動し、以降**参照しない**（改修はコード優先）。`docs/workflow/design/archive/` は読まない。`fix/*` の単純修正は除外可。
+
 ## 標準開発フロー
 
-新機能・拡張は **調査 → 計画 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
+新機能・拡張は **調査 → 設計書 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
 
 `develop` から作業ブランチを手動で作成する。命名は次のいずれか:
 
@@ -52,7 +56,7 @@
 
 **`main` は本番相当 — 直接コミットしない。** PR は作業ブランチ → `develop`。
 
-詳細: [`docs/branch-strategy.md`](docs/branch-strategy.md)、[`docs/development-workflow.md`](docs/development-workflow.md)
+詳細: [`docs/harness/README.md`](docs/harness/README.md)、[`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)、[`docs/workflow/development.md`](docs/workflow/development.md)
 
 ## 上流追従
 - 上流を `upstream` リモートとして保持する。
@@ -88,18 +92,18 @@
 | # | フェーズ | 担当 | 内容 |
 |---|----------|------|------|
 | 1 | 調査 | **@Explore**（ビルトイン） | 現状を調べる。実装はしない |
-| 2 | 計画 | **@planner** | 縦切り単位にタスクを分解する |
-| 3 | 承認 | **人間** | 計画を確認して OK を出す。**ここで必ず一度止まる** |
-| 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する（platform / plugin で編集範囲を分ける） |
-| 5 | レビュー | **@reviewer**（差分モード） | 検査後、結果を [`docs/review-log.md`](docs/review-log.md) 先頭に追記してコミットする |
+| 2 | 設計書 | **メインエージェント** | [`docs/workflow/design/<機能名>.md`](docs/workflow/design/) を `draft` で作成（必要なら @planner の分解を反映） |
+| 3 | 設計承認 | **人間** | 設計書を確認して OK。**ここで必ず一度止まる**。OK 後に `approved` に更新 |
+| 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する |
+| 5 | レビュー | **@reviewer**（差分モード） | 検査後、結果を [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
 | 6 | テスト | **メインエージェント** | `make pre-pr` + 関連 e2e spec のみ（上記「## テスト」参照）。フル e2e は CI |
-| 7 | PR | **メインエージェント** | `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"` で PR を作成する（レビュー欄を含む） |
-| 8 | マージ承認 | **人間** | PR を確認してマージする |
+| 7 | PR | **メインエージェント** | `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
+| 8 | マージ承認 | **人間** | PR を確認してマージ。設計書を `docs/workflow/design/archive/` へ移動 |
 
 ### 補足
 
 - **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/platform-*` / `feat/plugin-*` / `fix/*` → PR → `develop`）。
-- **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/branch-strategy.md`](docs/branch-strategy.md)。
+- **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)。
 - **サブエージェント（@Explore / @planner / @reviewer 等）は `.cursor/rules` を継承しない。** コア保護の要点は本ファイル（および各 `.cursor/agents/*.md`）に記載されている前提で動くこと。
 - DB 変更が必要な場合は **@db-migrator** を開発フェーズで呼び出す（追加専用マイグレーションのみ）。
 

@@ -33,7 +33,7 @@ make start-app               # start-supabase 済みなら
 
 GitHub の「Use this template」からリポジトリを作成するか、fork 後に `origin` を自分のリポジトリ URL に差し替えてください。
 
-拡張ルールは [AGENTS.md](./AGENTS.md)、開発フローは [docs/development-workflow.md](./docs/development-workflow.md)、ハーネス全体は [docs/ai-development-harness.md](./docs/ai-development-harness.md) を参照。
+拡張ルールは [AGENTS.md](./AGENTS.md)、開発フローは [docs/workflow/development.md](./docs/workflow/development.md)、ハーネス全体は [docs/harness/README.md](./docs/harness/README.md) を参照。
 
 ---
 

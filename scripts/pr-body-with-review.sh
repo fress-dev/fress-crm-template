@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# PR 本文テンプレート + docs/review-log.md の最新エントリを結合して stdout に出力する
+# PR 本文テンプレート + docs/logs/review-log.md の最新エントリを結合して stdout に出力する
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TEMPLATE="${ROOT}/.github/pull_request_template.md"
-REVIEW_LOG="${ROOT}/docs/review-log.md"
+REVIEW_LOG="${ROOT}/docs/logs/review-log.md"
 
 if [[ ! -f "$TEMPLATE" ]]; then
   echo "テンプレートが見つかりません: $TEMPLATE" >&2
@@ -33,6 +33,6 @@ cat "$TEMPLATE"
 echo ""
 echo "## エージェントレビュー"
 echo ""
-echo "詳細ログ: [docs/review-log.md](../docs/review-log.md)"
+echo "詳細ログ: [docs/logs/review-log.md](../docs/logs/review-log.md)"
 echo ""
 echo "$latest"

@@ -9,7 +9,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 MAIN_BRANCH="${MAIN_BRANCH:-main}"
 DEVELOP_BRANCH="${DEVELOP_BRANCH:-develop}"
 
-BRANCH_NAMING_HELP=$'許可される作業ブランチ:\n  feat/platform-<内容>          … ベース・全業界共通\n  feat/plugin-realestate-<内容> … 不動産プラグイン\n  feat/plugin-beauty-<内容>     … 美容プラグイン\n  fix/<内容>                    … バグ修正\n\ndevelop から作成し、PR は --base develop で。詳細: docs/branch-strategy.md'
+BRANCH_NAMING_HELP=$'許可される作業ブランチ:\n  feat/platform-<内容>       … コア（レジストリ・テナント設定）\n  feat/plugin-<機能名>-<内容> … プラグイン（appointments 等）\n  feat/plugin-realestate-* / feat/plugin-beauty-* … 業界専用ドメインのみ\n  fix/<内容>                 … バグ修正\n\ndevelop から作成し、PR は --base develop で。詳細: docs/workflow/branch-strategy.md'
 
 allow() {
   echo '{"permission":"allow"}'
@@ -37,8 +37,7 @@ ask() {
 is_valid_work_branch() {
   local b="$1"
   [[ "$b" =~ ^feat/platform-.+ ]] && return 0
-  [[ "$b" =~ ^feat/plugin-realestate-.+ ]] && return 0
-  [[ "$b" =~ ^feat/plugin-beauty-.+ ]] && return 0
+  [[ "$b" =~ ^feat/plugin-.+ ]] && return 0
   [[ "$b" =~ ^fix/.+ ]] && return 0
   return 1
 }
