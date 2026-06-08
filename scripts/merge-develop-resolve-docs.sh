@@ -47,6 +47,7 @@ while IFS= read -r file; do
   if [[ "$allowed" != true ]]; then
     echo "❌ 自動解消対象外のコンフリクト: $file" >&2
     echo "   手動で解消してください" >&2
+    git merge --abort 2>/dev/null || true
     exit 1
   fi
 done <<< "$conflicts"
