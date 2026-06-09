@@ -4,11 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FormToolbar } from "@/components/atomic-crm/layout/FormToolbar";
 import { cleanupStoreForSave, StoreInputs } from "./StoreInputs";
 import { StoreDeleteButton } from "./StoreDeleteButton";
+import { StorePageShell } from "./StorePageShell";
 
 export const StoreEdit = () => (
   <EditBase actions={false} redirect="show" transform={cleanupStoreForSave}>
-    <div className="mt-2 flex lg:mr-72">
-      <Form className="flex flex-1 flex-col gap-4 pb-2">
+    <StorePageShell>
+      <Form className="flex flex-col gap-4 pb-2">
         <Card>
           <CardContent>
             <StoreInputs />
@@ -19,6 +20,6 @@ export const StoreEdit = () => (
           </CardContent>
         </Card>
       </Form>
-    </div>
+    </StorePageShell>
   </EditBase>
 );

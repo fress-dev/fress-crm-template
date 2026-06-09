@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { countContactsForStore } from "./countContactsForStore";
 import { StoreCreatedAtField } from "./StoreCreatedAtField";
 import { StoreDeleteButton } from "./StoreDeleteButton";
+import { StorePageShell } from "./StorePageShell";
 import type { Store } from "./types";
 
 const EMPTY = "—";
@@ -42,7 +43,7 @@ const StoreContactCount = () => {
 
 export const StoreShow = () => (
   <ShowBase>
-    <div className="mt-2 max-w-2xl">
+    <StorePageShell>
       <div className="flex justify-end gap-2 mb-4">
         <EditButton />
         <StoreDeleteButton />
@@ -72,6 +73,6 @@ export const StoreShow = () => (
           </RecordField>
         </CardContent>
       </Card>
-    </div>
+    </StorePageShell>
   </ShowBase>
 );

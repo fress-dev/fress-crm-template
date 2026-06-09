@@ -59,6 +59,7 @@ flowchart LR
 | [workflow/design/README.md](../workflow/design/README.md) | 設計書フロー・1PR=1設計・アーカイブ | AI・人間 |
 | [workflow/branch-strategy.md](../workflow/branch-strategy.md) | ブランチ命名 | AI・人間 |
 | [workflow/development.md](../workflow/development.md) | 手順の詳細 | AI・人間 |
+| [workflow/plugin-runbook.md](../workflow/plugin-runbook.md) | プラグイン有効化・停止・強制削除 | 人間 |
 | [logs/review-log.md](../logs/review-log.md) | レビュー結果のログ | AI・人間 |
 | [product/crm-features.md](../product/crm-features.md) | 現状の CRM 機能 | AI・人間 |
 | [harness/philosophy.md](./philosophy.md) | 開発思想・背景 | 人間 |

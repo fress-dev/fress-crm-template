@@ -8,6 +8,7 @@ import { bootstrapPlainJapaneseStore } from "@/custom/configuration/bootstrapPla
 import { PlainJapaneseLayout } from "@/custom/layout/PlainJapaneseLayout";
 import { createI18nProvider } from "@/custom/i18n/i18nProvider";
 import { withPlainJapaneseConfiguration } from "@/custom/providers/withPlainJapaneseConfiguration";
+import { withPluginDataProvider } from "@/custom/providers/withPluginDataProvider";
 import { resolveAppAssembly } from "@/custom/platform/plugin/resolveAssembly";
 
 const crmStore = localStorageStore(undefined, "CRM");
@@ -30,9 +31,11 @@ const App = () => {
 
   const dataProvider = useMemo(
     () =>
-      withPlainJapaneseConfiguration(
-        getDataProvider(),
-        assembly.crmConfiguration,
+      withPluginDataProvider(
+        withPlainJapaneseConfiguration(
+          getDataProvider(),
+          assembly.crmConfiguration,
+        ),
       ),
     [assembly.crmConfiguration],
   );

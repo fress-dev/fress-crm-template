@@ -9,6 +9,7 @@ export default defineConfig({
     include: [
       "src/custom/platform/**/*.test.ts",
       "src/custom/plugins/**/*.test.ts",
+      "src/custom/providers/**/*.test.ts",
     ],
   },
   resolve: {

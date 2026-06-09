@@ -1,6 +1,6 @@
 # プラグイン設計方針
 
-> **最終更新:** 2026-06-07  
+> **最終更新:** 2026-06-10  
 > 現時点で**実装する範囲**と、将来の拡張の置き場所を定義する。  
 > コア非変更の原則は [AGENTS.md](../../AGENTS.md) に従う。
 
@@ -73,6 +73,54 @@ Core（常時）
 - プラグインが定義する **Extension インターフェースを実装**して差し込む
 - プラグイン本体の継承・複製はしない
 - 例: `extensions/tenant-b/appointments.ts` をテナント設定から参照
+
+## プラグインの有効化・停止・削除
+
+### 管理方法（現状）
+
+| 操作 | やること | 自動？ |
+|------|----------|--------|
+| **有効化** | `tenants/<id>.json` の `plugins` に id を追加 → **追加 migration を適用**（`make dev` / `supabase db push` 等） | migration は手動実行 |
+| **停止（通常の OFF）** | `plugins` から id を外す → アプリ再起動 / 再読み込み | JSON のみ。DB は触らない |
+| **強制削除** | 誤導入・完全撤去が必要なときだけ、**別 PR の teardown migration** でテーブル・カラムを DROP | 人間が判断して migration を書き・実行 |
+
+**将来:** テナント設定画面から ON/OFF できる UI を用意する想定。**現状は JSON 編集のまま**でよい。
+
+JSON を変更したあと、有効化・強制削除に伴う migration は**人間が実施**する（JSON のトグルだけでは migration は走らない）。
+
+### 三つの状態
+
+```
+有効 ──(plugins から外す)──► 停止 ──(teardown migration + 判断)──► 強制削除済み
+  ▲                              │
+  └── plugins に戻す + migration  │  通常はここで止める
+      （再有効化）                └── DB スキーマ・データは残る
+```
+
+| 状態 | 機能（UI・API） | DB（テーブル・カラム・データ） |
+|------|----------------|-------------------------------|
+| **有効** | プラグイン画面・拡張が動く | 追加 migration 済み |
+| **停止** | `isXxxPluginEnabled()` が false → **コアにフォールバック** | **そのまま残す**（nullable 推奨）。コア CRUD は壊さない |
+| **強制削除** | コード・register からも外す（別作業） | **DROP migration で削除**（データ消失を承知） |
+
+**原則:** 一度有効にしたプラグインは、**通常は「停止」まで**。カラム削除はデータが消えるためデフォルトでは行わない。間違えて入れた・本当に不要、といった**例外**だけ強制削除（teardown migration）を検討する。
+
+### migration の考え方
+
+- **有効化用:** `supabase/migrations/` に**追加のみ**。`PluginDefinition.migrations` にファイル名を列挙（参照用。実行は Supabase の通常フロー）。
+- **停止用:** 原則 **migration 不要**。実行時ガードで機能だけ止める。
+- **強制削除用:** 新規 forward migration で `DROP TABLE` / `DROP COLUMN`、view 再作成、FK 解除などを**明示的に**書く。過去 migration の編集・削除はしない。
+- プラグインが触った **コアテーブルのカラム**（例: `contacts.store_id`）は、停止可能にするため **DB `NOT NULL` にしない**。必須はプラグイン有効時の UI バリデーションで行う。
+
+### 実装側の約束（停止時にコアを壊さない）
+
+- プラグイン固有 UI は `isXxxPluginEnabled()` でガードし、無効時はコア実装へフォールバックする。
+- `dataProvider` 拡張・シード・ナビは有効時のみ。
+- 依存は `PluginDefinition.dependsOn` で明示（例: 予約が stores 必須）。
+
+**運用 Runbook（有効化・停止・強制削除・依存チェック）:** [workflow/plugin-runbook.md](../workflow/plugin-runbook.md)  
+**teardown テンプレート:** [workflow/design/_template-teardown.md](../workflow/design/_template-teardown.md)  
+**実装チェックリスト:** [`.cursor/rules/implementation-patterns.mdc`](../../.cursor/rules/implementation-patterns.mdc) の「プラグインの独立性」。
 
 ## 差分の置き場所
 

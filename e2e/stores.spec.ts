@@ -44,6 +44,15 @@ test("store CRUD and contact store assignment", async ({
   await goToStoresList(page);
   await expect(page.getByRole("cell", { name: "千葉店" })).toBeVisible();
 
+  await page.getByPlaceholder(ja.search).fill("船橋");
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("cell", { name: "船橋店" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "千葉店" })).not.toBeVisible();
+
+  await page.getByPlaceholder(ja.search).fill("");
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("cell", { name: "千葉店" })).toBeVisible();
+
   await goToContactsList(page);
   if (isMobile) {
     await page.getByRole("button", { name: ja.newContact }).click();

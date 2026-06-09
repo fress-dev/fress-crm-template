@@ -81,6 +81,7 @@ readonly: true
 - **削除**：`DeleteButton` が record / resource context のある場所に置かれているか。`FormToolbar` に削除が含まれる前提になっていないか。外部キー制約・RLS・関連データありの失敗ケースを想定しているか。
 - **import**：画面部品は `@/components/admin/...`、base / hooks / controller は `ra-core` から import しているか。
 - **確認範囲**：一覧、検索（空文字 / ヒットあり / ヒットなし）、作成、更新、削除、エラー表示がテスト方針に含まれているか。
+- **レイアウト**：Aside が無いのに `lg:mr-72` だけ付いていないか。`max-w-*` 単体で左寄せになっていないか（`mx-auto` または `flex-1` + Aside）。Show / Edit / Create で幅が揃っているか。
 
 ## 【両モード共通】言語・表記規約
 
