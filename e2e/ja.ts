@@ -44,6 +44,8 @@ export const ja = {
   createStore: "店舗を登録",
   memberStore: "在籍店舗",
   contacts: "担当者",
+  filterConditions: "検索条件",
+  confirm: "確認",
   bulkTag: "ラベルを付ける",
   selectAll: "すべて選択",
   createNewTag: "新しいラベルを作る",

@@ -1,8 +1,15 @@
 import { test, expect } from "./fixtures";
 import { ja } from "./ja";
+import {
+  applyContactStoreFilter,
+  goToContactsList,
+  goToStoresList,
+  openNewStoreForm,
+} from "./storeHelpers";
 
 test("store CRUD and contact store filter", async ({
   page,
+  isMobile,
   createSales,
   dismissToast,
 }) => {
@@ -19,24 +26,31 @@ test("store CRUD and contact store filter", async ({
   await page.getByRole("button", { name: ja.signIn }).click();
   await page.waitForLoadState("networkidle");
 
-  await page.getByRole("link", { name: ja.stores }).click();
-  await page.waitForLoadState("networkidle");
-
-  await page.getByRole("link", { name: ja.newStore }).click();
+  await goToStoresList(page);
+  await openNewStoreForm(page);
   await page.getByLabel(ja.storeName).fill("船橋店");
   await page.getByRole("button", { name: ja.createStore }).click();
   await dismissToast(ja.createdToast);
 
+  await expect(page.getByText("船橋店", { exact: true })).toBeVisible();
+
+  await goToStoresList(page);
   await expect(page.getByRole("cell", { name: "船橋店" })).toBeVisible();
 
-  await page.getByRole("link", { name: ja.newStore }).click();
+  await openNewStoreForm(page);
   await page.getByLabel(ja.storeName).fill("千葉店");
   await page.getByRole("button", { name: ja.createStore }).click();
   await dismissToast(ja.createdToast);
 
-  await page.getByRole("link", { name: ja.contacts }).click();
-  await page.waitForLoadState("networkidle");
-  await page.getByRole("link", { name: ja.newContact }).click();
+  await goToStoresList(page);
+  await expect(page.getByRole("cell", { name: "千葉店" })).toBeVisible();
+
+  await goToContactsList(page);
+  if (isMobile) {
+    await page.getByRole("button", { name: ja.newContact }).click();
+  } else {
+    await page.getByRole("link", { name: ja.newContact }).click();
+  }
   await page.waitForLoadState("networkidle");
 
   await page.getByLabel(ja.femalePronoun).click();
@@ -45,20 +59,14 @@ test("store CRUD and contact store filter", async ({
   await page.getByLabel(ja.memberStore).click();
   await page.getByRole("option", { name: "船橋店" }).click();
 
-  await page.getByLabel(`${ja.accountManager} *`).click();
-  await page.getByRole("option", { name: "Store Admin" }).click();
-
   await page.getByRole("button", { name: ja.save }).click();
   await dismissToast(ja.createdToast);
 
-  await page.getByRole("link", { name: ja.contacts }).click();
-  await page.waitForLoadState("networkidle");
-  await page.getByRole("button", { name: "船橋店" }).click();
-  await page.waitForLoadState("networkidle");
+  await goToContactsList(page);
+  await applyContactStoreFilter(page, "船橋店", isMobile);
 
   await expect(page.getByText("会員 太郎")).toBeVisible();
 
-  await page.getByRole("button", { name: "千葉店" }).click();
-  await page.waitForLoadState("networkidle");
+  await applyContactStoreFilter(page, "千葉店", isMobile);
   await expect(page.getByText("会員 太郎")).not.toBeVisible();
 });
