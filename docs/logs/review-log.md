@@ -9,6 +9,33 @@
 
 ---
 
+## 2026-06-10 | fix/plugin-stores-search | 店舗検索・レイアウト・プラグイン運用 | （PR 予定）
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- 店舗一覧 `SearchInput source="q"` に `withStoresListSearch`（`applyFullTextSearch`）を追加
+- 店舗 Show/Edit/Create を `StorePageShell` で中央寄せ・`lg:mr-72` 除去
+- `contacts.store_id` を nullable 化（プラグイン停止時の会員 CRUD 保護）
+- `withPluginDataProvider` は stores 有効時のみラップ
+- プラグイン runbook・teardown テンプレ・architecture / implementation-patterns 追記
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| コア保護 | **OK** — `src/components/**` 非変更。縫い目 `App.tsx` のみ |
+| CRUD/dataProvider観点 | **OK** — stores 検索の `beforeGetList` 相当をプラグイン層で実装 |
+| 拡張パターン | **OK** — レイアウト・プラグイン独立性ルールに沿う |
+| DoD | **OK** — `make pre-pr` + platform 単体テスト |
+
+---
+
 ## 2026-06-09 | feat/platform-implementation-patterns | CRUD / dataProvider 実装パターン | [PR #7](https://github.com/fress-dev/fress-crm-template/pull/7)
 
 | 項目 | 結果 |

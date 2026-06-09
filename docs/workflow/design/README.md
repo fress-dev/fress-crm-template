@@ -65,4 +65,6 @@
 - [architecture/plugin-architecture.md](../../architecture/plugin-architecture.md)
 - [development.md](../development.md)
 - [_template.md](./_template.md)
+- [_template-teardown.md](./_template-teardown.md) — プラグイン強制削除用 teardown
+- [plugin-runbook.md](../plugin-runbook.md) — 有効化・停止・強制削除の手順
 - [archive/](./archive/) — 実装済み設計書（AI は参照しない）

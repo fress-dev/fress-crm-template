@@ -36,6 +36,8 @@
 
 - 主要エンティティ / テーブル（新規 migration があれば概要）
 - 画面・ルート（あれば）
+- **プラグイン停止時:** コア CRUD への影響（nullable・UI ガード）。通常は DB 削除しない
+- **強制削除時（例外）:** teardown migration の要否（DROP の範囲・データ消失）
 
 ## CRUD / dataProvider チェック（該当する場合）
 
@@ -52,6 +54,7 @@
 | 関連データがある場合 | |
 | RLS | select / insert / update / delete |
 | エラー表示 | |
+| レイアウト | Aside の有無、`flex gap-8` / `lg:mr-72` / `max-w-2xl mx-auto` のどれを使うか。Show・Edit・Create で同じシェルか |
 
 ## テナント設定
 

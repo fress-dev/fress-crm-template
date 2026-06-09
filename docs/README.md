@@ -31,6 +31,8 @@ docs/
 | [workflow/branch-strategy.md](./workflow/branch-strategy.md) | ブランチ命名・並行開発 |
 | [workflow/research/README.md](./workflow/research/README.md) | 調査・要件定義の土台（Salus 等） |
 | [workflow/design/README.md](./workflow/design/README.md) | 機能設計書（実装前の承認用） |
+| [workflow/plugin-runbook.md](./workflow/plugin-runbook.md) | プラグイン有効化・停止・強制削除 |
+| [workflow/design/_template-teardown.md](./workflow/design/_template-teardown.md) | プラグイン強制削除用 teardown SQL テンプレ |
 
 ### architecture/ — 技術方針
 
