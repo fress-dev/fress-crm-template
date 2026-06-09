@@ -6,6 +6,7 @@ import { useLocaleState } from "ra-core";
 import {
   APP_TIME_ZONE,
   differenceInCalendarDaysTokyo,
+  formatDateTimeTokyo,
   formatDateTokyo,
   formatTimeTokyo,
 } from "./appDateTime";
@@ -52,6 +53,23 @@ export const formatLocalizedDate = (date: string, locale = "ja") => {
     year: "numeric",
     month: "long",
     day: "numeric",
+  }).format(dateObj);
+};
+
+export const formatLocalizedDateTime = (date: string, locale = "ja") => {
+  const dateObj = new Date(date);
+  if (usesJapaneseDates(locale)) {
+    return formatDateTimeTokyo(dateObj);
+  }
+  return new Intl.DateTimeFormat(resolveIntlLocale(locale), {
+    timeZone: APP_TIME_ZONE,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
   }).format(dateObj);
 };
 

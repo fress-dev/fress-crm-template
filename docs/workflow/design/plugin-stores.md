@@ -3,7 +3,7 @@
 > **status:** approved  
 > **層:** プラグイン  
 > **ブランチ（予定）:** `feat/plugin-stores-master`  
-> **最終更新:** 2026-06-07  
+> **最終更新:** 2026-06-09  
 > **前提:** [platform-tenant-config.md](./platform-tenant-config.md)・[platform-plugin-registry.md](./platform-plugin-registry.md) がマージ済み
 
 ## 概要
@@ -57,6 +57,24 @@ noexcuse（テナント = 1つの CRM デプロイ）
 - 店舗権限・RLS（Phase 2）
 - 予約カレンダーの店舗切り替え（appointments プラグイン側）
 - マルチテナント SaaS（noexcuse 以外の事業を同一 DB に載せる）
+- **店舗フォームの形式バリデーション・重複チェック** — [plugin-stores-followups.md](./plugin-stores-followups.md) §1 へ移管（PR #5 時点では `name` の `required()` のみ）
+- **Show 画面・空状態・削除 UI・モバイルタブ** — 同上 §2
+
+### PR #5 実装済み / 未実装（2026-06-09 時点）
+
+| 項目 | 状態 |
+|------|------|
+| `stores` テーブル + migration | ✅ |
+| 店舗一覧・登録・編集 | ✅（Show なし） |
+| 会員 `store_id` フォーム + 一覧フィルタ | ✅ |
+| `storeSeed` 初回投入 | ✅ |
+| `FressCRM` + ヘッダー店舗タブ（デスクトップ） | ✅ |
+| `make dev` 時のマイグレーション自動適用 | ✅ |
+| 店舗名以外のバリデーション | ✅ followups §1（PR #6） |
+| 店舗名の重複防止（UI / DB） | ✅ followups §1（PR #6） |
+| `contacts.store_id` の DB 必須化 | ✅ followups §1（PR #6、店舗存在時） |
+| 店舗 Show / Empty / 削除 / モバイル | ✅ followups §2（PR #6） |
+| Salus 互換 `del_flg` | ❌ → followups §3（任意） |
 
 ## 層の割り当て
 
@@ -106,6 +124,18 @@ noexcuse（テナント = 1つの CRM デプロイ）
 | `/stores/:id` | 店舗詳細・編集 |
 
 会員フォームに **在籍店舗** セレクトを追加（カスタム Contact フォーム差し替え）。
+
+### バリデーション（Phase 1 当初案 → フォローアップへ）
+
+Phase 1 当初は「店舗名必須」のみ想定していたが、実装レビューで不足が判明。**詳細ルールは [plugin-stores-followups.md](./plugin-stores-followups.md) §1 を正**とする。
+
+| フィールド | Phase 1（PR #5） | フォローアップ §1 |
+|-----------|-----------------|------------------|
+| `name` | `required()` のみ | trim・最大長・重複不可・DB UNIQUE |
+| `zip` | なし | 任意、入力時は郵便番号形式 |
+| `area_code` | なし | 任意、英数字系・最大長 |
+| `address` / `build` | なし | 任意、最大長 |
+| Contact.`store_id` | UI `required()` | DB NOT NULL 化を検討 |
 
 ### `tenants/noexcuse.json` への追記（案）
 
@@ -177,6 +207,7 @@ noexcuse（テナント = 1つの CRM デプロイ）
 - **単体:** シードロジック、store_id バリデーション
 - **`make pre-pr`:** 必須
 - **e2e:** 店舗 CRUD、会員に店舗を設定してフィルタできること
+- **フォローアップ:** バリデーション否定系 e2e — [plugin-stores-followups.md](./plugin-stores-followups.md) §1
 
 ## 未決事項・リスク
 
@@ -194,6 +225,7 @@ noexcuse（テナント = 1つの CRM デプロイ）
 
 ## 関連
 
+- [plugin-stores-followups.md](./plugin-stores-followups.md) — バリデーション・UI 補完（draft、分割 PR 案）
 - [platform-tenant-config.md](./platform-tenant-config.md)
 - [05-gap-analysis.md](../research/05-gap-analysis.md)
 - Salus: `Store`, `users.store_id`
