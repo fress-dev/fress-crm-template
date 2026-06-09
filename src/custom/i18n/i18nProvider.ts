@@ -84,17 +84,20 @@ export const getInitialLocale = (): "ja" | "en" => {
   return "ja";
 };
 
-export const i18nProvider = polyglotI18nProvider(
-  (locale) => {
-    if (locale === "ja") {
-      return japaneseCatalog;
-    }
-    return englishCatalog;
-  },
-  getInitialLocale(),
-  [
-    { locale: "ja", name: "日本語" },
-    { locale: "en", name: "English" },
-  ],
-  { allowMissing: true },
-);
+export const createI18nProvider = (tenantMessages = {}) =>
+  polyglotI18nProvider(
+    (locale) => {
+      if (locale === "ja") {
+        return mergeTranslations(japaneseCatalog, tenantMessages);
+      }
+      return englishCatalog;
+    },
+    getInitialLocale(),
+    [
+      { locale: "ja", name: "日本語" },
+      { locale: "en", name: "English" },
+    ],
+    { allowMissing: true },
+  );
+
+export const i18nProvider = createI18nProvider();

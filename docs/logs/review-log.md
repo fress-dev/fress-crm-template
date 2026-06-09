@@ -9,6 +9,38 @@
 
 ---
 
+## 2026-06-10 | feat/platform-tenant-config | テナント設定実装 | [PR #9](https://github.com/fress-dev/fress-crm-template/pull/9)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント（@reviewer 相当のチェックリスト適用） |
+
+### 検査結果
+
+| 観点 | 結果 | メモ |
+|------|------|------|
+| コア保護 | OK | `src/root/**`・`src/components/**`・既存 migrations の差分なし |
+| 拡張パターン | OK | `App.tsx` から `src/custom/` の設定変換・i18n・表示制御を注入 |
+| ブランチ命名 | OK | `feat/platform-tenant-config` |
+| CRM（RLS / i18n / Query） | OK | DB/RLS 変更なし。i18n はテナント JSON から上書き生成 |
+| 言語規約 | OK | コメント・ドキュメントは日本語 |
+| DoD | OK | `make pre-pr` 成功。関連 e2e は専用 spec なしのため未実行 |
+
+### 変更の要約
+
+- `tenants/*.json` の title / labels / CRM 設定 / hiddenResources を読み込み、CRM props と i18n に反映
+- noexcuse では「会員」「入会管理」「スタッフ」の表記と商談段階を適用し、companies を非表示
+- 縫い目は `App.tsx` の props 注入と `src/custom/` 側の変換・表示制御に限定
+
+### 指摘・メモ（改善のタネ）
+
+- tenant/noexcuse 専用 e2e は未作成。次に画面回帰を固めるならタイトル・会員表記・companies 非表示の smoke spec を追加する
+- ビルド時に Node.js 22.8.0 が Vite 推奨の 22.12+ 未満という警告あり。チェックは成功
+
+---
+
 ## 2026-06-09 | feat/platform-implementation-patterns | CRUD / dataProvider 実装パターン | [PR #7](https://github.com/fress-dev/fress-crm-template/pull/7)
 
 | 項目 | 結果 |

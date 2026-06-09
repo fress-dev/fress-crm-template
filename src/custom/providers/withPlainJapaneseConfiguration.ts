@@ -6,16 +6,17 @@ import { mergePlainJapaneseConfiguration } from "@/custom/configuration/mergePla
 /** DB から読み込んだ設定にも日本語ラベルを適用する */
 export const withPlainJapaneseConfiguration = (
   dataProvider: CrmDataProvider,
+  tenantConfiguration?: Partial<ConfigurationContextValue>,
 ): CrmDataProvider => ({
   ...dataProvider,
   async getConfiguration(): Promise<ConfigurationContextValue> {
     const config = await dataProvider.getConfiguration();
-    return mergePlainJapaneseConfiguration(config);
+    return mergePlainJapaneseConfiguration(config, tenantConfiguration);
   },
   async updateConfiguration(
     config: ConfigurationContextValue,
   ): Promise<ConfigurationContextValue> {
-    const merged = mergePlainJapaneseConfiguration(config);
+    const merged = mergePlainJapaneseConfiguration(config, tenantConfiguration);
     return dataProvider.updateConfiguration(merged);
   },
 });

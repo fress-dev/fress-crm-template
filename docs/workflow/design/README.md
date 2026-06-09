@@ -58,7 +58,7 @@
 
 | 設計書 | 層 | status | 備考 |
 |--------|-----|--------|------|
-| [platform-tenant-config.md](./platform-tenant-config.md) | コア（platform） | **draft** | **noexcuse CRM** 表示・テナント JSON。先に承認 |
+| [platform-tenant-config.md](./platform-tenant-config.md) | コア（platform） | **approved** | **noexcuse CRM** 表示・テナント JSON |
 
 ## 関連
 

@@ -1,7 +1,7 @@
 import type { ConfigurationContextValue } from "@/components/atomic-crm/root/ConfigurationContext";
-import { plainJapaneseConfiguration } from "@/custom/configuration/plainJapaneseDefaults";
-
 import { loadTenantConfig } from "../tenant/loadTenantConfig";
+import { toCrmConfiguration } from "../tenant/toCrmConfiguration";
+import { toI18nOverrides } from "../tenant/toI18nOverrides";
 import type { TenantConfig } from "../tenant/types";
 import { bootstrapPlugins } from "./bootstrapPlugins";
 import { getEnabledPlugins } from "./registry";
@@ -10,8 +10,8 @@ import type { PluginDefinition } from "./types";
 export type AppAssembly = {
   tenant: TenantConfig;
   enabledPlugins: PluginDefinition[];
-  /** platform-tenant-config まで plainJapanese を既定とする */
   crmConfiguration: Partial<ConfigurationContextValue>;
+  i18nOverrides: Record<string, unknown>;
 };
 
 let bootstrapped = false;
@@ -31,7 +31,8 @@ export const resolveAppAssembly = (): AppAssembly => {
   return {
     tenant,
     enabledPlugins,
-    crmConfiguration: plainJapaneseConfiguration,
+    crmConfiguration: toCrmConfiguration(tenant),
+    i18nOverrides: toI18nOverrides(tenant),
   };
 };
 
