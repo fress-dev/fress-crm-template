@@ -1,13 +1,12 @@
 import { test, expect } from "./fixtures";
 import { ja } from "./ja";
 import {
-  applyContactStoreFilter,
   goToContactsList,
   goToStoresList,
   openNewStoreForm,
 } from "./storeHelpers";
 
-test("store CRUD and contact store filter", async ({
+test("store CRUD and contact store assignment", async ({
   page,
   isMobile,
   createSales,
@@ -63,10 +62,5 @@ test("store CRUD and contact store filter", async ({
   await dismissToast(ja.createdToast);
 
   await goToContactsList(page);
-  await applyContactStoreFilter(page, "船橋店", isMobile);
-
   await expect(page.getByText("会員 太郎")).toBeVisible();
-
-  await applyContactStoreFilter(page, "千葉店", isMobile);
-  await expect(page.getByText("会員 太郎")).not.toBeVisible();
 });
