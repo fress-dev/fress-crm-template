@@ -27,10 +27,10 @@ make start-app               # Supabase 起動済みなら
 
 | コマンド | 用途 |
 |----------|------|
-| `make start` | Supabase + Vite |
+| `make start` / `make dev` | Supabase 起動 → 未適用マイグレーション適用 → Vite |
 | `make test` | ユニットテスト |
 | `make pre-pr` | PR 前チェック |
-| `make supabase-migrate-database` | マイグレーション適用 |
+| `make supabase-migrate-database` | マイグレーションのみ適用（Supabase 起動済みのとき） |
 
 ## テンプレートから新規プロジェクト
 

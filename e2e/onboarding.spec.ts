@@ -1,7 +1,13 @@
 import { test, expect } from "./fixtures";
 import { ja } from "./ja";
 
-test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
+test("user onboarding", async ({
+  page,
+  isMobile,
+  menu,
+  dismissToast,
+  createStore,
+}) => {
   await page.goto("http://localhost:5175/");
 
   await expect(page).toHaveTitle(new RegExp(ja.appTitle));
@@ -18,6 +24,8 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await expect(page.getByText(ja.installApp)).toBeVisible();
   await expect(page.getByText(ja.addFirstContact)).toBeVisible();
   await expect(page.getByText(ja.addFirstNote)).toBeVisible();
+
+  await createStore({ name: "オンボーディング店舗" });
 
   await page.getByText(ja.newContact).click();
   await page.waitForLoadState("networkidle");
@@ -57,6 +65,9 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await expect(page.getByLabel(`${ja.accountManager} *`)).toHaveText(
     "John Doe",
   );
+
+  await page.getByLabel(ja.memberStore).click();
+  await page.getByRole("option", { name: "オンボーディング店舗" }).click();
 
   await page.getByRole("button", { name: ja.save }).click();
 

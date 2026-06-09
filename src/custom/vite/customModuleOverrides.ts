@@ -22,6 +22,22 @@ const overrides: Array<{ pattern: RegExp; replacement: string }> = [
     pattern: /atomic-crm\/notes\/NoteCreateSheet\.tsx$/,
     replacement: "src/custom/notes/NoteCreateSheet.tsx",
   },
+  {
+    pattern: /atomic-crm\/contacts\/ContactInputs\.core\.tsx$/,
+    replacement: "src/components/atomic-crm/contacts/ContactInputs.tsx",
+  },
+  {
+    pattern: /atomic-crm\/contacts\/ContactInputs\.tsx$/,
+    replacement: "src/custom/plugins/stores/ContactInputs.tsx",
+  },
+  {
+    pattern: /atomic-crm\/contacts\/ContactListFilter\.core\.tsx$/,
+    replacement: "src/components/atomic-crm/contacts/ContactListFilter.tsx",
+  },
+  {
+    pattern: /atomic-crm\/contacts\/ContactListFilter\.tsx$/,
+    replacement: "src/custom/plugins/stores/ContactListFilter.tsx",
+  },
 ];
 
 const resolveCandidate = (source: string, importer: string, root: string) => {

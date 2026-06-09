@@ -26,6 +26,7 @@ const TABLES = [
   "deal_notes",
   "deals",
   "contacts",
+  "stores",
   "companies",
   "tags",
   "favicons_excluded_domains",
@@ -154,12 +155,46 @@ async function createCompany({
   return data;
 }
 
+async function createStore({ name }: { name: string }) {
+  const { data, error } = await getAdminSupabase()
+    .from("stores")
+    .insert({ name })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create store: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function resolveDefaultStoreId(): Promise<string | number | null> {
+  const { data: stores, error } = await getAdminSupabase()
+    .from("stores")
+    .select("id")
+    .order("id", { ascending: true })
+    .limit(1);
+
+  if (error) {
+    throw new Error(`Failed to list stores: ${error.message}`);
+  }
+
+  if (stores?.[0]?.id != null) {
+    return stores[0].id;
+  }
+
+  const store = await createStore({ name: "E2Eテスト店舗" });
+  return store.id;
+}
+
 async function createContact({
   first_name,
   last_name,
   title = "",
   company_id = null,
   sales_id,
+  store_id,
   notes = [],
 }: {
   first_name: string;
@@ -167,12 +202,16 @@ async function createContact({
   title?: string;
   company_id?: string | number | null;
   sales_id: string | number;
+  store_id?: string | number | null;
   notes?: {
     text: string;
     date?: string;
     status?: "cold" | "warm" | "hot";
   }[];
 }) {
+  const resolvedStoreId =
+    store_id === undefined ? await resolveDefaultStoreId() : store_id;
+
   const { data, error } = await getAdminSupabase()
     .from("contacts")
     .insert({
@@ -181,6 +220,7 @@ async function createContact({
       title,
       company_id,
       sales_id,
+      store_id: resolvedStoreId,
       first_seen: new Date().toISOString(),
       last_seen: new Date().toISOString(),
       has_newsletter: false,
@@ -230,6 +270,7 @@ export const test = base.extend<{
   createUser: typeof createUser;
   createSales: typeof createSales;
   createCompany: typeof createCompany;
+  createStore: typeof createStore;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   menu: ReturnType<typeof getMenuMethod>;
@@ -256,6 +297,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createCompany: async ({}, cb) => {
     await cb(createCompany);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createStore: async ({}, cb) => {
+    await cb(createStore);
   },
   // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {

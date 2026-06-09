@@ -1,6 +1,6 @@
 # 店舗マスタとスタッフの店舗スコープ
 
-> **status:** draft  
+> **status:** approved  
 > **層:** プラグイン  
 > **ブランチ（予定）:** `feat/plugin-stores-master`  
 > **最終更新:** 2026-06-07  
@@ -184,13 +184,13 @@ noexcuse（テナント = 1つの CRM デプロイ）
 |------|------|
 | `rooms` の置き場 | stores に含めるか appointments に含めるか — 予約設計時に決定 |
 | 店舗メニューの位置 | ヘッダー新タブ vs 設定配下 — 実装時に UI 確認 |
-| プラグイン route マウント | [platform-plugin-registry.md](./platform-plugin-registry.md) の A/B/C 案に依存 |
+| プラグイン route マウント | **案 B**（`FressCRM` + `renderPluginAdminChildren`）で実装 |
 
 ## 承認
 
 | 日付 | 承認者 | 備考 |
 |------|--------|------|
-| | | |
+| 2026-06-07 | ユーザー | Phase 1 実装着手承認 |
 
 ## 関連
 

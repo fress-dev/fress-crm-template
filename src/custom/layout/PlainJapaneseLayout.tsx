@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 
-import { Layout } from "@/components/atomic-crm/layout/Layout";
 import { MobileLayout } from "@/components/atomic-crm/layout/MobileLayout";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import { PlainJapaneseConfigurationSync } from "@/custom/configuration/PlainJapaneseConfigurationSync";
+import { FressLayout } from "@/custom/layout/FressLayout";
+import { StoreSeedSync } from "@/custom/plugins/stores/StoreSeedSync";
 
 const PlainJapaneseLayoutShell = ({
   children,
@@ -15,10 +16,11 @@ const PlainJapaneseLayoutShell = ({
 }) => (
   <>
     <PlainJapaneseConfigurationSync />
+    <StoreSeedSync />
     {mobile ? (
       <MobileLayout>{children}</MobileLayout>
     ) : (
-      <Layout>{children}</Layout>
+      <FressLayout>{children}</FressLayout>
     )}
   </>
 );

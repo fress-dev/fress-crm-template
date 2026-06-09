@@ -1,5 +1,6 @@
 {
   "id": "noexcuse",
-  "plugins": [],
-  "extensions": []
+  "plugins": ["stores"],
+  "extensions": [],
+  "storeSeed": [{ "name": "船橋店" }, { "name": "千葉店" }]
 }

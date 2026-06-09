@@ -29,7 +29,13 @@
     // Shadcn
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/components/atomic-crm/contacts/ContactInputs.core": [
+        "./src/components/atomic-crm/contacts/ContactInputs.tsx"
+      ],
+      "@/components/atomic-crm/contacts/ContactListFilter.core": [
+        "./src/components/atomic-crm/contacts/ContactListFilter.tsx"
+      ]
     }
   },
   "include": ["src", "demo", "vitest-browser.d.ts"]
