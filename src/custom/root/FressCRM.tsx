@@ -59,6 +59,7 @@ import { ContactListMobile } from "@/components/atomic-crm/contacts/ContactList.
 import { ContactShow } from "@/components/atomic-crm/contacts/ContactShow.tsx";
 import { CompanyShow } from "@/components/atomic-crm/companies/CompanyShow.tsx";
 import { NoteShowPage } from "@/components/atomic-crm/notes/NoteShowPage.tsx";
+import type { HiddenResource } from "@/custom/platform/tenant/types";
 
 const defaultStore = localStorageStore(undefined, "CRM");
 
@@ -70,6 +71,7 @@ export type CRMProps = {
   store?: CoreAdminProps["store"];
   dashboard?: DashboardComponent;
   layout?: LayoutComponent;
+  hiddenResources?: HiddenResource[];
 } & Partial<ConfigurationContextValue>;
 
 /**
@@ -114,6 +116,11 @@ export type CRMProps = {
  */
 import { renderPluginAdminChildren } from "@/custom/platform/plugin/renderPluginAdminChildren";
 
+const isVisible = (
+  hiddenResources: HiddenResource[] | undefined,
+  resource: HiddenResource,
+) => !hiddenResources?.includes(resource);
+
 export const FressCRM = ({
   companySectors = defaultCompanySectors,
   currency = defaultCurrency,
@@ -133,6 +140,7 @@ export const FressCRM = ({
   disableEmailPasswordAuthentication = import.meta.env
     .VITE_DISABLE_EMAIL_PASSWORD_AUTHENTICATION === "true",
   disableTelemetry,
+  hiddenResources = [],
   ...rest
 }: CRMProps) => {
   useEffect(() => {
@@ -230,6 +238,7 @@ export const FressCRM = ({
       loginPage={StartPage}
       requireAuth
       disableTelemetry
+      hiddenResources={hiddenResources}
       {...rest}
     />
   );
@@ -239,13 +248,15 @@ const DesktopAdmin = (
   props: CoreAdminProps & {
     dashboard?: DashboardComponent;
     layout?: LayoutComponent;
+    hiddenResources?: HiddenResource[];
   },
 ) => {
+  const { hiddenResources, ...adminProps } = props;
   return (
     <Admin
-      layout={props.layout ?? Layout}
-      dashboard={props.dashboard ?? Dashboard}
-      {...props}
+      layout={adminProps.layout ?? Layout}
+      dashboard={adminProps.dashboard ?? Dashboard}
+      {...adminProps}
     >
       <CustomRoutes noLayout>
         <Route path={SignupPage.path} element={<SignupPage />} />
@@ -267,13 +278,21 @@ const DesktopAdmin = (
         <Route path={ImportPage.path} element={<ImportPage />} />
         <Route path={ChangelogPage.path} element={<ChangelogPage />} />
       </CustomRoutes>
-      <Resource name="deals" {...deals} />
-      <Resource name="contacts" {...contacts} />
-      <Resource name="companies" {...companies} />
+      {isVisible(hiddenResources, "deals") ? (
+        <Resource name="deals" {...deals} />
+      ) : null}
+      {isVisible(hiddenResources, "contacts") ? (
+        <Resource name="contacts" {...contacts} />
+      ) : null}
+      {isVisible(hiddenResources, "companies") ? (
+        <Resource name="companies" {...companies} />
+      ) : null}
       <Resource name="contact_notes" />
       <Resource name="deal_notes" />
       <Resource name="tasks" />
-      <Resource name="sales" {...sales} />
+      {isVisible(hiddenResources, "sales") ? (
+        <Resource name="sales" {...sales} />
+      ) : null}
       <Resource name="tags" />
       {renderPluginAdminChildren()}
     </Admin>
@@ -284,8 +303,10 @@ const MobileAdmin = (
   props: CoreAdminProps & {
     dashboard?: DashboardComponent;
     layout?: LayoutComponent;
+    hiddenResources?: HiddenResource[];
   },
 ) => {
+  const { hiddenResources, ...adminProps } = props;
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -308,9 +329,9 @@ const MobileAdmin = (
     >
       <Admin
         queryClient={queryClient}
-        layout={props.layout ?? MobileLayout}
-        dashboard={props.dashboard ?? MobileDashboard}
-        {...props}
+        layout={adminProps.layout ?? MobileLayout}
+        dashboard={adminProps.dashboard ?? MobileDashboard}
+        {...adminProps}
       >
         <CustomRoutes noLayout>
           <Route path={SignupPage.path} element={<SignupPage />} />
@@ -332,15 +353,19 @@ const MobileAdmin = (
           />
           <Route path={ChangelogPage.path} element={<ChangelogPage />} />
         </CustomRoutes>
-        <Resource
-          name="contacts"
-          list={ContactListMobile}
-          show={ContactShow}
-          recordRepresentation={contacts.recordRepresentation}
-        >
-          <Route path=":id/notes/:noteId" element={<NoteShowPage />} />
-        </Resource>
-        <Resource name="companies" show={CompanyShow} />
+        {isVisible(hiddenResources, "contacts") ? (
+          <Resource
+            name="contacts"
+            list={ContactListMobile}
+            show={ContactShow}
+            recordRepresentation={contacts.recordRepresentation}
+          >
+            <Route path=":id/notes/:noteId" element={<NoteShowPage />} />
+          </Resource>
+        ) : null}
+        {isVisible(hiddenResources, "companies") ? (
+          <Resource name="companies" show={CompanyShow} />
+        ) : null}
         <Resource name="tasks" list={MobileTasksList} />
         {renderPluginAdminChildren()}
       </Admin>

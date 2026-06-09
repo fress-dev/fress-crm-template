@@ -10,11 +10,14 @@ import { useConfigurationContext } from "@/components/atomic-crm/root/Configurat
 import { ImportPage } from "@/components/atomic-crm/misc/ImportPage";
 import { ChangelogPage } from "@/components/atomic-crm/misc/ChangelogPage";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
+import { isResourceHidden } from "@/custom/platform/tenant/isResourceHidden";
+import { loadTenantConfig } from "@/custom/platform/tenant/loadTenantConfig";
 
 export const FressHeader = () => {
   const { darkModeLogo, lightModeLogo, title } = useConfigurationContext();
   const location = useLocation();
   const translate = useTranslate();
+  const tenant = loadTenantConfig();
 
   let currentPath: string | boolean = "/";
   if (matchPath("/", location.pathname)) {
@@ -62,27 +65,33 @@ export const FressHeader = () => {
                     to="/"
                     isActive={currentPath === "/"}
                   />
-                  <NavigationTab
-                    label={translate("resources.contacts.name", {
-                      smart_count: 2,
-                    })}
-                    to="/contacts"
-                    isActive={currentPath === "/contacts"}
-                  />
-                  <NavigationTab
-                    label={translate("resources.companies.name", {
-                      smart_count: 2,
-                    })}
-                    to="/companies"
-                    isActive={currentPath === "/companies"}
-                  />
-                  <NavigationTab
-                    label={translate("resources.deals.name", {
-                      smart_count: 2,
-                    })}
-                    to="/deals"
-                    isActive={currentPath === "/deals"}
-                  />
+                  {!isResourceHidden(tenant, "contacts") ? (
+                    <NavigationTab
+                      label={translate("resources.contacts.name", {
+                        smart_count: 2,
+                      })}
+                      to="/contacts"
+                      isActive={currentPath === "/contacts"}
+                    />
+                  ) : null}
+                  {!isResourceHidden(tenant, "companies") ? (
+                    <NavigationTab
+                      label={translate("resources.companies.name", {
+                        smart_count: 2,
+                      })}
+                      to="/companies"
+                      isActive={currentPath === "/companies"}
+                    />
+                  ) : null}
+                  {!isResourceHidden(tenant, "deals") ? (
+                    <NavigationTab
+                      label={translate("resources.deals.name", {
+                        smart_count: 2,
+                      })}
+                      to="/deals"
+                      isActive={currentPath === "/deals"}
+                    />
+                  ) : null}
                   {storesEnabled ? (
                     <NavigationTab
                       label={translate("resources.stores.name", {
@@ -99,9 +108,11 @@ export const FressHeader = () => {
                 <RefreshButton />
                 <UserMenu>
                   <ProfileMenu />
-                  <CanAccess resource="sales" action="list">
-                    <UsersMenu />
-                  </CanAccess>
+                  {!isResourceHidden(tenant, "sales") ? (
+                    <CanAccess resource="sales" action="list">
+                      <UsersMenu />
+                    </CanAccess>
+                  ) : null}
                   <CanAccess resource="configuration" action="edit">
                     <SettingsMenu />
                   </CanAccess>

@@ -7,13 +7,41 @@ export type StoreSeedEntry = {
   build?: string;
 };
 
-/**
- * テナント設定の最小型（platform-plugin-registry 時点）。
- * 表示名・商談段階等は platform-tenant-config PR で拡張する。
- */
+type LabeledValueConfig = {
+  value: string;
+  label: string;
+};
+
+type NoteStatusConfig = LabeledValueConfig & {
+  color: string;
+};
+
+export type HiddenResource = "companies" | "contacts" | "deals" | "sales";
+
+export type TenantLabels = {
+  contacts: string;
+  deals: string;
+  sales: string;
+  companies?: string;
+};
+
+export type TenantCrmConfig = {
+  dealStages?: LabeledValueConfig[];
+  dealCategories?: LabeledValueConfig[];
+  noteStatuses?: NoteStatusConfig[];
+  taskTypes?: LabeledValueConfig[];
+  dealPipelineStatuses?: string[];
+  currency?: string;
+};
+
+/** テナント設定。現状は `tenants/*.json` からビルド時に読み込む */
 export type TenantConfig = {
   id: string;
+  title: string;
   plugins: string[];
+  hiddenResources?: HiddenResource[];
+  crm?: TenantCrmConfig;
+  labels?: TenantLabels;
   extensions?: string[];
   /** stores プラグイン有効時の初回店舗データ */
   storeSeed?: StoreSeedEntry[];
