@@ -9,6 +9,37 @@
 
 ---
 
+## 2026-06-10 | fix/tenant-smoke-e2e | noexcuse smoke e2e 追加 | [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 検査結果
+
+| 観点 | 結果 | メモ |
+|------|------|------|
+| コア保護 | OK | `src/root/**`・`src/components/**`・既存 migrations の差分なし |
+| 拡張パターン | OK | `App.tsx` と e2e / makefile のみ。コアロジック非変更 |
+| ブランチ命名 | OK | `fix/tenant-smoke-e2e` |
+| CRM（RLS / i18n / Query） | OK | DB 変更なし。noexcuse 表示・非表示リソースの smoke e2e を追加 |
+| DoD | OK | `make pre-pr` と `make test-e2e-tenant-noexcuse` 成功 |
+
+### 変更の要約
+
+- noexcuse tenant 起動時にタイトル・会員/入会管理ラベル・companies 非表示を確認する e2e を追加
+- e2e によりブラウザタイトル未同期を検出したため、`App.tsx` でテナントタイトルを `document.title` に同期
+- `stop-app-e2e` を冪等化し、noexcuse 専用 e2e ターゲットを追加
+
+### 指摘・メモ（改善のタネ）
+
+- 通常 e2e では tenant spec は skip。noexcuse 確認は `make test-e2e-tenant-noexcuse` を使う
+- ビルド時に Node.js 22.8.0 が Vite 推奨の 22.12+ 未満という警告あり。チェックは成功
+
+---
+
 ## 2026-06-10 | fix/plugin-stores-search | 店舗検索・レイアウト・プラグイン運用 | [PR #10](https://github.com/fress-dev/fress-crm-template/pull/10)
 
 | 項目 | 結果 |

@@ -35,7 +35,8 @@ start-app-e2e: ## start the app pointing to the e2e supabase instance
 	npx vite --port 5175 --force --mode e2e &
 
 stop-app-e2e:
-	kill $$(lsof -t -i:5175)
+	@pids="$$(lsof -t -i:5175 2>/dev/null || true)"; \
+	if [ -n "$$pids" ]; then kill $$pids; fi
 
 start-app-e2e-ci: build-e2e ## start the app pointing to the e2e supabase instance in CI mode (no open, no watch)
 	npx serve -l 5175 -L -s dist &
@@ -118,6 +119,13 @@ test-e2e-ci: start-e2e-ci
 	@./scripts/sync-e2e-env.sh
 	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
 	npx playwright test
+
+test-e2e-tenant-noexcuse: start-supabase-e2e ## noexcuse tenant smoke e2e
+	VITE_TENANT_ID=noexcuse npx vite --port 5175 --force --mode e2e &
+	@chmod +x scripts/sync-e2e-env.sh
+	@./scripts/sync-e2e-env.sh
+	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
+	VITE_TENANT_ID=noexcuse npx playwright test e2e/tenantNoexcuse.spec.ts --project=chromium
 
 # PR 前の CI 相当チェック（e2e 除く。e2e は make pre-pr-e2e）
 pre-pr:
