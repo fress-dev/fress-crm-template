@@ -9,7 +9,7 @@
 
 ---
 
-## 2026-06-10 | fix/plugin-stores-search | 店舗検索・レイアウト・プラグイン運用 | （PR 予定）
+## 2026-06-10 | fix/plugin-stores-search | 店舗検索・レイアウト・プラグイン運用 | [PR #10](https://github.com/fress-dev/fress-crm-template/pull/10)
 
 | 項目 | 結果 |
 |------|------|
