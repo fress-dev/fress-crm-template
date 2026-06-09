@@ -1,0 +1,59 @@
+---
+description: CRUD・dataProvider・検索・削除の実装パターン
+alwaysApply: true
+---
+
+# 実装パターンルール
+
+マスタ管理・CRUD 画面を実装または変更するときは、コア保護に加えて以下を守る。
+
+## CRUD 設計
+
+設計書に次を明記する。
+
+- 対象リソース名、対象テーブル、主キー。
+- 一覧 / 検索 / 作成 / 更新 / 削除の有無。
+- 読み取り先がテーブルか view か。書き込み先がテーブルか。
+- 検索対象カラム。`SearchInput source="q"` を使う場合の `beforeGetList` または同等処理。
+- 削除方式（物理削除 / 論理削除）と、関連データがある場合の挙動。
+- RLS の `select` / `insert` / `update` / `delete` 方針。
+- エラー時の通知・表示方針。
+
+## dataProvider
+
+- `supabaseDataProvider` の標準 CRUD に任せる前に、対象リソースが **view 読み取り + table 書き込み** かを確認する。
+- summary view を使う場合、`getList` / `getOne` は view、`create` / `update` / `delete` は実テーブルへ向ける。
+- view に `delete` / `update` / `create` を投げない。
+- 新リソースで custom dataProvider を追加したら、一覧・検索・作成・更新・削除の向き先を設計書と一致させる。
+
+## 検索
+
+- `SearchInput source="q"` を置く場合、`q` を DB カラムとして送らない。
+- `beforeGetList` で `q` を取り除き、実在する検索対象カラムの `@ilike` / `@or` フィルタに変換する。
+- 検索対象カラムは migration / view / table に存在するものだけにする。
+- 検索は空文字、ヒットあり、ヒットなしを確認する。
+
+## 削除
+
+- `DeleteButton` は `@/components/admin/delete-button` を使い、対象 record / resource の context がある場所に置く。
+- `FormToolbar` には削除ボタンが含まれない。編集画面に削除が必要なら別途配置する。
+- 削除対象の resource が view を指していないことを確認する。
+- 外部キー制約、RLS、関連データありの場合の挙動を確認する。
+- 削除後に一覧が古いまま残らないよう、既存の shadcn-admin-kit / ra-core の mutation・query 更新パターンに従う。
+
+## import の使い分け
+
+- 画面部品（`List`、`DataTable`、`CreateButton`、`SearchInput`、`DeleteButton`、入力・フィールド類）は `@/components/admin/...` から import する。
+- base / hooks / controller / form context（`EditBase`、`CreateBase`、`Form`、`useDataProvider`、`useNotify` 等）は `ra-core` から import する。
+- 新規実装では既存の近い画面を参照し、import 元を混在させない。
+
+## 確認
+
+CRUD を触る PR は、少なくとも次を手動確認または関連 e2e で確認する。
+
+- 一覧表示。
+- 検索: 空文字 / ヒットあり / ヒットなし。
+- 作成。
+- 更新。
+- 削除: 成功 / RLS または外部キー制約で失敗するケース。
+- エラー時に通知または画面表示が出ること。

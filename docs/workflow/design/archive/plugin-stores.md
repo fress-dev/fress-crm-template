@@ -1,10 +1,11 @@
 # 店舗マスタとスタッフの店舗スコープ
 
 > **status:** approved  
+> **archived:** 2026-06-09 — PR #5 作成時に `archive/` へ移動（Phase 2 店舗権限など未実装分は別設計書で対応）  
 > **層:** プラグイン  
-> **ブランチ（予定）:** `feat/plugin-stores-master`  
+> **ブランチ:** `feat/plugin-stores-master`（マージ済み）  
 > **最終更新:** 2026-06-09  
-> **前提:** [platform-tenant-config.md](./platform-tenant-config.md)・[platform-plugin-registry.md](./platform-plugin-registry.md) がマージ済み
+> **前提:** [platform-tenant-config.md](../platform-tenant-config.md)・[platform-plugin-registry.md](./platform-plugin-registry.md) がマージ済み
 
 ## 概要
 

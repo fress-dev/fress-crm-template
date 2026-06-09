@@ -1,6 +1,6 @@
 # 標準開発フロー
 
-> 調査 → 設計書 → 承認 → 開発 → レビュー → テスト → PR → マージ
+> 調査 → 設計書 → 承認 → 開発 → レビュー → テスト → archive → PR → マージ
 
 フェーズの状態は **git ブランチと PR** で表現する。状態管理ファイルや CLI は使わない。
 
@@ -58,13 +58,15 @@ make pre-pr
 # 7. コミット（件名・本文は日本語。review-log 追記も含める）
 git commit -m "変更内容を日本語で記載"
 
-# 8. PR 作成（タイトル・本文も日本語、マージ先は develop）
+# 8. 設計書を docs/workflow/design/archive/ へ移動（以降 AI は参照しない）
+#    設計書に書いたが未実装の範囲は、必要になったら別の設計書を新規作成
+
+# 9. PR 作成（タイトル・本文も日本語、マージ先は develop）
 #    本文には最新のレビューログが含まれる
 gh pr create --base develop --title "日本語の PR タイトル" \
   --body "$(./scripts/pr-body-with-review.sh)"
 
-# 9. マージ（人間が PR を確認してマージ）
-#    設計書を docs/workflow/design/archive/ へ移動（以降 AI は参照しない）
+# 10. マージ（人間が PR を確認してマージ）
 ```
 
 コミット・PR・`src/custom/**` のソースコメントは日本語。詳細は [AGENTS.md](../../AGENTS.md) の「## 言語・表記規約」。

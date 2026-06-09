@@ -1,10 +1,11 @@
 # プラグインレジストリと Extension 契約
 
 > **status:** approved  
+> **archived:** 2026-06-09 — PR #4 作成時に `archive/` へ移動  
 > **層:** コア（platform）  
-> **ブランチ（予定）:** `feat/platform-plugin-registry`  
+> **ブランチ:** `feat/platform-plugin-registry`（マージ済み）  
 > **最終更新:** 2026-06-07  
-> **前提:** [platform-tenant-config.md](./platform-tenant-config.md) がマージ済み
+> **前提:** [platform-tenant-config.md](../platform-tenant-config.md) がマージ済み
 
 ## 概要
 

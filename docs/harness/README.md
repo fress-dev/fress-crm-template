@@ -36,7 +36,7 @@ flowchart LR
 ```
 
 ```
-依頼 → 設計書(draft) → 【あなたがOK】→ 実装 → レビュー → テスト → PR → 【あなたがマージ】→ 設計書を archive へ
+依頼 → 設計書(draft) → 【あなたがOK】→ 実装 → レビュー → テスト → 設計書を archive へ → PR → 【あなたがマージ】
 ```
 
 ---
@@ -96,7 +96,7 @@ AGENTS.md + rules/*.mdc
     ↓
 メインエージェント → 設計書(draft) → 人間(OK) → 実装
     ↓
-@reviewer → logs/review-log.md → PR → フック + CI → マージ → 設計書 archive
+@reviewer → logs/review-log.md → 設計書 archive → PR → フック + CI → マージ
 ```
 
 ---

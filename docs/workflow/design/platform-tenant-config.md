@@ -9,7 +9,7 @@
 
 顧客（事業）ごとの設定を `tenants/<id>.json` で持ち、起動時に読み込んで CRM の表示名・商談段階・非表示メニューを切り替える。最初の本番テナントとして **noexcuse**（パーソナルジム事業）用 `noexcuse.json` を追加する。アプリタイトルは **「noexcuse CRM」**。
 
-**店舗（船橋店・千葉店等）のマスタ管理・権限は本 PR に含めない** — [plugin-stores.md](./plugin-stores.md) で対応。
+**店舗（船橋店・千葉店等）のマスタ管理・権限は本 PR に含めない** — [plugin-stores.md](./archive/plugin-stores.md) で対応。
 
 ## 背景・目的
 
@@ -24,7 +24,7 @@
 | 用語 | noexcuse での例 | 設定の置き場 |
 |------|----------------|-------------|
 | **テナント** | noexcuse（事業全体） | `tenants/noexcuse.json` |
-| **店舗** | 船橋店、千葉店 | DB `stores`（[plugin-stores.md](./plugin-stores.md)） |
+| **店舗** | 船橋店、千葉店 | DB `stores`（[plugin-stores.md](./archive/plugin-stores.md)） |
 
 ## スコープ
 
@@ -43,8 +43,8 @@
 
 ### やらないこと
 
-- プラグインレジストリ（次 PR: [platform-plugin-registry.md](./platform-plugin-registry.md)）
-- **店舗マスタ CRUD・店舗権限**（[plugin-stores.md](./plugin-stores.md)）
+- プラグインレジストリ（次 PR: [platform-plugin-registry.md](./archive/platform-plugin-registry.md)）
+- **店舗マスタ CRUD・店舗権限**（[plugin-stores.md](./archive/plugin-stores.md)）
 - Contact カスタムフィールド（かな・生年月日・`store_id`）
 - 会員申込フォーム
 - `companies` リソース自体の削除（コアに残る。メニューと i18n のみ非表示）
@@ -119,7 +119,7 @@ type TenantConfig = {
 | `labels.sales` | スタッフ |
 | `hiddenResources` | `["companies"]` |
 | `plugins` | `[]`（registry PR 後に `"stores"` を追加） |
-| `storeSeed` | 船橋店、千葉店（[plugin-stores.md](./plugin-stores.md) で DB 投入） |
+| `storeSeed` | 船橋店、千葉店（[plugin-stores.md](./archive/plugin-stores.md) で DB 投入） |
 | `crm.dealStages` | 下表 |
 | `crm.taskTypes` | 体験後連絡 / 更新案内 / 休会フォロー 等 |
 
@@ -213,6 +213,6 @@ VITE_TENANT_ID=noexcuse make start
 
 ## 関連
 
-- 次 PR: [platform-plugin-registry.md](./platform-plugin-registry.md)
-- 店舗: [plugin-stores.md](./plugin-stores.md)
+- 次 PR: [platform-plugin-registry.md](./archive/platform-plugin-registry.md)
+- 店舗: [plugin-stores.md](./archive/plugin-stores.md)
 - [05-gap-analysis.md](../research/05-gap-analysis.md)

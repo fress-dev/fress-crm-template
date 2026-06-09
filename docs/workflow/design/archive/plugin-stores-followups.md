@@ -1,6 +1,7 @@
 # 店舗マスタ — フォローアップ（バリデーション・UI 補完）
 
 > **status:** approved  
+> **archived:** 2026-06-09 — PR #6 作成時に `archive/` へ移動（§3 論理削除は未実装 — 別設計書で対応）  
 > **層:** プラグイン  
 > **前提:** [plugin-stores.md](./plugin-stores.md) Phase 1（PR #5）マージ済み  
 > **最終更新:** 2026-06-09

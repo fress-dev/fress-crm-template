@@ -44,7 +44,9 @@
 
 プラグイン・テナント設定・カスタム層の設計判断に迷ったら [`docs/architecture/plugin-architecture.md`](docs/architecture/plugin-architecture.md) を先に読む。
 
-機能実装の依頼を受けたら、**先に [`docs/workflow/design/`](docs/workflow/design/) に設計書を書く**（[_template.md`](docs/workflow/design/_template.md) を使用）。**1 設計書 = 1 PR**。大きな依頼は分割案を提示してから各設計書を draft で作成する。`status: approved` になるまで**実装しない**。マージ後は設計書を `docs/workflow/design/archive/` へ移動し、以降**参照しない**（改修はコード優先）。`docs/workflow/design/archive/` は読まない。`fix/*` の単純修正は除外可。
+マスタ管理・CRUD・検索・削除・dataProvider を触る場合は [`.cursor/rules/implementation-patterns.mdc`](.cursor/rules/implementation-patterns.mdc) の実装パターンに従う。
+
+機能実装の依頼を受けたら、**先に [`docs/workflow/design/`](docs/workflow/design/) に設計書を書く**（[_template.md`](docs/workflow/design/_template.md) を使用）。**1 設計書 = 1 PR**。大きな依頼は分割案を提示してから各設計書を draft で作成する。`status: approved` になるまで**実装しない**。**実装完了〜PR 作成時**に設計書を `docs/workflow/design/archive/` へ移動し、以降**参照しない**（改修はコード優先。設計書に書いたが未実装の範囲は、必要になったら別の設計書を新規作成）。`docs/workflow/design/archive/` は読まない。`fix/*` の単純修正は除外可。
 
 ## 標準開発フロー
 
@@ -99,8 +101,8 @@
 | 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する |
 | 5 | レビュー | **@reviewer** → **メインエージェント** | @reviewer は検査結果のみ返す（readonly）。メインが [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
 | 6 | テスト | **メインエージェント** | `make pre-pr` + 関連 e2e spec のみ（上記「## テスト」参照）。フル e2e は CI |
-| 7 | PR | **メインエージェント** | `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
-| 8 | マージ承認 | **人間** | PR を確認してマージ。設計書を `docs/workflow/design/archive/` へ移動 |
+| 7 | PR | **メインエージェント** | 設計書を `docs/workflow/design/archive/` へ移動 → `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
+| 8 | マージ承認 | **人間** | PR を確認してマージ |
 
 ### 補足
 
