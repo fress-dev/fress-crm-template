@@ -47,6 +47,8 @@ export const ja = {
   zipFormatError: "郵便番号は 123-4567 または 7 桁の数字で入力してください",
   duplicateStoreError: "同じ名前の店舗が既にあります",
   contacts: "担当者",
+  filterConditions: "検索条件",
+  confirm: "確認",
   bulkTag: "ラベルを付ける",
   selectAll: "すべて選択",
   createNewTag: "新しいラベルを作る",

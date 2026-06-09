@@ -1,5 +1,5 @@
 import { EditButton } from "@/components/admin/edit-button";
-import { SimpleShowLayout } from "@/components/admin/simple-show-layout";
+import { RecordField } from "@/components/admin/record-field";
 import { TextField } from "@/components/admin/text-field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -11,8 +11,11 @@ import {
 import { useEffect, useState } from "react";
 
 import { countContactsForStore } from "./countContactsForStore";
+import { StoreCreatedAtField } from "./StoreCreatedAtField";
 import { StoreDeleteButton } from "./StoreDeleteButton";
 import type { Store } from "./types";
+
+const EMPTY = "—";
 
 const StoreContactCount = () => {
   const record = useRecordContext<Store>();
@@ -51,14 +54,22 @@ export const StoreShow = () => (
           </CardTitle>
           <StoreContactCount />
         </CardHeader>
-        <CardContent>
-          <SimpleShowLayout>
-            <TextField source="area_code" />
-            <TextField source="zip" />
-            <TextField source="address" />
-            <TextField source="build" />
-            <TextField source="created_at" />
-          </SimpleShowLayout>
+        <CardContent className="flex flex-col gap-4">
+          <RecordField source="area_code">
+            <TextField source="area_code" empty={EMPTY} />
+          </RecordField>
+          <RecordField source="zip">
+            <TextField source="zip" empty={EMPTY} />
+          </RecordField>
+          <RecordField source="address">
+            <TextField source="address" empty={EMPTY} />
+          </RecordField>
+          <RecordField source="build">
+            <TextField source="build" empty={EMPTY} />
+          </RecordField>
+          <RecordField source="created_at">
+            <StoreCreatedAtField />
+          </RecordField>
         </CardContent>
       </Card>
     </div>

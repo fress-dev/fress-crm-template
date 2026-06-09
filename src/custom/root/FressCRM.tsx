@@ -342,6 +342,7 @@ const MobileAdmin = (
         </Resource>
         <Resource name="companies" show={CompanyShow} />
         <Resource name="tasks" list={MobileTasksList} />
+        {renderPluginAdminChildren()}
       </Admin>
     </PersistQueryClientProvider>
   );

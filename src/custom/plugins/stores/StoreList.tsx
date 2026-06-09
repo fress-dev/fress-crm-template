@@ -6,6 +6,7 @@ import { SearchInput } from "@/components/admin/search-input";
 
 import { TopToolbar } from "@/components/atomic-crm/layout/TopToolbar";
 
+import { StoreCreatedAtField } from "./StoreCreatedAtField";
 import { StoreEmpty } from "./StoreEmpty";
 
 const StoreListActions = () => (
@@ -28,7 +29,9 @@ export const StoreList = () => (
       <DataTable.Col source="name" />
       <DataTable.Col source="area_code" />
       <DataTable.Col source="address" />
-      <DataTable.Col source="created_at" />
+      <DataTable.Col source="created_at">
+        <StoreCreatedAtField />
+      </DataTable.Col>
     </DataTable>
   </List>
 );

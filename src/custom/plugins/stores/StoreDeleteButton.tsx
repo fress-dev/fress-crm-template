@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   useDataProvider,
   useDeleteController,
+  useGetRecordRepresentation,
   useNotify,
   useRecordContext,
   useTranslate,
@@ -18,6 +19,7 @@ export const StoreDeleteButton = () => {
   const dataProvider = useDataProvider();
   const notify = useNotify();
   const translate = useTranslate();
+  const getRecordRepresentation = useGetRecordRepresentation("stores");
   const [open, setOpen] = useState(false);
   const [checking, setChecking] = useState(false);
 
@@ -29,6 +31,10 @@ export const StoreDeleteButton = () => {
   });
 
   if (!record) return null;
+
+  const representation = getRecordRepresentation(record);
+  const storeName =
+    (typeof representation === "string" ? representation : null) ?? record.name;
 
   const onConfirm = async () => {
     setChecking(true);
@@ -65,15 +71,15 @@ export const StoreDeleteButton = () => {
       <Confirm
         isOpen={open}
         loading={isPending || checking}
-        title="ra.message.delete_title"
-        content="ra.message.delete_content"
+        title="resources.stores.confirm.delete_title"
+        content="resources.stores.confirm.delete_content"
         titleTranslateOptions={{
-          name: translate("resources.stores.name", { smart_count: 1 }),
-          id: record.id,
+          name: storeName,
+          _: `「${storeName}」を削除`,
         }}
         contentTranslateOptions={{
-          name: translate("resources.stores.name", { smart_count: 1 }),
-          id: record.id,
+          name: storeName,
+          _: "この店舗を削除してもよろしいですか？",
         }}
         onConfirm={() => void onConfirm()}
         onClose={() => setOpen(false)}

@@ -78,4 +78,17 @@ export const formatDateTokyo = (date: Date) =>
     day: "numeric",
   }).format(date);
 
+/** 登録日時など（日本時間・時分秒まで） */
+export const formatDateTimeTokyo = (date: Date) =>
+  new Intl.DateTimeFormat("ja-JP", {
+    timeZone: APP_TIME_ZONE,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date);
+
 export const nowInTokyo = () => new Date();

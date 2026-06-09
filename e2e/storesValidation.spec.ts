@@ -1,5 +1,6 @@
 import { test, expect } from "./fixtures";
 import { ja } from "./ja";
+import { goToStoresList, openNewStoreForm } from "./storeHelpers";
 
 test("store form validation", async ({ page, createSales }) => {
   await createSales({
@@ -15,8 +16,8 @@ test("store form validation", async ({ page, createSales }) => {
   await page.getByRole("button", { name: ja.signIn }).click();
   await page.waitForLoadState("networkidle");
 
-  await page.getByRole("link", { name: ja.stores }).click();
-  await page.getByRole("link", { name: ja.newStore }).click();
+  await goToStoresList(page);
+  await openNewStoreForm(page);
 
   await page.getByLabel(ja.storeName).fill("検証用店舗");
   await page.getByLabel(ja.zipLabel).fill("wq");
@@ -28,7 +29,8 @@ test("store form validation", async ({ page, createSales }) => {
   await page.getByRole("button", { name: ja.createStore }).click();
   await expect(page.getByText(ja.createdToast)).toBeVisible();
 
-  await page.getByRole("link", { name: ja.newStore }).click();
+  await goToStoresList(page);
+  await openNewStoreForm(page);
   await page.getByLabel(ja.storeName).fill("検証用店舗");
   await page.getByRole("button", { name: ja.createStore }).click();
 

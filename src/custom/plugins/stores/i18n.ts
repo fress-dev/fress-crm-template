@@ -9,7 +9,7 @@ export const storesPluginI18n = {
         zip: "郵便番号",
         address: "住所",
         build: "建物名",
-        created_at: "登録日",
+        created_at: "登録日時",
       },
       action: {
         create: "店舗を登録",
@@ -23,6 +23,10 @@ export const storesPluginI18n = {
       },
       show: {
         contact_count: "在籍会員: %{count}人",
+      },
+      confirm: {
+        delete_title: "「%{name}」を削除",
+        delete_content: "この店舗を削除してもよろしいですか？",
       },
       validation: {
         name_required: "店舗名を入力してください",
