@@ -11,7 +11,7 @@
 | ----------------- | -------------------- | ----------------- | ------------------- |
 | `User`（会員）        | `contacts`           | **コア**            | 氏名・連絡先・ラベルで足りる部分が多い |
 | `Trainer`         | `sales`              | **コア**            | スタッフ＝CRM 利用者        |
-| `Store` / `Room`  | `plugin-stores` 等   | **プラグイン**         | noexcuse は船橋店・千葉店等（[plugin-stores.md](../design/plugin-stores.md)） |
+| `Store` / `Room`  | `plugin-stores` 等   | **プラグイン**         | noexcuse は船橋店・千葉店等（[plugin-stores.md](../design/archive/plugin-stores.md)） |
 | `Course`          | Product / Plan       | **プラグイン**         | コース種別・時間            |
 | `Contract`        | Deal 拡張 or Contract  | **要判断**           | 金額なし・回数券モデル         |
 | `Ticket`          | Entitlement / Credit | **プラグイン**         | コアに相当なし             |

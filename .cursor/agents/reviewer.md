@@ -71,6 +71,17 @@ readonly: true
 - **日本語 i18n**：新規 UI 文言の訳が揃っているか。ハードコード英語が残っていないか。請求・適格請求書・消費税・屋号・敬称・住所形式など日本固有要件が妥当か。
 - **データ取得**：TanStack Query の作法（キャッシュキー、無効化、ローディング/エラー）。react-admin の古い API を前提にしていないか。
 
+## 【両モード共通】CRUD / dataProvider 観点
+
+マスタ管理・CRUD 画面、または dataProvider / 検索 / 削除に触る差分では、次を確認する。
+
+- **resource と DB の対応**：対象リソース、実テーブル、summary view、主キーが設計書と一致しているか。
+- **view と table の向き先**：`getList` / `getOne` だけ view を読む設計なら、`create` / `update` / `delete` が実テーブルへ向いているか。view に書き込みを投げていないか。
+- **検索**：`SearchInput source="q"` を使う場合、`beforeGetList` または同等処理で `q` を実在カラムの `@ilike` / `@or` フィルタに変換しているか。存在しない `q` カラム検索になっていないか。
+- **削除**：`DeleteButton` が record / resource context のある場所に置かれているか。`FormToolbar` に削除が含まれる前提になっていないか。外部キー制約・RLS・関連データありの失敗ケースを想定しているか。
+- **import**：画面部品は `@/components/admin/...`、base / hooks / controller は `ra-core` から import しているか。
+- **確認範囲**：一覧、検索（空文字 / ヒットあり / ヒットなし）、作成、更新、削除、エラー表示がテスト方針に含まれているか。
+
 ## 【両モード共通】言語・表記規約
 
 - **`src/custom/**`、新規マイグレーション、`src/App.tsx` 追記部分**：説明用コメント（`//`、`/* */`、JSDoc、SQL `--`）が **日本語** か。不要な英語コメントが残っていないか。
@@ -145,7 +156,7 @@ docs に書いてあるがフックで止められない項目があれば **FAI
 ## 【差分モード】設計書が PR に含まれる場合
 
 - `docs/workflow/design/*.md`（draft/approved）と実装のスコープ・層の割り当てが一致しているか。
-- マージ後に `docs/workflow/design/archive/` へ移動する想定か（`archive/` を実装参照に使っていないか）。
+- PR 作成時に `docs/workflow/design/archive/` へ移動する想定か（`archive/` を実装参照に使っていないか）。
 
 ---
 
@@ -159,6 +170,7 @@ docs に書いてあるがフックで止められない項目があれば **FAI
 コア保護: OK / NG（該当ファイルと行）
 拡張パターン: OK / 指摘あり
 CRM観点（RLS / i18n / Query）: 各 OK / 指摘あり
+CRUD/dataProvider観点: OK / 指摘あり / 対象外
 言語規約（コメント / コミット / PR）: OK / 指摘あり
 DoD: 各項目 ✓ / ✗
 

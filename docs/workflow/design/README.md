@@ -1,6 +1,6 @@
 # 機能設計書
 
-> **最終更新:** 2026-06-07
+> **最終更新:** 2026-06-09
 
 **主目的:** 実装前に人間が内容を確認・承認するため。  
 層の方針は [architecture/plugin-architecture.md](../../architecture/plugin-architecture.md)、レビュー結果は [logs/review-log.md](../../logs/review-log.md)。
@@ -20,13 +20,15 @@
 2. 設計書作成（docs/workflow/design/<名前>.md、status: draft）
 3. 人間が確認・OK → approved
 4. AI が設計書を見ながら実装（この間だけ参照）
-5. レビュー・テスト・PR・マージ
-6. 設計書を docs/workflow/design/archive/<名前>.md へ移動
-7. 以降の改修 → コード優先。大きい変更だけ新しい design（draft）から
+5. レビュー・テスト
+6. PR 作成と同時に設計書を docs/workflow/design/archive/<名前>.md へ移動
+7. マージ（人間）
+8. 以降の改修 → コード優先。未実装分・大きい変更は新しい design（draft）から
 ```
 
 **`approved` になるまで実装しない。**  
-**`archive/` は AI が参照しない。**
+**`archive/` は AI が参照しない。**  
+**アーカイブはマージ後ではなく、実装完了〜PR 作成時。** 設計書に書いたが実装しなかった範囲は、必要になったら別の設計書を新規作成する。
 
 ## 大きな依頼の分け方
 
@@ -50,19 +52,18 @@
 | `draft` | レビュー待ち |
 | `approved` | 実装してよい |
 
-マージ後は `archive/` へ移動。
+実装完了〜PR 作成時に `archive/` へ移動。
 
 ## 一覧（進行中）
 
 | 設計書 | 層 | status | 備考 |
 |--------|-----|--------|------|
 | [platform-tenant-config.md](./platform-tenant-config.md) | コア（platform） | **draft** | **noexcuse CRM** 表示・テナント JSON。先に承認 |
-| [platform-plugin-registry.md](./platform-plugin-registry.md) | コア（platform） | **approved** | 本 PR で実装済み |
-| [plugin-stores.md](./plugin-stores.md) | プラグイン | **approved** | Phase 1 実装済み（PR #5） |
-| [plugin-stores-followups.md](./plugin-stores-followups.md) | プラグイン | **approved** | §1・§2 実装中（PR #6 予定）。§3 は未着手 |
+| [platform-implementation-patterns.md](./platform-implementation-patterns.md) | コア（ハーネス） | **approved** | CRUD / dataProvider / 検索 / 削除の実装パターン |
 
 ## 関連
 
 - [architecture/plugin-architecture.md](../../architecture/plugin-architecture.md)
 - [development.md](../development.md)
 - [_template.md](./_template.md)
+- [archive/](./archive/) — 実装済み設計書（AI は参照しない）
