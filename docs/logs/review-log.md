@@ -9,6 +9,37 @@
 
 ---
 
+## 2026-06-09 | feat/platform-implementation-patterns | CRUD / dataProvider 実装パターン | [PR #7](https://github.com/fress-dev/fress-crm-template/pull/7)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- `.cursor/rules/implementation-patterns.mdc` — CRUD / dataProvider / 検索 / 削除の実装パターン
+- `docs/workflow/design/_template.md` — CRUD チェック欄
+- `.cursor/agents/reviewer.md` — CRUD / dataProvider レビュー観点
+- `AGENTS.md` — 実装パターン rule への参照
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `platform-implementation-patterns.md`（approved）のスコープ3点と一致 |
+| コア保護 | **OK** — `src/**`・migrations 変更なし |
+| 拡張パターン | **OK** — 縫い目・ハーネス docs のみ |
+| CRUD/dataProvider観点 | **対象外**（ハーネス追加のみ） |
+| DoD | **OK** — `make pre-pr` 想定内（docs / rules のみ） |
+
+### メモ
+
+- ハーネス本体は PR #7 で `develop` にマージ済み。本ブランチでは設計書 archive と横断参照を仕上げる。
+
+---
+
 ## 2026-06-09 | feat/platform-plugin-registry | プラグインレジストリ実装 | [PR #4](https://github.com/fress-dev/fress-crm-template/pull/4)
 
 | 項目 | 結果 |

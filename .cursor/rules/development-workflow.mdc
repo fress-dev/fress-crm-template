@@ -7,6 +7,8 @@ alwaysApply: true
 
 新機能・拡張は AGENTS.md 末尾の「## 開発フロー」に従う。`feat/*` は [`docs/workflow/design/`](../../docs/workflow/design/) に設計書（`approved`）を先に作成する（1 設計書 = 1 PR）。[`docs/workflow/design/archive/`](../../docs/workflow/design/archive/) は参照しない。フェーズの状態は git ブランチと PR で表現する。
 
+マスタ管理・CRUD・検索・削除・dataProvider を触る場合は [`implementation-patterns.mdc`](./implementation-patterns.mdc) に従う。
+
 ## ブランチ戦略
 
 | ブランチ | 用途 |

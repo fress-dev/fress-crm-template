@@ -82,7 +82,7 @@ flowchart LR
 
 | 種類 | 場所 | 内容 |
 |------|------|------|
-| ルール | `.cursor/rules/*.mdc` | フロー・コア保護・日本語規約 |
+| ルール | `.cursor/rules/*.mdc` | フロー・コア保護・日本語規約・CRUD 実装パターン（`implementation-patterns.mdc`） |
 | フック | `.cursor/hooks/workflow-gate-shell.sh` | main 直 commit/push 禁止・develop 起点・命名・PR base 検証 |
 | CI | `.github/workflows/check.yml` | lint / test / e2e |
 | スクリプト | `scripts/pre-pr-check.sh` 等 | PR 前チェック・PR 本文生成 |
