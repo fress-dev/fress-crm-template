@@ -1,8 +1,9 @@
 # CRUD / dataProvider 実装パターンのハーネス追加
 
 > **status:** approved  
-> **層:** コア  
-> **ブランチ（予定）:** feat/platform-implementation-patterns  
+> **archived:** 2026-06-09 — PR #7 でハーネス実装済み、本 PR 作成時に `archive/` へ移動  
+> **層:** コア（ハーネス）  
+> **ブランチ:** `feat/platform-implementation-patterns`  
 > **最終更新:** 2026-06-09
 
 ## 概要

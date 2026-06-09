@@ -13,3 +13,4 @@
 | [platform-plugin-registry.md](./platform-plugin-registry.md) | コア（platform） | 2026-06-09 | PR #4 プラグインレジストリ |
 | [plugin-stores.md](./plugin-stores.md) | プラグイン | 2026-06-09 | PR #5 Phase 1（Phase 2 は別設計書） |
 | [plugin-stores-followups.md](./plugin-stores-followups.md) | プラグイン | 2026-06-09 | PR #6 §1・§2（§3 論理削除は別設計書） |
+| [platform-implementation-patterns.md](./platform-implementation-patterns.md) | コア（ハーネス） | 2026-06-09 | CRUD / dataProvider 実装パターン（PR #7） |
