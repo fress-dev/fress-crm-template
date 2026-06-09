@@ -15,7 +15,9 @@ const findTenantModule = (tenantId: string): TenantConfig | undefined => {
 
 const fallbackTenantConfig = (): TenantConfig => ({
   id: DEFAULT_TENANT_ID,
+  title: "お客様管理",
   plugins: [],
+  hiddenResources: [],
   extensions: [],
 });
 
@@ -35,6 +37,7 @@ export const loadTenantConfig = (): TenantConfig => {
 
   return {
     ...config,
+    hiddenResources: config.hiddenResources ?? [],
     plugins: config.plugins ?? [],
     extensions: config.extensions ?? [],
   };

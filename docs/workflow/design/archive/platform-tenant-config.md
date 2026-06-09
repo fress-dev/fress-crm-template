@@ -1,6 +1,6 @@
 # テナント設定の読み込みと noexcuse 向け表示
 
-> **status:** draft  
+> **status:** approved
 > **層:** コア（platform）  
 > **ブランチ（予定）:** `feat/platform-tenant-config`  
 > **最終更新:** 2026-06-07
@@ -88,7 +88,7 @@ type TenantConfig = {
   id: string;                    // 例: "noexcuse"
   title: string;                 // 例: "noexcuse CRM"
   plugins: string[];             // 例: ["stores"] — 次 PR 以降で有効化
-  hiddenResources?: Array<"companies" | "deals" | "contacts">;
+  hiddenResources?: Array<"companies" | "deals" | "contacts" | "sales">;
   crm: {
     dealStages: Array<{ value: string; label: string }>;
     dealCategories?: Array<{ value: string; label: string }>;
@@ -118,7 +118,7 @@ type TenantConfig = {
 | `labels.deals` | 入会管理 |
 | `labels.sales` | スタッフ |
 | `hiddenResources` | `["companies"]` |
-| `plugins` | `[]`（registry PR 後に `"stores"` を追加） |
+| `plugins` | `["stores"]`（stores プラグイン有効） |
 | `storeSeed` | 船橋店、千葉店（[plugin-stores.md](./archive/plugin-stores.md) で DB 投入） |
 | `crm.dealStages` | 下表 |
 | `crm.taskTypes` | 体験後連絡 / 更新案内 / 休会フォロー 等 |

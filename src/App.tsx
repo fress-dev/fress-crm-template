@@ -6,7 +6,7 @@ import { getDataProvider } from "@/components/atomic-crm/providers/supabase";
 
 import { bootstrapPlainJapaneseStore } from "@/custom/configuration/bootstrapPlainJapaneseStore";
 import { PlainJapaneseLayout } from "@/custom/layout/PlainJapaneseLayout";
-import { i18nProvider } from "@/custom/i18n/i18nProvider";
+import { createI18nProvider } from "@/custom/i18n/i18nProvider";
 import { withPlainJapaneseConfiguration } from "@/custom/providers/withPlainJapaneseConfiguration";
 import { withPluginDataProvider } from "@/custom/providers/withPluginDataProvider";
 import { resolveAppAssembly } from "@/custom/platform/plugin/resolveAssembly";
@@ -24,19 +24,29 @@ bootstrapPlainJapaneseStore(crmStore);
  */
 const App = () => {
   const assembly = useMemo(() => resolveAppAssembly(), []);
+  const tenantI18nProvider = useMemo(
+    () => createI18nProvider(assembly.i18nOverrides),
+    [assembly.i18nOverrides],
+  );
 
   const dataProvider = useMemo(
     () =>
-      withPluginDataProvider(withPlainJapaneseConfiguration(getDataProvider())),
-    [],
+      withPluginDataProvider(
+        withPlainJapaneseConfiguration(
+          getDataProvider(),
+          assembly.crmConfiguration,
+        ),
+      ),
+    [assembly.crmConfiguration],
   );
 
   return (
     <FressCRM
       store={crmStore}
       dataProvider={dataProvider}
-      i18nProvider={i18nProvider}
+      i18nProvider={tenantI18nProvider}
       layout={PlainJapaneseLayout}
+      hiddenResources={assembly.tenant.hiddenResources}
       {...assembly.crmConfiguration}
     />
   );

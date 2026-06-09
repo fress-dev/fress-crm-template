@@ -45,21 +45,31 @@ const applyJapaneseNoteStatuses = (
 /** 保存済み設定に、日本語ラベルを value 単位で上書きする */
 export const mergePlainJapaneseConfiguration = (
   config: Partial<ConfigurationContextValue> = {},
+  baseConfig: Partial<ConfigurationContextValue> = plainJapaneseConfiguration,
 ): ConfigurationContextValue => ({
   ...defaultConfiguration,
   ...plainJapaneseConfiguration,
   ...config,
-  title: plainJapaneseConfiguration.title,
-  currency: plainJapaneseConfiguration.currency,
+  ...baseConfig,
+  title: baseConfig.title ?? plainJapaneseConfiguration.title,
+  currency: baseConfig.currency ?? plainJapaneseConfiguration.currency,
   companySectors: applyJapaneseLabels(
     config.companySectors,
     plainJapaneseCompanySectors,
   ),
-  dealStages: applyJapaneseLabels(config.dealStages, plainJapaneseDealStages),
-  dealCategories: applyJapaneseLabels(
-    config.dealCategories,
-    plainJapaneseDealCategories,
-  ),
-  noteStatuses: applyJapaneseNoteStatuses(config.noteStatuses),
-  taskTypes: applyJapaneseLabels(config.taskTypes, plainJapaneseTaskTypes),
+  dealStages:
+    baseConfig.dealStages ??
+    applyJapaneseLabels(config.dealStages, plainJapaneseDealStages),
+  dealCategories:
+    baseConfig.dealCategories ??
+    applyJapaneseLabels(config.dealCategories, plainJapaneseDealCategories),
+  dealPipelineStatuses:
+    baseConfig.dealPipelineStatuses ??
+    config.dealPipelineStatuses ??
+    defaultConfiguration.dealPipelineStatuses,
+  noteStatuses:
+    baseConfig.noteStatuses ?? applyJapaneseNoteStatuses(config.noteStatuses),
+  taskTypes:
+    baseConfig.taskTypes ??
+    applyJapaneseLabels(config.taskTypes, plainJapaneseTaskTypes),
 });
