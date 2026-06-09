@@ -120,12 +120,13 @@ test-e2e-ci: start-e2e-ci
 	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
 	npx playwright test
 
-test-e2e-tenant-noexcuse: start-supabase-e2e ## noexcuse tenant smoke e2e
-	VITE_TENANT_ID=noexcuse npx vite --port 5175 --force --mode e2e &
+test-e2e-tenant: start-supabase-e2e ## tenant smoke e2e. Usage: make test-e2e-tenant TENANT_ID=<id>
+	@test -n "$(TENANT_ID)" || (echo "TENANT_ID=<id> を指定してください" >&2; exit 1)
+	VITE_TENANT_ID=$(TENANT_ID) npx vite --port 5175 --force --mode e2e &
 	@chmod +x scripts/sync-e2e-env.sh
 	@./scripts/sync-e2e-env.sh
 	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
-	VITE_TENANT_ID=noexcuse npx playwright test e2e/tenantNoexcuse.spec.ts --project=chromium
+	TENANT_ID=$(TENANT_ID) VITE_TENANT_ID=$(TENANT_ID) npx playwright test e2e/tenantSmoke.spec.ts --project=chromium
 
 # PR 前の CI 相当チェック（e2e 除く。e2e は make pre-pr-e2e）
 pre-pr:
