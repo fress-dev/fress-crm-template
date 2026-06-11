@@ -12,6 +12,18 @@ import { StoreCreatedAtField } from "./StoreCreatedAtField";
 import { StoreEmpty } from "./StoreEmpty";
 import { StoreNameField } from "./StoreNameField";
 
+/** FilterForm の alwaysOn で常時表示するラッパー */
+const IncludeDeletedStoresFilter = ({
+  alwaysOn: _alwaysOn,
+}: {
+  alwaysOn?: boolean;
+}) => (
+  <ToggleFilterButton
+    label="resources.stores.filters.include_deleted"
+    value={{ include_deleted: true }}
+  />
+);
+
 const StoreListActions = () => (
   <TopToolbar>
     <ExportButton />
@@ -24,13 +36,7 @@ export const StoreList = () => {
   const filters = [
     <SearchInput source="q" alwaysOn key="q" />,
     ...(identity?.administrator
-      ? [
-          <ToggleFilterButton
-            key="include_deleted"
-            label="resources.stores.filters.include_deleted"
-            value={{ include_deleted: true }}
-          />,
-        ]
+      ? [<IncludeDeletedStoresFilter alwaysOn key="include_deleted" />]
       : []),
   ];
 

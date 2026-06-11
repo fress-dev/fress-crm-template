@@ -36,12 +36,7 @@ test("store soft delete", async ({
   await page.getByRole("button", { name: ja.createStore }).click();
   await dismissToast(ja.createdToast);
 
-  await goToContactsList(page);
-  if (isMobile) {
-    await page.getByRole("button", { name: ja.newContact }).click();
-  } else {
-    await page.getByRole("link", { name: ja.newContact }).click();
-  }
+  await page.goto(`${E2E_BASE}/#/contacts/create`);
   await page.waitForLoadState("networkidle");
 
   await page.getByLabel(ja.femalePronoun).click();
@@ -68,20 +63,20 @@ test("store soft delete", async ({
   await page.getByText("論理 削除").click();
   await page.waitForLoadState("networkidle");
 
-  const contactId = page.url().match(/contacts\/(\d+)/)?.[1];
-  if (!contactId) {
-    throw new Error(`contact id not found in ${page.url()}`);
+  if (isMobile) {
+    await page.getByRole("button", { name: ja.edit }).click();
+    await page.waitForLoadState("networkidle");
+  } else {
+    const contactId = page.url().match(/contacts\/(\d+)/)?.[1];
+    if (!contactId) {
+      throw new Error(`contact id not found in ${page.url()}`);
+    }
+    await page.goto(`${E2E_BASE}/#/contacts/${contactId}/edit`);
+    await page.waitForLoadState("networkidle");
   }
-  await page.goto(`${E2E_BASE}/#/contacts/${contactId}/edit`);
-  await page.waitForLoadState("networkidle");
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
-  await goToContactsList(page);
-  if (isMobile) {
-    await page.getByRole("button", { name: ja.newContact }).click();
-  } else {
-    await page.getByRole("link", { name: ja.newContact }).click();
-  }
+  await page.goto(`${E2E_BASE}/#/contacts/create`);
   await page.waitForLoadState("networkidle");
   await page.getByLabel(ja.memberStore).click();
   await expect(page.getByRole("option", { name: storeName })).not.toBeVisible();
