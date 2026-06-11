@@ -4,6 +4,7 @@ import {
   goToContactsList,
   goToStoresList,
   openNewContactForm,
+  openNewContactFormOnMobileList,
   openNewStoreForm,
 } from "./storeHelpers";
 
@@ -99,8 +100,7 @@ test("store soft delete", async ({
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: /Back/i }).click();
     await page.waitForLoadState("networkidle");
-    await page.getByText(ja.newContact).click();
-    await page.waitForLoadState("networkidle");
+    await openNewContactFormOnMobileList(page);
   } else {
     await page.goto(`${E2E_BASE}/#/contacts/create`);
     await page.waitForLoadState("networkidle");

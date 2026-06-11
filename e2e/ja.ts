@@ -63,6 +63,7 @@ export const ja = {
   tagAddedToast: "2人にラベルを付けました",
   addTask: "タスクを追加",
   create: "作成",
+  contactForcedCaseName: "担当者",
   task: "タスク",
   tasks: "タスク",
   taskCount: (n: number) => `タスク ${n}件`,
