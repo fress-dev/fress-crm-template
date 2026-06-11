@@ -83,6 +83,7 @@ test("store soft delete", async ({
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
   await openNewContactForm(page, isMobile);
+  await expect(page.getByLabel(ja.memberStore)).toBeVisible();
   await page.getByLabel(ja.memberStore).click();
   await expect(page.getByRole("option", { name: storeName })).not.toBeVisible();
 

@@ -4,7 +4,7 @@ import { ExportButton } from "@/components/admin/export-button";
 import { List } from "@/components/admin/list";
 import { SearchInput } from "@/components/admin/search-input";
 import { ToggleFilterButton } from "@/components/admin/toggle-filter-button";
-import { useGetIdentity } from "ra-core";
+import { useGetIdentity, useGetOne } from "ra-core";
 
 import { TopToolbar } from "@/components/atomic-crm/layout/TopToolbar";
 
@@ -33,9 +33,15 @@ const StoreListActions = () => (
 
 export const StoreList = () => {
   const { identity } = useGetIdentity();
+  const { data: sale } = useGetOne(
+    "sales",
+    { id: identity?.id ?? "" },
+    { enabled: identity?.id != null },
+  );
+  const isAdmin = sale?.administrator === true;
   const filters = [
     <SearchInput source="q" alwaysOn key="q" />,
-    ...(identity?.administrator
+    ...(isAdmin
       ? [<IncludeDeletedStoresFilter alwaysOn key="include_deleted" />]
       : []),
   ];
