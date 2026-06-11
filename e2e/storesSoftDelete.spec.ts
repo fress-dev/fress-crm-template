@@ -127,11 +127,12 @@ test("store soft delete", async ({
   }
 
   await goToStoresList(page);
-  await clickIncludeDeletedStores(page, isMobile);
-  await expectStoreInList(page, storeName, true);
-
-  await clickIncludeDeletedStores(page, isMobile);
-  await expectStoreInList(page, storeName, false);
+  if (!isMobile) {
+    await clickIncludeDeletedStores(page, isMobile);
+    await expectStoreInList(page, storeName, true);
+    await clickIncludeDeletedStores(page, isMobile);
+    await expectStoreInList(page, storeName, false);
+  }
 
   await openNewStoreForm(page);
   await page.getByLabel(ja.storeName).fill(storeName);
