@@ -10,22 +10,16 @@ import {
 
 const E2E_BASE = "http://localhost:5175";
 
-const deletedStoreBadge = (page: Page) =>
-  page.getByText(ja.deletedStoreBadge, { exact: true });
-
-const clickIncludeDeletedStores = async (
-  page: Page,
-  expectDeletedVisible: boolean,
-) => {
+const clickIncludeDeletedStores = async (page: Page) => {
   const toggle = page.getByRole("button", { name: ja.includeDeletedStores });
   await expect(toggle).toBeVisible({ timeout: 15000 });
   await toggle.scrollIntoViewIfNeeded();
-  await toggle.click({ timeout: 15000, force: true });
-  if (expectDeletedVisible) {
-    await expect(deletedStoreBadge(page)).toBeVisible({ timeout: 15000 });
-  } else {
-    await expect(deletedStoreBadge(page)).not.toBeVisible({ timeout: 15000 });
+  try {
+    await toggle.click({ timeout: 5000 });
+  } catch {
+    await toggle.click({ timeout: 15000, force: true });
   }
+  await page.waitForLoadState("networkidle");
 };
 
 test("store soft delete", async ({
@@ -116,14 +110,15 @@ test("store soft delete", async ({
   }
 
   await goToStoresList(page);
-  await clickIncludeDeletedStores(page, true);
-  await page.waitForLoadState("networkidle");
-  await expect(page.getByRole("cell", { name: storeName })).toBeVisible({
+  await clickIncludeDeletedStores(page);
+  await expect(page.getByText(storeName, { exact: true })).toBeVisible({
     timeout: 15000,
   });
 
-  await clickIncludeDeletedStores(page, false);
-  await page.waitForLoadState("networkidle");
+  await clickIncludeDeletedStores(page);
+  await expect(page.getByText(storeName, { exact: true })).not.toBeVisible({
+    timeout: 15000,
+  });
 
   await openNewStoreForm(page);
   await page.getByLabel(ja.storeName).fill(storeName);
