@@ -1,0 +1,76 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { isMap, isSeq, parseDocument } from "yaml";
+
+const ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../..",
+);
+const FEATURES_PATH = path.join(ROOT, "docs/product/features.yaml");
+
+export type FeatureStatus =
+  | "next"
+  | "in-progress"
+  | "blocked"
+  | "done"
+  | "skip";
+
+export type FeatureUpdate = {
+  status?: FeatureStatus;
+  assignee?: string | null;
+};
+
+const readDoc = () => {
+  const content = fs.readFileSync(FEATURES_PATH, "utf8");
+  return { content, doc: parseDocument(content) };
+};
+
+export const loadBacklog = () => {
+  const { doc } = readDoc();
+  return doc.toJSON();
+};
+
+const findFeatureMap = (id: string) => {
+  const { doc } = readDoc();
+  const features = doc.get("features", true);
+  if (!isSeq(features)) {
+    throw new Error("features.yaml: features が見つかりません");
+  }
+
+  for (const item of features.items) {
+    if (!isMap(item)) continue;
+    const idNode = item.get("id", true);
+    if (idNode?.value === id) {
+      return { doc, item };
+    }
+  }
+
+  return null;
+};
+
+export const updateFeature = (id: string, update: FeatureUpdate) => {
+  const found = findFeatureMap(id);
+  if (!found) {
+    throw new Error(`features.yaml: id="${id}" が見つかりません`);
+  }
+
+  const { doc, item } = found;
+
+  if (update.status !== undefined) {
+    item.set("status", update.status);
+  }
+
+  if (update.assignee !== undefined) {
+    if (update.assignee === null || update.assignee === "") {
+      item.delete("assignee");
+    } else {
+      item.set("assignee", update.assignee);
+    }
+  }
+
+  doc.set("last_updated", new Date().toISOString().slice(0, 10));
+  fs.writeFileSync(FEATURES_PATH, String(doc), "utf8");
+
+  return doc.toJSON();
+};

@@ -38,11 +38,13 @@ docs/
 |-------------|------|
 | [architecture/plugin-architecture.md](./architecture/plugin-architecture.md) | コア・プラグイン・テナント設定・カスタム層 |
 
-### product/ — 製品
+### product/ — 製品・バックログ
 
 | ドキュメント | 内容 |
 |-------------|------|
-| [product/crm-features.md](./product/crm-features.md) | お客様管理の機能一覧 |
+| [product/roadmap.md](./product/roadmap.md) | Salus 由来ジム機能のロードマップ（次に何を開発するか） |
+| [product/features.yaml](./product/features.yaml) | 上記の機械可読版（AI が読む） |
+| [product/crm-features.md](./product/crm-features.md) | お客様管理の機能一覧（利用者向け） |
 
 ### logs/ — ログ
 
@@ -56,6 +58,7 @@ docs/
 |------|------|
 | [AGENTS.md](../AGENTS.md) | メインエージェント向けマスター指示 |
 | [doc/](../doc/) | 上流 Atomic CRM の公式ドキュメント（英語） |
+| [../tools/backlog/README.md](../tools/backlog/README.md) | ローカル Kanban UI（`make start-backlog`） |
 
 ## 旧パスからの移行
 
