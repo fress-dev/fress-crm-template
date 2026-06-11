@@ -9,12 +9,26 @@ const ROOT = path.resolve(
 );
 const FEATURES_PATH = path.join(ROOT, "docs/product/features.yaml");
 
-export type FeatureStatus =
-  | "next"
-  | "in-progress"
-  | "blocked"
-  | "done"
-  | "skip";
+export type FeatureStatus = "not-started" | "in-progress" | "done" | "on-hold";
+
+const LEGACY_STATUS_MAP: Record<string, FeatureStatus> = {
+  next: "not-started",
+  blocked: "on-hold",
+  skip: "on-hold",
+};
+
+const normalizeStatus = (status: unknown): FeatureStatus | undefined => {
+  if (typeof status !== "string") return undefined;
+  if (
+    status === "not-started" ||
+    status === "in-progress" ||
+    status === "done" ||
+    status === "on-hold"
+  ) {
+    return status;
+  }
+  return LEGACY_STATUS_MAP[status];
+};
 
 export type FeatureUpdate = {
   status?: FeatureStatus;
@@ -28,7 +42,18 @@ const readDoc = () => {
 
 export const loadBacklog = () => {
   const { doc } = readDoc();
-  return doc.toJSON();
+  const data = doc.toJSON() as {
+    features?: Array<{ status?: string }>;
+  };
+
+  for (const feature of data.features ?? []) {
+    const normalized = normalizeStatus(feature.status);
+    if (normalized) {
+      feature.status = normalized;
+    }
+  }
+
+  return data;
 };
 
 const findFeatureMap = (id: string) => {

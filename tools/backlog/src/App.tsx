@@ -29,7 +29,7 @@ export const App = () => {
   const [info, setInfo] = useState<string | null>(null);
   const [activeFeature, setActiveFeature] = useState<Feature | null>(null);
   const [hideDone, setHideDone] = useState(true);
-  const [hideSkip, setHideSkip] = useState(false);
+  const [hideOnHold, setHideOnHold] = useState(false);
   const [layerFilter, setLayerFilter] = useState("all");
 
   const sensors = useSensors(
@@ -71,11 +71,11 @@ export const App = () => {
     if (!data) return [];
     return data.features.filter((f) => {
       if (hideDone && f.status === "done") return false;
-      if (hideSkip && f.status === "skip") return false;
+      if (hideOnHold && f.status === "on-hold") return false;
       if (layerFilter !== "all" && f.layer !== layerFilter) return false;
       return true;
     });
-  }, [data, hideDone, hideSkip, layerFilter]);
+  }, [data, hideDone, hideOnHold, layerFilter]);
 
   const columns = useMemo(() => {
     const map = Object.fromEntries(
@@ -91,7 +91,7 @@ export const App = () => {
 
   const visibleColumns = COLUMN_ORDER.filter((status) => {
     if (hideDone && status === "done") return false;
-    if (hideSkip && status === "skip") return false;
+    if (hideOnHold && status === "on-hold") return false;
     return true;
   });
 
@@ -165,10 +165,10 @@ export const App = () => {
           <label>
             <input
               type="checkbox"
-              checked={hideSkip}
-              onChange={(e) => setHideSkip(e.target.checked)}
+              checked={hideOnHold}
+              onChange={(e) => setHideOnHold(e.target.checked)}
             />
-            スキップを隠す
+            保留を隠す
           </label>
           <label>
             層

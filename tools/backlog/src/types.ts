@@ -1,9 +1,4 @@
-export type FeatureStatus =
-  | "next"
-  | "in-progress"
-  | "blocked"
-  | "done"
-  | "skip";
+export type FeatureStatus = "not-started" | "in-progress" | "done" | "on-hold";
 
 export type Feature = {
   id: string;
@@ -36,19 +31,24 @@ export type BacklogData = {
 };
 
 export const COLUMN_ORDER: FeatureStatus[] = [
-  "next",
+  "not-started",
   "in-progress",
-  "blocked",
   "done",
-  "skip",
+  "on-hold",
 ];
 
 export const COLUMN_LABELS: Record<FeatureStatus, string> = {
-  next: "着手候補",
-  "in-progress": "進行中",
-  blocked: "ブロック",
+  "not-started": "未着手",
+  "in-progress": "着手",
   done: "完了",
-  skip: "スキップ",
+  "on-hold": "保留",
+};
+
+/** 旧 status 値（移行用） */
+export const LEGACY_STATUS_MAP: Record<string, FeatureStatus> = {
+  next: "not-started",
+  blocked: "on-hold",
+  skip: "on-hold",
 };
 
 export const ASSIGNEE_OPTIONS = [

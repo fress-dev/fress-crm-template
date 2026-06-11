@@ -1,6 +1,7 @@
 # Salus 由来パーソナルジム機能のバックログ（AI・スクリプト向け）
 # 人間向けの一覧・選び方: docs/product/roadmap.md
 # 更新ルール: 設計承認・PR マージ・スコープ判断のたびに status / pr / design を更新する
+# status: not-started（未着手）| in-progress（着手）| done（完了）| on-hold（保留）
 
 version: 1
 last_updated: 2026-06-12
@@ -203,7 +204,7 @@ features:
     salus: 店舗権限
     crm: スタッフは担当店舗のみ RLS
     layer: plugin
-    status: blocked
+    status: on-hold
     priority: P2
     depends_on: [plugin-stores-master]
     scenarios: [B, C]
@@ -216,7 +217,7 @@ features:
     salus: 部屋（Room）
     crm: rooms マスタ（店舗配下）
     layer: plugin
-    status: blocked
+    status: on-hold
     priority: P2
     depends_on: [plugin-stores-master, plugin-appointments]
     scenarios: [B]
@@ -239,7 +240,7 @@ features:
     salus: 契約・チケット（Contract / Ticket）
     crm: コース契約・回数券発行・消費
     layer: plugin
-    status: blocked
+    status: on-hold
     priority: P0
     depends_on: [plugin-courses, core-contacts-member]
     scenarios: [A, B]
@@ -250,7 +251,7 @@ features:
     salus: スケジュール・予約（Schedule）
     crm: カレンダー・予約 CRUD・カウンセリング/セッション種別
     layer: plugin
-    status: next
+    status: not-started
     priority: P0
     depends_on: [plugin-stores-master]
     scenarios: [A, B]
@@ -261,7 +262,7 @@ features:
     salus: 一括予約（ScheduleBulk）
     crm: 曜日・隔週・期間での繰り返しセッション作成
     layer: plugin
-    status: skip
+    status: on-hold
     priority: P3
     depends_on: [plugin-appointments, plugin-memberships]
     scenarios: [B]
@@ -271,7 +272,7 @@ features:
     salus: セッション記録（Session）
     crm: 身体データ・種目・チケット再割当
     layer: plugin
-    status: blocked
+    status: on-hold
     priority: P1
     depends_on: [plugin-appointments, plugin-memberships]
     scenarios: [B]
@@ -281,7 +282,7 @@ features:
     salus: 種目マスタ・TrainingContent
     crm: TrainingType / TrainingGroup + セッション行
     layer: plugin
-    status: blocked
+    status: on-hold
     priority: P2
     depends_on: [plugin-session-log]
     scenarios: [B]
@@ -291,7 +292,7 @@ features:
     salus: 身体グラフ（Graph）
     crm: 体重・体脂肪の時系列チャート
     layer: plugin
-    status: skip
+    status: on-hold
     priority: P3
     depends_on: [plugin-session-log]
     scenarios: [B]
@@ -301,7 +302,7 @@ features:
     salus: カルテ（Karte）— 会員ハブ
     crm: Contact Show 拡張（契約・予約・セッションへの入口）
     layer: custom
-    status: next
+    status: not-started
     priority: P1
     depends_on: [core-contacts-member, plugin-stores-master]
     scenarios: [A, B]
@@ -314,7 +315,7 @@ features:
     salus: スケジュールコピー（LINE 等）
     crm: メモテンプレ・クリップボード出力
     layer: custom
-    status: skip
+    status: on-hold
     priority: P3
     depends_on: [plugin-appointments]
     scenarios: [B]
@@ -324,7 +325,7 @@ features:
     salus: 決済（Salus にも無し）
     crm: 外部決済連携プラグイン
     layer: plugin
-    status: skip
+    status: on-hold
     priority: null
     depends_on: []
     scenarios: []
@@ -337,7 +338,7 @@ features:
     salus: —
     crm: CSV 入出力（会員移行）
     layer: core
-    status: skip
+    status: on-hold
     priority: P3
     depends_on: []
     scenarios: [C]
@@ -347,7 +348,7 @@ features:
     salus: —
     crm: インバウンドメール → メモ
     layer: core
-    status: skip
+    status: on-hold
     priority: P3
     depends_on: []
     scenarios: [A]

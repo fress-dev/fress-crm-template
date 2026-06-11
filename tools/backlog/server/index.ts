@@ -7,11 +7,10 @@ const app = express();
 const PORT = 3456;
 
 const STATUSES: FeatureStatus[] = [
-  "next",
+  "not-started",
   "in-progress",
-  "blocked",
   "done",
-  "skip",
+  "on-hold",
 ];
 
 app.use(cors());

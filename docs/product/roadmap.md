@@ -43,7 +43,7 @@ features.yaml   (approved)         migrations         + roadmap 更新
 
 ## 選び方（3ステップ）
 
-1. 下の **「いま選べる候補」** を見る（`status: next` かつ依存が `done`）
+1. 下の **「いま選べる候補」** を見る（`status: not-started` かつ依存が `done`）
 2. **縦切りシナリオ**（A/B/C）で「今やりたい業務」を1つ決める
 3. 候補が2〜3個に絞れたら、チャットで **「`<id>` で設計書を書いて」** と依頼する
 
@@ -106,7 +106,7 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 
 ## 全機能一覧
 
-`status` の意味: `done` 完了 / `in-progress` PR 中 / `next` 着手候補 / `blocked` 依存待ち / `skip` 当面やらない
+`status` の意味: `not-started` 未着手 / `in-progress` 着手 / `done` 完了 / `on-hold` 保留（依存待ち・当面やらない・将来）
 
 ### コア・テナント（完了済みが多い）
 
@@ -135,30 +135,30 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 | done | plugin-stores-ui | Show・Empty・削除 | [archive followups §2](../workflow/design/archive/plugin-stores-followups.md) |
 | done | plugin-stores-search-layout | 検索・レイアウト・runbook | [PR #10](https://github.com/fress-dev/fress-crm-template/pull/10) |
 | in-progress | plugin-stores-soft-delete | del_flg | [PR #12](https://github.com/fress-dev/fress-crm-template/pull/12) |
-| blocked | plugin-stores-rls | 店舗権限 RLS | plugin-stores Phase 2 |
+| on-hold | plugin-stores-rls | 店舗権限 RLS | plugin-stores Phase 2 |
 
 ### これから（Salus 中核）
 
 | status | id | Salus | プラグイン案 | P |
 |--------|-----|-------|-------------|---|
-| next | plugin-appointments | Schedule | 予約・カレンダー | P0 |
+| not-started | plugin-appointments | Schedule | 予約・カレンダー | P0 |
 | in-progress | plugin-courses | Course | コースマスタ | P1 |
-| blocked | plugin-memberships | Contract / Ticket | 契約・回数券 | P0 |
-| blocked | plugin-session-log | Session | 身体データ・実施記録 | P1 |
-| blocked | plugin-rooms | Room | 部屋 | P2 |
-| blocked | plugin-training-content | 種目 | TrainingContent | P2 |
-| next | karte-hub | Karte | Contact Show ハブ | P1 |
-| skip | plugin-schedule-bulk | ScheduleBulk | 一括予約 | P3 |
-| skip | plugin-body-graph | Graph | 身体グラフ | P3 |
-| skip | plugin-payments | — | 決済（将来） | — |
+| on-hold | plugin-memberships | Contract / Ticket | 契約・回数券 | P0 |
+| on-hold | plugin-session-log | Session | 身体データ・実施記録 | P1 |
+| on-hold | plugin-rooms | Room | 部屋 | P2 |
+| on-hold | plugin-training-content | 種目 | TrainingContent | P2 |
+| not-started | karte-hub | Karte | Contact Show ハブ | P1 |
+| on-hold | plugin-schedule-bulk | ScheduleBulk | 一括予約 | P3 |
+| on-hold | plugin-body-graph | Graph | 身体グラフ | P3 |
+| on-hold | plugin-payments | — | 決済（将来） | — |
 
 ---
 
 ## 更新ルール
 
-1. **設計承認時** — 対象 `id` を `next` のまま、`design` に draft パスを入れる
+1. **設計承認時** — 対象 `id` を `not-started` のまま、`design` に draft パスを入れる
 2. **PR マージ時** — `status: done`、`pr`・`branch` を記録。設計書は `workflow/design/archive/` へ（既存フロー）
-3. **スコープ変更** — `skip` / `blocked` / `decisions` を更新。大きな論点は本ファイルの「未決」にも1行追記
+3. **スコープ変更** — `on-hold` / `decisions` を更新。大きな論点は本ファイルの「未決」にも1行追記
 4. **AI 依頼時** — 「ロードマップを見て次を提案して」→ `features.yaml` を読む
 
 ---
