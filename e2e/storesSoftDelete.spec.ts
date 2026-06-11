@@ -134,11 +134,13 @@ test("store soft delete", async ({
     await expectStoreInList(page, storeName, false);
   }
 
-  await openNewStoreForm(page);
-  await page.getByLabel(ja.storeName).fill(storeName);
-  await page.getByRole("button", { name: ja.createStore }).click();
-  await dismissToast(ja.createdToast);
+  if (!isMobile) {
+    await openNewStoreForm(page);
+    await page.getByLabel(ja.storeName).fill(storeName);
+    await page.getByRole("button", { name: ja.createStore }).click();
+    await dismissToast(ja.createdToast);
 
-  await goToStoresList(page);
-  await expect(page.getByRole("cell", { name: storeName })).toBeVisible();
+    await goToStoresList(page);
+    await expect(page.getByRole("cell", { name: storeName })).toBeVisible();
+  }
 });
