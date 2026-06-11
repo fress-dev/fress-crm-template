@@ -10,6 +10,7 @@ export const storesPlugin: PluginDefinition = {
     "20260609120000_stores_validation.sql",
     "20260609140000_contacts_summary_store_id.sql",
     "20260610120000_stores_store_id_nullable.sql",
+    "20260612120000_stores_soft_delete.sql",
   ],
   resources: [{ name: "stores", props: storesResource }],
 };

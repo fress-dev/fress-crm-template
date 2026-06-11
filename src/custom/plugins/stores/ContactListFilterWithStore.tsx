@@ -23,6 +23,8 @@ import { ResponsiveFilters } from "@/components/atomic-crm/misc/ResponsiveFilter
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ActiveFilterButton } from "@/components/atomic-crm/misc/ActiveFilterButton";
 
+import { ACTIVE_STORE_FILTER } from "./withStoresDataProvider";
+
 export const ContactListFilterWithStore = () => {
   const { noteStatuses } = useConfigurationContext();
   const isMobile = useIsMobile();
@@ -35,6 +37,7 @@ export const ContactListFilterWithStore = () => {
   const { data: stores } = useGetList("stores", {
     pagination: { page: 1, perPage: 100 },
     sort: { field: "name", order: "ASC" },
+    filter: ACTIVE_STORE_FILTER,
   });
 
   return (
@@ -194,6 +197,7 @@ export const ContactListFilterSummaryWithStore = () => {
   const { data: stores } = useGetList("stores", {
     pagination: { page: 1, perPage: 100 },
     sort: { field: "name", order: "ASC" },
+    filter: ACTIVE_STORE_FILTER,
   });
   const { filterValues } = useListContext();
   const hasFilters = !!Object.entries(filterValues || {}).filter(

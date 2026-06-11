@@ -3,11 +3,14 @@ import { DataTable } from "@/components/admin/data-table";
 import { ExportButton } from "@/components/admin/export-button";
 import { List } from "@/components/admin/list";
 import { SearchInput } from "@/components/admin/search-input";
+import { ToggleFilterButton } from "@/components/admin/toggle-filter-button";
+import { useGetIdentity } from "ra-core";
 
 import { TopToolbar } from "@/components/atomic-crm/layout/TopToolbar";
 
 import { StoreCreatedAtField } from "./StoreCreatedAtField";
 import { StoreEmpty } from "./StoreEmpty";
+import { StoreNameField } from "./StoreNameField";
 
 const StoreListActions = () => (
   <TopToolbar>
@@ -16,22 +19,38 @@ const StoreListActions = () => (
   </TopToolbar>
 );
 
-const filters = [<SearchInput source="q" alwaysOn />];
+export const StoreList = () => {
+  const { identity } = useGetIdentity();
+  const filters = [
+    <SearchInput source="q" alwaysOn key="q" />,
+    ...(identity?.administrator
+      ? [
+          <ToggleFilterButton
+            key="include_deleted"
+            label="resources.stores.filters.include_deleted"
+            value={{ include_deleted: true }}
+          />,
+        ]
+      : []),
+  ];
 
-export const StoreList = () => (
-  <List
-    filters={filters}
-    actions={<StoreListActions />}
-    sort={{ field: "name", order: "ASC" }}
-    empty={<StoreEmpty />}
-  >
-    <DataTable rowClick="show">
-      <DataTable.Col source="name" />
-      <DataTable.Col source="area_code" />
-      <DataTable.Col source="address" />
-      <DataTable.Col source="created_at">
-        <StoreCreatedAtField />
-      </DataTable.Col>
-    </DataTable>
-  </List>
-);
+  return (
+    <List
+      filters={filters}
+      actions={<StoreListActions />}
+      sort={{ field: "name", order: "ASC" }}
+      empty={<StoreEmpty />}
+    >
+      <DataTable rowClick="show">
+        <DataTable.Col source="name">
+          <StoreNameField />
+        </DataTable.Col>
+        <DataTable.Col source="area_code" />
+        <DataTable.Col source="address" />
+        <DataTable.Col source="created_at">
+          <StoreCreatedAtField />
+        </DataTable.Col>
+      </DataTable>
+    </List>
+  );
+};

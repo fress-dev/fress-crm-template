@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { countContactsForStore } from "./countContactsForStore";
 import { StoreCreatedAtField } from "./StoreCreatedAtField";
 import { StoreDeleteButton } from "./StoreDeleteButton";
+import { StoreDeletedBadge } from "./StoreDeletedBadge";
 import { StorePageShell } from "./StorePageShell";
 import type { Store } from "./types";
 
@@ -50,8 +51,9 @@ export const StoreShow = () => (
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>
+          <CardTitle className="flex items-center gap-2">
             <TextField source="name" />
+            <StoreDeletedBadge />
           </CardTitle>
           <StoreContactCount />
         </CardHeader>

@@ -43,6 +43,11 @@ export const ja = {
   storeName: "店舗名",
   createStore: "店舗を登録",
   memberStore: "在籍店舗",
+  editContact: "担当者を修正",
+  deletedStoreBadge: "削除済み",
+  includeDeletedStores: "削除済みを含む",
+  softDeleteStoreConfirm:
+    "この店舗を一覧から非表示にします。在籍会員の参照は維持されます。",
   zipLabel: "郵便番号",
   zipFormatError: "郵便番号は 123-4567 または 7 桁の数字で入力してください",
   duplicateStoreError: "同じ名前の店舗が既にあります",
