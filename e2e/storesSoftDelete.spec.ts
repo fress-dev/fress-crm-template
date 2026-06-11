@@ -15,7 +15,9 @@ const clickIncludeDeletedStores = async (page: Page, isMobile: boolean) => {
   await expect(toggle).toBeVisible({ timeout: 15000 });
   await toggle.scrollIntoViewIfNeeded();
   if (isMobile) {
-    await toggle.click({ timeout: 15000, force: true });
+    await toggle.evaluate((node) => {
+      (node as HTMLButtonElement).click();
+    });
   } else {
     await toggle.click({ timeout: 15000 });
   }
