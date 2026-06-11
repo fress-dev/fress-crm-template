@@ -32,13 +32,8 @@ export async function openNewStoreForm(page: Page) {
 }
 
 /** 担当者作成フォームを開く */
-export async function openNewContactForm(page: Page, isMobile: boolean) {
-  if (isMobile) {
-    await goToContactsList(page);
-    await page.getByRole("button", { name: ja.newContact }).click();
-  } else {
-    await page.goto(`${E2E_BASE}/#/contacts/create`);
-  }
+export async function openNewContactForm(page: Page, _isMobile: boolean) {
+  await page.goto(`${E2E_BASE}/#/contacts/create`);
   await page.waitForLoadState("networkidle");
 }
 

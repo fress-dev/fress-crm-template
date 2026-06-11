@@ -36,6 +36,20 @@ describe("applyStoresActiveFilter", () => {
     });
   });
 
+  it("include_deleted 時は del_flg=false が残っていても除去する", () => {
+    expect(
+      applyStoresActiveFilter({
+        filter: { include_deleted: true, del_flg: false },
+        pagination: { page: 1, perPage: 25 },
+        sort: { field: "name", order: "ASC" },
+      }),
+    ).toEqual({
+      filter: {},
+      pagination: { page: 1, perPage: 25 },
+      sort: { field: "name", order: "ASC" },
+    });
+  });
+
   it("del_flg が明示されていれば上書きしない", () => {
     expect(
       applyStoresActiveFilter({

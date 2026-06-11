@@ -25,7 +25,10 @@ export const applyStoresActiveFilter = <
   const { [STORES_INCLUDE_DELETED_FILTER]: includeDeleted, ...rest } = filter;
 
   if (includeDeleted) {
-    return { ...params, filter: rest };
+    const { del_flg: _delFlg, q, ...withoutDelFlg } = rest;
+    const cleaned =
+      q === "" || q == null ? withoutDelFlg : { ...withoutDelFlg, q };
+    return { ...params, filter: cleaned };
   }
 
   if (Object.prototype.hasOwnProperty.call(rest, "del_flg")) {
