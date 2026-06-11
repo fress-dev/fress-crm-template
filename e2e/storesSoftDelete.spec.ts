@@ -19,7 +19,8 @@ const clickIncludeDeletedStores = async (
 ) => {
   const toggle = page.getByRole("button", { name: ja.includeDeletedStores });
   await expect(toggle).toBeVisible({ timeout: 15000 });
-  await toggle.click();
+  await toggle.scrollIntoViewIfNeeded();
+  await toggle.click({ timeout: 15000 });
   if (expectDeletedVisible) {
     await expect(deletedStoreBadge(page)).toBeVisible({ timeout: 15000 });
   } else {
