@@ -1,0 +1,274 @@
+:root {
+  color-scheme: light;
+  font-family:
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui,
+    sans-serif;
+  line-height: 1.5;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 1rem 1.25rem;
+  background: #0f172a;
+  color: #f8fafc;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.app-header-meta {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: #cbd5e1;
+}
+
+.toolbar select {
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f8fafc;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+}
+
+.toolbar button {
+  border: 1px solid #475569;
+  background: #1e293b;
+  color: #f8fafc;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: #334155;
+}
+
+.banner {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.banner-error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-bottom: 1px solid #fecaca;
+}
+
+.banner-info {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-bottom: 1px solid #bfdbfe;
+}
+
+.board {
+  flex: 1;
+  overflow-x: auto;
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.column {
+  flex: 0 0 280px;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  background: #e2e8f0;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+}
+
+.column-header {
+  padding: 0.65rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.column-count {
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.column-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 120px;
+}
+
+.column-body-over {
+  background: #dbeafe;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.65rem 0.7rem;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 6%);
+  cursor: grab;
+  touch-action: none;
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card-dragging {
+  opacity: 0.55;
+}
+
+.card-id {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  word-break: break-all;
+}
+
+.card-salus {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.card-crm {
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.card-badges {
+  margin-top: 0.45rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.badge {
+  font-size: 0.6875rem;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.badge-p0 {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge-p1 {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.badge-layer {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.card-deps-warn {
+  margin-top: 0.35rem;
+  font-size: 0.6875rem;
+  color: #b45309;
+}
+
+.card-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.card-actions select {
+  flex: 1;
+  min-width: 110px;
+  font-size: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.2rem 0.35rem;
+  background: #fff;
+}
+
+.card-actions button {
+  font-size: 0.75rem;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.card-actions button:hover {
+  background: #e2e8f0;
+}
+
+.card-actions button.primary {
+  background: #0f172a;
+  color: #fff;
+  border-color: #0f172a;
+}
+
+.card-actions button.primary:hover {
+  background: #1e293b;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+}

@@ -31,6 +31,9 @@ supabase-reset-database: ## reset (and clear!) the database
 start-app: ## start the app locally
 	npm run dev
 
+start-backlog: ## start local kanban backlog UI (tools/backlog, CRM と無関係)
+	cd tools/backlog && npm install && npm run dev
+
 start-app-e2e: ## start the app pointing to the e2e supabase instance
 	npx vite --port 5175 --force --mode e2e &
 

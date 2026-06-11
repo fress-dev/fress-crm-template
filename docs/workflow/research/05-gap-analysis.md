@@ -2,6 +2,7 @@
 
 > **最終更新:** 2026-06-08  
 > **読者:** 要件定義の確認者（人間）  
+> **バックログ一覧:** [product/roadmap.md](../../product/roadmap.md) / [features.yaml](../../product/features.yaml)  
 > **この後:** 本ドキュメントを確認 → コアで足りる／不要／プラグイン化を決定 → `design/` に設計書
 
 ## Salus → CRM マッピング早見表

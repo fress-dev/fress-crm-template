@@ -1,0 +1,355 @@
+# Salus 由来パーソナルジム機能のバックログ（AI・スクリプト向け）
+# 人間向けの一覧・選び方: docs/product/roadmap.md
+# 更新ルール: 設計承認・PR マージ・スコープ判断のたびに status / pr / design を更新する
+# status: not-started（未着手）| in-progress（着手）| done（完了）| on-hold（保留）
+
+version: 1
+last_updated: 2026-06-12
+primary_tenant: noexcuse
+
+# 縦切りシナリオ（roadmap.md 参照）
+scenarios:
+  A: 新規入会（体験予約 → 体験 → 契約 → 初回予約）
+  B: 日常セッション（カルテ → 予約確認 → 実施記録 → チケット消費）
+  C: マスタ整備（店舗 → コース → スタッフ・権限）
+
+# 05-gap-analysis.md から吸収した判断事項（open → decided に更新していく）
+decisions:
+  - id: scope-phase1
+    question: Salus 全機能を再現するか、Phase 1 は P0 のみか
+    status: open
+    value: null
+  - id: multi-store-from-start
+    question: マルチ店舗を最初から必要とするか
+    status: decided
+    value: true
+  - id: payment-future
+    question: 決済連携を将来要件として残すか（Salus にも無し）
+    status: open
+    value: null
+  - id: deal-as-pipeline
+    question: Deal を入会パイプラインとして使うか（金額は使わない）
+    status: decided
+    value: true
+  - id: companies-hidden
+    question: companies を無効化・非表示でよいか
+    status: decided
+    value: true
+  - id: contact-as-member
+    question: Contact ＝ 会員で確定するか
+    status: decided
+    value: true
+  - id: plugin-split
+    question: P0 を1プラグインにまとめるか、機能単位で分割するか
+    status: decided
+    value: feature-split # appointments + memberships + session-log 等
+  - id: first-plugin-after-stores
+    question: 店舗の次に着手する P0（appointments / memberships / 縦切り）
+    status: decided
+    value: courses-in-progress-appointments-next
+    notes: plugin-courses を実装中。シナリオ A 優先なら plugin-appointments が次の設計候補
+
+features:
+  # --- コア + テナント設定（層: core / platform）---
+
+  - id: core-contacts-member
+    salus: 会員マスタ（User）
+    crm: contacts + ラベル
+    layer: core
+    status: done
+    priority: P0
+    depends_on: []
+    scenarios: [A, B, C]
+    design: null
+    notes: 氏名・連絡先・タグ。身体データ・種目は別プラグイン
+
+  - id: core-sales-trainer
+    salus: トレーナー（Trainer）
+    crm: sales（スタッフ）
+    layer: core
+    status: done
+    priority: P0
+    depends_on: []
+    scenarios: [A, B]
+    design: null
+
+  - id: platform-tenant-config
+    salus: （事業単位の表示・段階・ラベル）
+    crm: tenants/*.json → CRM props / i18n / hiddenResources
+    layer: platform
+    status: done
+    priority: P0
+    depends_on: []
+    scenarios: [A, B, C]
+    design: docs/workflow/design/archive/platform-tenant-config.md
+    pr: "#9"
+    notes: noexcuse CRM・会員表記・入会段階・companies 非表示
+
+  - id: core-deal-pipeline
+    salus: 体験〜入会
+    crm: deals（入会管理）+ テナント dealStages
+    layer: core
+    status: done
+    priority: P1
+    depends_on: [platform-tenant-config]
+    scenarios: [A]
+    design: docs/workflow/design/archive/platform-tenant-config.md
+    notes: 金額フィールドは未使用運用。回数券は memberships 側
+
+  - id: core-tasks-followup
+    salus: フォロー
+    crm: tasks + テナント taskTypes
+    layer: core
+    status: done
+    priority: P2
+    depends_on: [platform-tenant-config]
+    scenarios: [A]
+    design: null
+
+  - id: core-notes-simple
+    salus: 簡易メモ
+    crm: contact_notes
+    layer: core
+    status: done
+    priority: P2
+    depends_on: []
+    scenarios: [A, B]
+    design: null
+    notes: 身体データ・種目記録は session-log
+
+  # --- プラットフォーム基盤 ---
+
+  - id: platform-plugin-registry
+    salus: （プラグイン載せ台）
+    crm: plugin registry + App 組み立て
+    layer: platform
+    status: done
+    priority: P0
+    depends_on: [platform-tenant-config]
+    scenarios: [C]
+    design: docs/workflow/design/archive/platform-plugin-registry.md
+    pr: "#4"
+
+  - id: platform-implementation-patterns
+    salus: （開発ハーネス）
+    crm: CRUD / dataProvider 実装パターン
+    layer: platform
+    status: done
+    priority: P0
+    depends_on: []
+    scenarios: [C]
+    design: docs/workflow/design/archive/platform-implementation-patterns.md
+    pr: "#8"
+
+  # --- plugin-stores ---
+
+  - id: plugin-stores-master
+    salus: 店舗マスタ（Store）
+    crm: plugin-stores — CRUD・会員 store_id・フィルタ・シード
+    layer: plugin
+    status: done
+    priority: P0
+    depends_on: [platform-plugin-registry, platform-tenant-config]
+    scenarios: [A, B, C]
+    design: docs/workflow/design/archive/plugin-stores.md
+    pr: "#5"
+
+  - id: plugin-stores-validation
+    salus: 店舗フォーム検証
+    crm: storeModel バリデーション・重複チェック・会員 store 必須
+    layer: plugin
+    status: done
+    priority: P0
+    depends_on: [plugin-stores-master]
+    scenarios: [C]
+    design: docs/workflow/design/archive/plugin-stores-followups.md
+    notes: followups §1
+
+  - id: plugin-stores-ui
+    salus: 店舗画面 UX
+    crm: Show・Empty・削除・モバイルタブ
+    layer: plugin
+    status: done
+    priority: P1
+    depends_on: [plugin-stores-master]
+    scenarios: [C]
+    design: docs/workflow/design/archive/plugin-stores-followups.md
+    notes: followups §2
+
+  - id: plugin-stores-search-layout
+    salus: 店舗検索・画面レイアウト
+    crm: withStoresListSearch・StorePageShell・plugin-runbook 等
+    layer: plugin
+    status: done
+    priority: P1
+    depends_on: [plugin-stores-master]
+    scenarios: [C]
+    design: null
+    pr: "#10"
+
+  - id: plugin-stores-soft-delete
+    salus: 店舗 del_flg
+    crm: stores.del_flg + 一覧フィルタ
+    layer: plugin
+    status: in-progress
+    priority: P2
+    depends_on: [plugin-stores-master]
+    scenarios: [C]
+    design: docs/workflow/design/archive/plugin-stores-soft-delete.md
+    pr: "#12"
+    branch: feat/plugin-stores-soft-delete
+    notes: followups §3。レビュー・マージ待ち
+
+  - id: plugin-stores-rls
+    salus: 店舗権限
+    crm: スタッフは担当店舗のみ RLS
+    layer: plugin
+    status: on-hold
+    priority: P2
+    depends_on: [plugin-stores-master]
+    scenarios: [B, C]
+    design: docs/workflow/design/archive/plugin-stores.md
+    notes: Phase 2。データが溜まってから
+
+  # --- 未着手プラグイン（Salus 中核）---
+
+  - id: plugin-rooms
+    salus: 部屋（Room）
+    crm: rooms マスタ（店舗配下）
+    layer: plugin
+    status: on-hold
+    priority: P2
+    depends_on: [plugin-stores-master, plugin-appointments]
+    scenarios: [B]
+    design: null
+    notes: appointments と同時設計が望ましい
+
+  - id: plugin-courses
+    salus: コースマスタ（Course）
+    crm: コース種別・時間・トレーニング/ストレッチ
+    layer: plugin
+    status: in-progress
+    priority: P1
+    depends_on: [plugin-stores-master]
+    scenarios: [A, C]
+    design: docs/workflow/design/plugin-courses.md
+    branch: feat/plugin-courses-master
+    notes: memberships の前提。設計書 draft・実装 WIP（PR 未作成）
+
+  - id: plugin-memberships
+    salus: 契約・チケット（Contract / Ticket）
+    crm: コース契約・回数券発行・消費
+    layer: plugin
+    status: on-hold
+    priority: P0
+    depends_on: [plugin-courses, core-contacts-member]
+    scenarios: [A, B]
+    design: null
+    notes: plugin-courses 完了後に設計着手。金額なし・回数券モデル。Deal 拡張か独立テーブルは設計時に決定
+
+  - id: plugin-appointments
+    salus: スケジュール・予約（Schedule）
+    crm: カレンダー・予約 CRUD・カウンセリング/セッション種別
+    layer: plugin
+    status: not-started
+    priority: P0
+    depends_on: [plugin-stores-master]
+    scenarios: [A, B]
+    design: null
+    notes: Salus 日常業務の中心 /schedule
+
+  - id: plugin-schedule-bulk
+    salus: 一括予約（ScheduleBulk）
+    crm: 曜日・隔週・期間での繰り返しセッション作成
+    layer: plugin
+    status: on-hold
+    priority: P3
+    depends_on: [plugin-appointments, plugin-memberships]
+    scenarios: [B]
+    design: null
+
+  - id: plugin-session-log
+    salus: セッション記録（Session）
+    crm: 身体データ・種目・チケット再割当
+    layer: plugin
+    status: on-hold
+    priority: P1
+    depends_on: [plugin-appointments, plugin-memberships]
+    scenarios: [B]
+    design: null
+
+  - id: plugin-training-content
+    salus: 種目マスタ・TrainingContent
+    crm: TrainingType / TrainingGroup + セッション行
+    layer: plugin
+    status: on-hold
+    priority: P2
+    depends_on: [plugin-session-log]
+    scenarios: [B]
+    design: null
+
+  - id: plugin-body-graph
+    salus: 身体グラフ（Graph）
+    crm: 体重・体脂肪の時系列チャート
+    layer: plugin
+    status: on-hold
+    priority: P3
+    depends_on: [plugin-session-log]
+    scenarios: [B]
+    design: null
+
+  - id: karte-hub
+    salus: カルテ（Karte）— 会員ハブ
+    crm: Contact Show 拡張（契約・予約・セッションへの入口）
+    layer: custom
+    status: not-started
+    priority: P1
+    depends_on: [core-contacts-member, plugin-stores-master]
+    scenarios: [A, B]
+    design: null
+    notes: 各プラグイン未実装時はプレースホルダ可。縦切りの見通し用
+
+  # --- Salus に無い / 任意 ---
+
+  - id: custom-schedule-copy
+    salus: スケジュールコピー（LINE 等）
+    crm: メモテンプレ・クリップボード出力
+    layer: custom
+    status: on-hold
+    priority: P3
+    depends_on: [plugin-appointments]
+    scenarios: [B]
+    design: null
+
+  - id: plugin-payments
+    salus: 決済（Salus にも無し）
+    crm: 外部決済連携プラグイン
+    layer: plugin
+    status: on-hold
+    priority: null
+    depends_on: []
+    scenarios: []
+    design: null
+    notes: 将来要件
+
+  # --- CRM 既存機能のジム利用（参考）---
+
+  - id: crm-csv-import
+    salus: —
+    crm: CSV 入出力（会員移行）
+    layer: core
+    status: on-hold
+    priority: P3
+    depends_on: []
+    scenarios: [C]
+    design: null
+
+  - id: crm-inbound-email
+    salus: —
+    crm: インバウンドメール → メモ
+    layer: core
+    status: on-hold
+    priority: P3
+    depends_on: []
+    scenarios: [A]
+    design: null
