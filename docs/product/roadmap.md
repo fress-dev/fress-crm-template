@@ -1,6 +1,6 @@
 # 機能ロードマップ（Salus → パーソナルジム CRM）
 
-> **最終更新:** 2026-06-10  
+> **最終更新:** 2026-06-12  
 > **読者:** 次に何を開発するか選ぶ人間  
 > **機械可読:** [features.yaml](./features.yaml)（AI・スクリプト向け。こちらを正とする）
 
@@ -61,22 +61,20 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 
 ---
 
-## いま選べる候補（2026-06-10 時点）
+## いま選べる候補（2026-06-12 時点）
 
-依存が満たされていて、すぐ設計に入れるものです。
+依存が満たされていて、すぐ設計に入れるものです（`in-progress` は除く）。
 
 | id | Salus 相当 | 優先度 | シナリオ | メモ |
 |----|-----------|--------|---------|------|
-| **plugin-appointments** | 予約・カレンダー | P0 | A, B | 店舗済み。日常業務の中心 |
-| **plugin-courses** | コースマスタ | P1 | A, C | memberships の前提 |
-| **plugin-stores-soft-delete** | 店舗 del_flg | P2 | C | 任意。followups §3 |
+| **plugin-appointments** | 予約・カレンダー | P0 | A, B | 店舗済み。日常業務の中心。次の設計候補 |
 | **karte-hub** | カルテ（会員ハブ） | P1 | A, B | Contact Show 拡張。他プラグインの入口 |
 
 **ブロック中（先に上記か依存の完了が必要）**
 
 | id | 待ち |
 |----|------|
-| plugin-memberships | plugin-courses |
+| plugin-memberships | plugin-courses（実装中） |
 | plugin-session-log | appointments + memberships |
 | plugin-rooms | appointments と同時設計推奨 |
 | plugin-stores-rls | Phase 2（データ蓄積後） |
@@ -85,9 +83,11 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 
 | id | PR / ブランチ |
 |----|--------------|
-| （なし） | — |
+| plugin-stores-soft-delete | [PR #12](https://github.com/fress-dev/fress-crm-template/pull/12) `feat/plugin-stores-soft-delete` |
+| plugin-courses | `feat/plugin-courses-master`（設計 draft・実装 WIP、PR 未作成） |
 
-※ [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11) tenant smoke e2e はロードマップ未登録（e2e 整備のみ）
+※ [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11) tenant smoke e2e はロードマップ未登録（e2e 整備のみ）  
+※ [PR #13](https://github.com/fress-dev/fress-crm-template/pull/13) バックログ Kanban 復元（platform）
 
 ---
 
@@ -98,8 +98,8 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 | 判断 | 状態 | 提案 |
 |------|------|------|
 | Phase 1 は P0 のみか、Salus 全再現か | 未決 | **P0 + P1 まで** を Phase 1 とする案が現実的 |
-| Deal ＝ 入会パイプライン（金額未使用） | 未決 | noexcuse は既に段階名適用済み → **確定でよい** |
-| 店舗の次の1本 | 未決 | **A なら appointments** / **契約先行なら courses → memberships** |
+| Deal ＝ 入会パイプライン（金額未使用） | **確定** | noexcuse で段階名適用済み |
+| 店舗の次の1本 | **確定（並行）** | **courses 実装中** + シナリオ A なら **appointments** が次の設計候補 |
 | 決済連携を将来要件に残すか | 未決 | **skip 扱いでロードマップに残す**（Salus にも無し） |
 
 ---
@@ -134,7 +134,7 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 | done | plugin-stores-validation | バリデーション | [archive followups §1](../workflow/design/archive/plugin-stores-followups.md) |
 | done | plugin-stores-ui | Show・Empty・削除 | [archive followups §2](../workflow/design/archive/plugin-stores-followups.md) |
 | done | plugin-stores-search-layout | 検索・レイアウト・runbook | [PR #10](https://github.com/fress-dev/fress-crm-template/pull/10) |
-| next | plugin-stores-soft-delete | del_flg | followups §3 |
+| in-progress | plugin-stores-soft-delete | del_flg | [PR #12](https://github.com/fress-dev/fress-crm-template/pull/12) |
 | blocked | plugin-stores-rls | 店舗権限 RLS | plugin-stores Phase 2 |
 
 ### これから（Salus 中核）
@@ -142,7 +142,7 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 | status | id | Salus | プラグイン案 | P |
 |--------|-----|-------|-------------|---|
 | next | plugin-appointments | Schedule | 予約・カレンダー | P0 |
-| next | plugin-courses | Course | コースマスタ | P1 |
+| in-progress | plugin-courses | Course | コースマスタ | P1 |
 | blocked | plugin-memberships | Contract / Ticket | 契約・回数券 | P0 |
 | blocked | plugin-session-log | Session | 身体データ・実施記録 | P1 |
 | blocked | plugin-rooms | Room | 部屋 | P2 |

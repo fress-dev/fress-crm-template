@@ -28,8 +28,8 @@ decisions:
     value: null
   - id: deal-as-pipeline
     question: Deal を入会パイプラインとして使うか（金額は使わない）
-    status: open
-    value: null
+    status: decided
+    value: true
   - id: companies-hidden
     question: companies を無効化・非表示でよいか
     status: decided
@@ -44,8 +44,9 @@ decisions:
     value: feature-split # appointments + memberships + session-log 等
   - id: first-plugin-after-stores
     question: 店舗の次に着手する P0（appointments / memberships / 縦切り）
-    status: open
-    value: null
+    status: decided
+    value: courses-in-progress-appointments-next
+    notes: plugin-courses を実装中。シナリオ A 優先なら plugin-appointments が次の設計候補
 
 features:
   # --- コア + テナント設定（層: core / platform）---
@@ -137,7 +138,7 @@ features:
     depends_on: []
     scenarios: [C]
     design: docs/workflow/design/archive/platform-implementation-patterns.md
-    pr: "#7"
+    pr: "#8"
 
   # --- plugin-stores ---
 
@@ -189,12 +190,14 @@ features:
     salus: 店舗 del_flg
     crm: stores.del_flg + 一覧フィルタ
     layer: plugin
-    status: next
+    status: in-progress
     priority: P2
     depends_on: [plugin-stores-master]
     scenarios: [C]
-    design: docs/workflow/design/archive/plugin-stores-followups.md
-    notes: followups §3。appointments 前でも可（optional）
+    design: docs/workflow/design/archive/plugin-stores-soft-delete.md
+    pr: "#12"
+    branch: feat/plugin-stores-soft-delete
+    notes: followups §3。レビュー・マージ待ち
 
   - id: plugin-stores-rls
     salus: 店舗権限
@@ -224,12 +227,13 @@ features:
     salus: コースマスタ（Course）
     crm: コース種別・時間・トレーニング/ストレッチ
     layer: plugin
-    status: next
+    status: in-progress
     priority: P1
     depends_on: [plugin-stores-master]
     scenarios: [A, C]
-    design: null
-    notes: memberships の前提
+    design: docs/workflow/design/plugin-courses.md
+    branch: feat/plugin-courses-master
+    notes: memberships の前提。設計書 draft・実装 WIP（PR 未作成）
 
   - id: plugin-memberships
     salus: 契約・チケット（Contract / Ticket）
@@ -240,7 +244,7 @@ features:
     depends_on: [plugin-courses, core-contacts-member]
     scenarios: [A, B]
     design: null
-    notes: 金額なし・回数券モデル。Deal 拡張か独立テーブルは設計時に決定
+    notes: plugin-courses 完了後に設計着手。金額なし・回数券モデル。Deal 拡張か独立テーブルは設計時に決定
 
   - id: plugin-appointments
     salus: スケジュール・予約（Schedule）
