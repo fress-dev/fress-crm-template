@@ -23,8 +23,13 @@ export async function openNewStoreForm(page: Page) {
     .or(page.getByRole("link", { name: ja.createStore }));
 
   if (await createLink.first().isVisible()) {
-    await createLink.first().click();
-    return;
+    try {
+      await createLink.first().click({ timeout: 5000 });
+      await page.waitForLoadState("networkidle");
+      return;
+    } catch {
+      // モバイル等でクリックできない場合は URL 直指定へフォールバック
+    }
   }
 
   await page.goto(`${E2E_BASE}/#/stores/create`);
