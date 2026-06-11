@@ -1,5 +1,5 @@
 import { localStorageStore } from "ra-core";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { FressCRM } from "@/custom/root/FressCRM";
 import { getDataProvider } from "@/components/atomic-crm/providers/supabase";
@@ -39,6 +39,12 @@ const App = () => {
       ),
     [assembly.crmConfiguration],
   );
+
+  useEffect(() => {
+    if (assembly.crmConfiguration.title) {
+      document.title = assembly.crmConfiguration.title;
+    }
+  }, [assembly.crmConfiguration.title]);
 
   return (
     <FressCRM
