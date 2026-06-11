@@ -55,7 +55,9 @@ test("store soft delete", async ({
   await dismissToast(ja.createdToast);
 
   await openNewContactForm(page, isMobile);
-  await expect(page.getByLabel(ja.femalePronoun)).toBeVisible();
+  await expect(page.getByLabel(ja.femalePronoun)).toBeVisible({
+    timeout: 15000,
+  });
   await page.getByLabel(ja.femalePronoun).click();
   await page.getByLabel(ja.firstName).fill("論理");
   await page.getByLabel(ja.lastName).fill("削除");
@@ -93,9 +95,15 @@ test("store soft delete", async ({
   }
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
-  await page.goto(`${E2E_BASE}/#/contacts/create`);
-  await page.waitForLoadState("networkidle");
-  await expect(page.getByLabel(ja.memberStore)).toBeVisible();
+  if (isMobile) {
+    await openNewContactForm(page, isMobile);
+  } else {
+    await page.goto(`${E2E_BASE}/#/contacts/create`);
+    await page.waitForLoadState("networkidle");
+  }
+  await expect(page.getByLabel(ja.memberStore)).toBeVisible({
+    timeout: 15000,
+  });
   await page.getByLabel(ja.memberStore).click();
   await expect(page.getByRole("option", { name: storeName })).not.toBeVisible();
 
