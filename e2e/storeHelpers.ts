@@ -31,6 +31,17 @@ export async function openNewStoreForm(page: Page) {
   await page.waitForLoadState("networkidle");
 }
 
+/** 担当者作成フォームを開く */
+export async function openNewContactForm(page: Page, isMobile: boolean) {
+  if (isMobile) {
+    await goToContactsList(page);
+    await page.getByRole("button", { name: ja.newContact }).click();
+  } else {
+    await page.goto(`${E2E_BASE}/#/contacts/create`);
+  }
+  await page.waitForLoadState("networkidle");
+}
+
 /** 会員一覧の在籍店舗フィルタ（モバイルはフィルタシート経由） */
 export async function applyContactStoreFilter(
   page: Page,

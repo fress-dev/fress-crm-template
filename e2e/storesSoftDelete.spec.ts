@@ -1,12 +1,19 @@
-import { test, expect } from "./fixtures";
+import { test, expect, type Page } from "./fixtures";
 import { ja } from "./ja";
 import {
   goToContactsList,
   goToStoresList,
+  openNewContactForm,
   openNewStoreForm,
 } from "./storeHelpers";
 
 const E2E_BASE = "http://localhost:5175";
+
+const clickIncludeDeletedStores = async (page: Page) => {
+  const toggle = page.getByRole("button", { name: ja.includeDeletedStores });
+  await expect(toggle).toBeVisible({ timeout: 15000 });
+  await toggle.click();
+};
 
 test("store soft delete", async ({
   page,
@@ -36,9 +43,8 @@ test("store soft delete", async ({
   await page.getByRole("button", { name: ja.createStore }).click();
   await dismissToast(ja.createdToast);
 
-  await page.goto(`${E2E_BASE}/#/contacts/create`);
-  await page.waitForLoadState("networkidle");
-
+  await openNewContactForm(page, isMobile);
+  await expect(page.getByLabel(ja.femalePronoun)).toBeVisible();
   await page.getByLabel(ja.femalePronoun).click();
   await page.getByLabel(ja.firstName).fill("論理");
   await page.getByLabel(ja.lastName).fill("削除");
@@ -76,18 +82,17 @@ test("store soft delete", async ({
   }
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
-  await page.goto(`${E2E_BASE}/#/contacts/create`);
-  await page.waitForLoadState("networkidle");
+  await openNewContactForm(page, isMobile);
   await page.getByLabel(ja.memberStore).click();
   await expect(page.getByRole("option", { name: storeName })).not.toBeVisible();
 
   await goToStoresList(page);
-  await page.getByRole("button", { name: ja.includeDeletedStores }).click();
+  await clickIncludeDeletedStores(page);
   await page.waitForLoadState("networkidle");
   await expect(page.getByRole("cell", { name: storeName })).toBeVisible();
   await expect(page.getByText(ja.deletedStoreBadge)).toBeVisible();
 
-  await page.getByRole("button", { name: ja.includeDeletedStores }).click();
+  await clickIncludeDeletedStores(page);
   await page.waitForLoadState("networkidle");
 
   await openNewStoreForm(page);
