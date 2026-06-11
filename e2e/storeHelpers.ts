@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 import { ja } from "./ja";
 
@@ -32,8 +32,17 @@ export async function openNewStoreForm(page: Page) {
 }
 
 /** 担当者作成フォームを開く */
-export async function openNewContactForm(page: Page, _isMobile: boolean) {
-  await page.goto(`${E2E_BASE}/#/contacts/create`);
+export async function openNewContactForm(page: Page, isMobile: boolean) {
+  if (isMobile) {
+    await goToContactsList(page);
+    const newContact = page
+      .getByRole("button", { name: ja.newContact })
+      .or(page.getByRole("link", { name: ja.newContact }));
+    await expect(newContact.first()).toBeVisible({ timeout: 15000 });
+    await newContact.first().click();
+  } else {
+    await page.goto(`${E2E_BASE}/#/contacts/create`);
+  }
   await page.waitForLoadState("networkidle");
 }
 

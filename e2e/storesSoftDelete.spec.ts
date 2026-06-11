@@ -9,6 +9,9 @@ import {
 
 const E2E_BASE = "http://localhost:5175";
 
+const deletedStoreBadge = (page: Page) =>
+  page.getByText(ja.deletedStoreBadge, { exact: true });
+
 const clickIncludeDeletedStores = async (
   page: Page,
   expectDeletedVisible: boolean,
@@ -17,13 +20,9 @@ const clickIncludeDeletedStores = async (
   await expect(toggle).toBeVisible({ timeout: 15000 });
   await toggle.click();
   if (expectDeletedVisible) {
-    await expect(page.getByText(ja.deletedStoreBadge)).toBeVisible({
-      timeout: 15000,
-    });
+    await expect(deletedStoreBadge(page)).toBeVisible({ timeout: 15000 });
   } else {
-    await expect(page.getByText(ja.deletedStoreBadge)).not.toBeVisible({
-      timeout: 15000,
-    });
+    await expect(deletedStoreBadge(page)).not.toBeVisible({ timeout: 15000 });
   }
 };
 
@@ -94,7 +93,8 @@ test("store soft delete", async ({
   }
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
-  await openNewContactForm(page, isMobile);
+  await page.goto(`${E2E_BASE}/#/contacts/create`);
+  await page.waitForLoadState("networkidle");
   await expect(page.getByLabel(ja.memberStore)).toBeVisible();
   await page.getByLabel(ja.memberStore).click();
   await expect(page.getByRole("option", { name: storeName })).not.toBeVisible();
