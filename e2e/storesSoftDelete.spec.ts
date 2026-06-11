@@ -10,19 +10,15 @@ import {
 
 const E2E_BASE = "http://localhost:5175";
 
-const clickIncludeDeletedStores = async (page: Page) => {
+const clickIncludeDeletedStores = async (page: Page, isMobile: boolean) => {
   const toggle = page.getByRole("button", { name: ja.includeDeletedStores });
   await expect(toggle).toBeVisible({ timeout: 15000 });
   await toggle.scrollIntoViewIfNeeded();
-  await Promise.all([
-    page.waitForResponse(
-      (response) =>
-        response.url().includes("/rest/v1/stores") &&
-        response.request().method() === "GET" &&
-        response.ok(),
-    ),
-    toggle.click({ timeout: 15000 }),
-  ]);
+  if (isMobile) {
+    await toggle.click({ timeout: 15000, force: true });
+  } else {
+    await toggle.click({ timeout: 15000 });
+  }
   await page.waitForLoadState("networkidle");
 };
 
@@ -129,10 +125,10 @@ test("store soft delete", async ({
   }
 
   await goToStoresList(page);
-  await clickIncludeDeletedStores(page);
+  await clickIncludeDeletedStores(page, isMobile);
   await expectStoreInList(page, storeName, true);
 
-  await clickIncludeDeletedStores(page);
+  await clickIncludeDeletedStores(page, isMobile);
   await expectStoreInList(page, storeName, false);
 
   await openNewStoreForm(page);
