@@ -33,10 +33,16 @@ describe("withPluginDataProvider", () => {
 
   it("stores 有効時は getList をラップする", async () => {
     loadTenantConfig.mockReturnValue({ plugins: ["stores"] });
-    getPlugin.mockReturnValue({ id: "stores" });
+    getPlugin.mockImplementation((id: string) =>
+      id === "stores" ? { id: "stores" } : undefined,
+    );
 
     const getList = vi.fn().mockResolvedValue({ data: [], total: 0 });
-    const dataProvider = { getList } as unknown as CrmDataProvider;
+    const dataProvider = {
+      getList,
+      update: vi.fn(),
+      delete: vi.fn(),
+    } as unknown as CrmDataProvider;
     const wrapped = withPluginDataProvider(dataProvider);
 
     expect(wrapped).not.toBe(dataProvider);
@@ -49,6 +55,7 @@ describe("withPluginDataProvider", () => {
 
     expect(getList).toHaveBeenCalledWith("stores", {
       filter: {
+        del_flg: false,
         "@or": expect.objectContaining({ "name@ilike": "船橋" }),
       },
       pagination: { page: 1, perPage: 25 },
