@@ -96,7 +96,11 @@ test("store soft delete", async ({
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
   if (isMobile) {
-    await openNewContactForm(page, isMobile);
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: /Back/i }).click();
+    await page.waitForLoadState("networkidle");
+    await page.getByText(ja.newContact).click();
+    await page.waitForLoadState("networkidle");
   } else {
     await page.goto(`${E2E_BASE}/#/contacts/create`);
     await page.waitForLoadState("networkidle");
