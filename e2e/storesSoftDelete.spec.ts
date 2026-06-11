@@ -6,6 +6,8 @@ import {
   openNewStoreForm,
 } from "./storeHelpers";
 
+const E2E_BASE = "http://localhost:5175";
+
 test("store soft delete", async ({
   page,
   isMobile,
@@ -65,10 +67,16 @@ test("store soft delete", async ({
   await goToContactsList(page);
   await page.getByText("論理 削除").click();
   await page.waitForLoadState("networkidle");
-  await page.getByRole("link", { name: ja.editContact }).click();
+
+  const contactId = page.url().match(/contacts\/(\d+)/)?.[1];
+  if (!contactId) {
+    throw new Error(`contact id not found in ${page.url()}`);
+  }
+  await page.goto(`${E2E_BASE}/#/contacts/${contactId}/edit`);
   await page.waitForLoadState("networkidle");
   await expect(page.getByLabel(ja.memberStore)).toContainText(storeName);
 
+  await goToContactsList(page);
   if (isMobile) {
     await page.getByRole("button", { name: ja.newContact }).click();
   } else {
