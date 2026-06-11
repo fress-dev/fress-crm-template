@@ -20,7 +20,7 @@ const clickIncludeDeletedStores = async (
   const toggle = page.getByRole("button", { name: ja.includeDeletedStores });
   await expect(toggle).toBeVisible({ timeout: 15000 });
   await toggle.scrollIntoViewIfNeeded();
-  await toggle.click({ timeout: 15000 });
+  await toggle.click({ timeout: 15000, force: true });
   if (expectDeletedVisible) {
     await expect(deletedStoreBadge(page)).toBeVisible({ timeout: 15000 });
   } else {
@@ -111,6 +111,9 @@ test("store soft delete", async ({
   });
   await page.getByLabel(ja.memberStore).click();
   await expect(page.getByRole("option", { name: storeName })).not.toBeVisible();
+  if (isMobile) {
+    await page.keyboard.press("Escape");
+  }
 
   await goToStoresList(page);
   await clickIncludeDeletedStores(page, true);
