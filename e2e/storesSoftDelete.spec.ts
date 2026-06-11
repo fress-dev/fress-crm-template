@@ -53,9 +53,10 @@ test("store soft delete", async ({
   await goToStoresList(page);
   await page.getByRole("cell", { name: storeName }).click();
   await page.waitForLoadState("networkidle");
-  await page.getByRole("button", { name: ja.delete }).click();
-  await expect(page.getByText(ja.softDeleteStoreConfirm)).toBeVisible();
-  await page.getByRole("button", { name: ja.confirm }).click();
+  await page.getByRole("button", { name: ja.delete, exact: true }).click();
+  const deleteDialog = page.getByRole("dialog");
+  await expect(deleteDialog.getByText(ja.softDeleteStoreConfirm)).toBeVisible();
+  await deleteDialog.getByRole("button", { name: ja.confirm }).click();
   await dismissToast("削除しました");
 
   await goToStoresList(page);

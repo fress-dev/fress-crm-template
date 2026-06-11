@@ -43,6 +43,7 @@ export const ja = {
   storeName: "店舗名",
   createStore: "店舗を登録",
   memberStore: "在籍店舗",
+  delete: "削除",
   editContact: "担当者を修正",
   deletedStoreBadge: "削除済み",
   includeDeletedStores: "削除済みを含む",
