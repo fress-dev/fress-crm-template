@@ -26,6 +26,10 @@ alwaysApply: true
 
 **1ブランチ = 1タスク。** platform と plugin を同じブランチに混ぜない。
 
+## push / PR（エージェント自律）
+
+DoD 達成後は **push・PR 作成まで人間確認を待たない**（詳細は [`agent-autonomy.mdc`](./agent-autonomy.mdc)）。人間が止めるのは設計承認とマージ承認のみ。
+
 ## 言語
 
 コミット・PR・カスタム側コメントは日本語。詳細は `japanese-conventions.mdc`。
