@@ -28,6 +28,11 @@ type NoteStatusConfig = LabeledValueConfig & {
   color: string;
 };
 
+export type AppointmentTypeConfig = {
+  id: string;
+  label: string;
+};
+
 export type HiddenResource = "companies" | "contacts" | "deals" | "sales";
 
 export type TenantLabels = {
@@ -59,4 +64,6 @@ export type TenantConfig = {
   storeSeed?: StoreSeedEntry[];
   /** courses プラグイン有効時の初回コースデータ */
   courseSeed?: CourseSeedEntry[];
+  /** appointments プラグイン有効時の予約種別 */
+  appointmentTypes?: AppointmentTypeConfig[];
 };

@@ -1,4 +1,5 @@
 import { registerPlugin } from "./registry";
+import { appointmentsPlugin } from "@/custom/plugins/appointments/plugin";
 import { coursesPlugin } from "@/custom/plugins/courses/plugin";
 import { membershipsPlugin } from "@/custom/plugins/memberships/plugin";
 import { roomsPlugin } from "@/custom/plugins/rooms/plugin";
@@ -13,4 +14,5 @@ export const bootstrapPlugins = (): void => {
   registerPlugin(coursesPlugin);
   registerPlugin(membershipsPlugin);
   registerPlugin(roomsPlugin);
+  registerPlugin(appointmentsPlugin);
 };

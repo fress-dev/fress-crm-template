@@ -1,4 +1,6 @@
 import type { CrmDataProvider } from "@/components/atomic-crm/providers/types";
+import { isAppointmentsPluginEnabled } from "@/custom/plugins/appointments/isAppointmentsPluginEnabled";
+import { withAppointmentsDataProvider } from "@/custom/plugins/appointments/withAppointmentsDataProvider";
 import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPluginEnabled";
 import { withCoursesDataProvider } from "@/custom/plugins/courses/withCoursesDataProvider";
 import { isMembershipsPluginEnabled } from "@/custom/plugins/memberships/isMembershipsPluginEnabled";
@@ -13,6 +15,7 @@ export const withPluginDataProvider = (
   dataProvider: CrmDataProvider,
 ): CrmDataProvider => {
   let wrapped = dataProvider;
+
   if (isStoresPluginEnabled()) {
     wrapped = withStoresDataProvider(wrapped);
   }
@@ -25,5 +28,9 @@ export const withPluginDataProvider = (
   if (isRoomsPluginEnabled()) {
     wrapped = withRoomsDataProvider(wrapped);
   }
+  if (isAppointmentsPluginEnabled()) {
+    wrapped = withAppointmentsDataProvider(wrapped);
+  }
+
   return wrapped;
 };

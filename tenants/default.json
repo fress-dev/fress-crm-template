@@ -1,7 +1,7 @@
 {
   "id": "default",
   "title": "お客様管理",
-  "plugins": ["stores", "courses", "memberships", "rooms"],
+  "plugins": ["stores", "courses", "memberships", "rooms", "appointments"],
   "extensions": [],
   "hiddenResources": [],
   "labels": {
@@ -9,5 +9,11 @@
     "deals": "商談",
     "sales": "利用者",
     "companies": "取引先企業"
-  }
+  },
+  "appointmentTypes": [
+    { "id": "session", "label": "セッション" },
+    { "id": "counseling", "label": "カウンセリング" },
+    { "id": "trial", "label": "体験" },
+    { "id": "other", "label": "その他" }
+  ]
 }
