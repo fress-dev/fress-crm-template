@@ -101,11 +101,12 @@
 | 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する |
 | 5 | レビュー | **@reviewer** → **メインエージェント** | @reviewer は検査結果のみ返す（readonly）。メインが [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
 | 6 | テスト | **メインエージェント** | `make pre-pr` + 関連 e2e spec のみ（上記「## テスト」参照）。フル e2e は CI |
-| 7 | PR | **メインエージェント** | 設計書を `docs/workflow/design/archive/` へ移動 → `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
+| 7 | PR | **メインエージェント** | 設計書を `docs/workflow/design/archive/` へ移動 → `git push` → `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める。**push / PR 前の人間確認は不要**） |
 | 8 | マージ承認 | **人間** | PR を確認してマージ |
 
 ### 補足
 
+- **push / PR 作成:** DoD 達成後は人間の push 前確認を待たず、コミット → push → PR 作成まで進めてよい（MAIN / sub 全セッション共通）。詳細は [`.cursor/rules/agent-autonomy.mdc`](.cursor/rules/agent-autonomy.mdc)。
 - **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/platform-*` / `feat/plugin-*` / `fix/*` → PR → `develop`）。
 - **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)。
 - **`feat/plugin-*` の PR では platform（ベース）とハーネス設定（`AGENTS.md`、`.cursor/`、`docs/harness/`、`scripts/workflow-gate*` 等）を一緒に変更しない。** 必要なら `feat/platform-*` / `feat/platform-harness-*` で別 PR。platform を先にマージしてから plugin を着手する。
