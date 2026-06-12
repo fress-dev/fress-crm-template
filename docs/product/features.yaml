@@ -4,7 +4,7 @@
 # status: not-started（未着手）| in-progress（着手）| done（完了）| on-hold（保留）
 
 version: 1
-last_updated: 2026-06-12
+last_updated: 2026-06-13
 primary_tenant: noexcuse
 
 # 縦切りシナリオ（roadmap.md 参照）
@@ -46,8 +46,8 @@ decisions:
   - id: first-plugin-after-stores
     question: 店舗の次に着手する P0（appointments / memberships / 縦切り）
     status: decided
-    value: courses-in-progress-appointments-next
-    notes: plugin-courses を実装中。シナリオ A 優先なら plugin-appointments が次の設計候補
+    value: courses-and-appointments-in-review
+    notes: plugin-courses（PR #27）と plugin-appointments（PR #26）がレビュー中。マージ後は plugin-memberships が次候補
 
 features:
   # --- コア + テナント設定（層: core / platform）---
@@ -191,14 +191,14 @@ features:
     salus: 店舗 del_flg
     crm: stores.del_flg + 一覧フィルタ
     layer: plugin
-    status: in-progress
+    status: done
     priority: P2
     depends_on: [plugin-stores-master]
     scenarios: [C]
     design: docs/workflow/design/archive/plugin-stores-soft-delete.md
     pr: "#12"
     branch: feat/plugin-stores-soft-delete
-    notes: followups §3。レビュー・マージ待ち
+    notes: followups §3。マージ済み
 
   - id: plugin-stores-rls
     salus: 店舗権限
@@ -232,9 +232,10 @@ features:
     priority: P1
     depends_on: [plugin-stores-master]
     scenarios: [A, C]
-    design: docs/workflow/design/plugin-courses.md
+    design: docs/workflow/design/archive/plugin-courses.md
+    pr: "#27"
     branch: feat/plugin-courses-master
-    notes: memberships の前提。設計書 draft・実装 WIP（PR 未作成）
+    notes: memberships の前提。PR レビュー中
 
   - id: plugin-memberships
     salus: 契約・チケット（Contract / Ticket）
@@ -251,12 +252,14 @@ features:
     salus: スケジュール・予約（Schedule）
     crm: カレンダー・予約 CRUD・カウンセリング/セッション種別
     layer: plugin
-    status: not-started
+    status: in-progress
     priority: P0
     depends_on: [plugin-stores-master]
     scenarios: [A, B]
-    design: null
-    notes: Salus 日常業務の中心 /schedule
+    design: docs/workflow/design/archive/plugin-appointments.md
+    pr: "#26"
+    branch: feat/plugin-appointments-master
+    notes: Salus 日常業務の中心 /schedule。PR レビュー中
 
   - id: plugin-schedule-bulk
     salus: 一括予約（ScheduleBulk）
