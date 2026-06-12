@@ -72,11 +72,13 @@ async function createSales({
   last_name,
   email,
   password,
+  administrator = false,
 }: {
   first_name: string;
   last_name: string;
   email: string;
   password: string;
+  administrator?: boolean;
 }) {
   const { data: userData, error: userError } =
     await getAdminSupabase().auth.admin.createUser({
@@ -91,7 +93,7 @@ async function createSales({
 
   const { data, error } = await getAdminSupabase()
     .from("sales")
-    .update({ first_name, last_name, administrator: false })
+    .update({ first_name, last_name, administrator })
     .eq("user_id", userData.user?.id)
     .select()
     .single();
@@ -259,7 +261,7 @@ const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
 });
 
 const dismissToast = async (page: Page, content: string) => {
-  await expect(page.getByText(content)).toBeVisible();
+  await expect(page.getByText(content, { exact: true })).toBeVisible();
   await page.getByLabel("Close toast").first().click();
   // Since we are in optimistic UI, dismissing the toast trigger the request to the api linked to the toast message
   await page.waitForLoadState("networkidle");

@@ -6,5 +6,6 @@ export type Store = {
   zip?: string;
   address?: string;
   build?: string;
+  del_flg?: boolean;
   created_at?: string;
 } & Pick<RaRecord, "id">;

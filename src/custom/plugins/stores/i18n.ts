@@ -26,7 +26,14 @@ export const storesPluginI18n = {
       },
       confirm: {
         delete_title: "「%{name}」を削除",
-        delete_content: "この店舗を削除してもよろしいですか？",
+        delete_content:
+          "この店舗を一覧から非表示にします。在籍会員の参照は維持されます。",
+      },
+      filters: {
+        include_deleted: "削除済みを含む",
+      },
+      status: {
+        deleted: "削除済み",
       },
       validation: {
         name_required: "店舗名を入力してください",
@@ -38,7 +45,6 @@ export const storesPluginI18n = {
         area_code_max_length: "エリアコードは20文字以内で入力してください",
         address_max_length: "住所は200文字以内で入力してください",
         build_max_length: "建物名は100文字以内で入力してください",
-        delete_has_contacts: "在籍会員がいる店舗は削除できません",
       },
     },
     contacts: {

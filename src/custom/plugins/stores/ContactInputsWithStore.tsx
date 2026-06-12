@@ -29,6 +29,8 @@ import {
   translatePersonalInfoTypeLabel,
 } from "@/components/atomic-crm/contacts/contactModel.ts";
 
+import { ACTIVE_STORE_FILTER } from "./withStoresDataProvider";
+
 export const ContactInputsWithStore = () => {
   const isMobile = useIsMobile();
 
@@ -217,6 +219,7 @@ const ContactMiscInputs = () => {
         reference="stores"
         source="store_id"
         sort={{ field: "name", order: "ASC" }}
+        filter={ACTIVE_STORE_FILTER}
       >
         <SelectInput
           helperText={false}

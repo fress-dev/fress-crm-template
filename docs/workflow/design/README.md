@@ -1,8 +1,9 @@
 # 機能設計書
 
-> **最終更新:** 2026-06-09
+> **最終更新:** 2026-06-12
 
 **主目的:** 実装前に人間が内容を確認・承認するため。  
+**何を書くか:** [product/roadmap.md](../../product/roadmap.md) / [features.yaml](../../product/features.yaml) で選んだ `id` を1本ずつ。  
 層の方針は [architecture/plugin-architecture.md](../../architecture/plugin-architecture.md)、レビュー結果は [logs/review-log.md](../../logs/review-log.md)。
 
 ## いつ書くか
