@@ -9,7 +9,7 @@
 
 ---
 
-## 2026-06-13 | feat/plugin-courses-master | コースマスタプラグイン | （PR 未作成）
+## 2026-06-13 | feat/plugin-courses-master | コースマスタプラグイン | [PR #27](https://github.com/fress-dev/fress-crm-template/pull/27)
 
 | 項目 | 結果 |
 |------|------|
