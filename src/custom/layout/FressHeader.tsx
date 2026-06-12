@@ -9,6 +9,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useConfigurationContext } from "@/components/atomic-crm/root/ConfigurationContext";
 import { ImportPage } from "@/components/atomic-crm/misc/ImportPage";
 import { ChangelogPage } from "@/components/atomic-crm/misc/ChangelogPage";
+import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPluginEnabled";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { isResourceHidden } from "@/custom/platform/tenant/isResourceHidden";
 import { loadTenantConfig } from "@/custom/platform/tenant/loadTenantConfig";
@@ -30,11 +31,14 @@ export const FressHeader = () => {
     currentPath = "/deals";
   } else if (matchPath("/stores/*", location.pathname)) {
     currentPath = "/stores";
+  } else if (matchPath("/courses/*", location.pathname)) {
+    currentPath = "/courses";
   } else {
     currentPath = false;
   }
 
   const storesEnabled = isStoresPluginEnabled();
+  const coursesEnabled = isCoursesPluginEnabled();
 
   return (
     <>
@@ -99,6 +103,15 @@ export const FressHeader = () => {
                       })}
                       to="/stores"
                       isActive={currentPath === "/stores"}
+                    />
+                  ) : null}
+                  {coursesEnabled ? (
+                    <NavigationTab
+                      label={translate("resources.courses.name", {
+                        smart_count: 2,
+                      })}
+                      to="/courses"
+                      isActive={currentPath === "/courses"}
                     />
                   ) : null}
                 </nav>

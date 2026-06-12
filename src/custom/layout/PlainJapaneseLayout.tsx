@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 import { PlainJapaneseConfigurationSync } from "@/custom/configuration/PlainJapaneseConfigurationSync";
 import { FressLayout } from "@/custom/layout/FressLayout";
+import { CourseSeedSync } from "@/custom/plugins/courses/CourseSeedSync";
 import { StoreSeedSync } from "@/custom/plugins/stores/StoreSeedSync";
 
 const PlainJapaneseLayoutShell = ({
@@ -17,6 +18,7 @@ const PlainJapaneseLayoutShell = ({
   <>
     <PlainJapaneseConfigurationSync />
     <StoreSeedSync />
+    <CourseSeedSync />
     {mobile ? (
       <MobileLayout>{children}</MobileLayout>
     ) : (

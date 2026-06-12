@@ -7,6 +7,18 @@ export type StoreSeedEntry = {
   build?: string;
 };
 
+/** 初回セットアップ用のコースシード（運用開始後は管理画面で編集） */
+export type CourseSeedEntry = {
+  name: string;
+  description?: string;
+  courseType: "single" | "membership" | "ticket";
+  serviceKind: "training" | "stretch" | "training_and_stretch";
+  durationMinutes: number;
+  storeNames?: string[];
+  displayOrder?: number;
+  isActive?: boolean;
+};
+
 type LabeledValueConfig = {
   value: string;
   label: string;
@@ -45,4 +57,6 @@ export type TenantConfig = {
   extensions?: string[];
   /** stores プラグイン有効時の初回店舗データ */
   storeSeed?: StoreSeedEntry[];
+  /** courses プラグイン有効時の初回コースデータ */
+  courseSeed?: CourseSeedEntry[];
 };

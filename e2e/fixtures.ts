@@ -26,6 +26,8 @@ const TABLES = [
   "deal_notes",
   "deals",
   "contacts",
+  "course_stores",
+  "courses",
   "stores",
   "companies",
   "tags",
@@ -171,6 +173,39 @@ async function createStore({ name }: { name: string }) {
   return data;
 }
 
+async function createCourse({
+  name,
+  course_type = "ticket",
+  service_kind = "training",
+  duration_minutes = 60,
+  display_order = 100,
+}: {
+  name: string;
+  course_type?: "single" | "membership" | "ticket";
+  service_kind?: "training" | "stretch" | "training_and_stretch";
+  duration_minutes?: number;
+  display_order?: number;
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("courses")
+    .insert({
+      name,
+      course_type,
+      service_kind,
+      duration_minutes,
+      display_order,
+      is_active: true,
+    })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create course: ${error.message}`);
+  }
+
+  return data;
+}
+
 async function resolveDefaultStoreId(): Promise<string | number | null> {
   const { data: stores, error } = await getAdminSupabase()
     .from("stores")
@@ -273,6 +308,7 @@ export const test = base.extend<{
   createSales: typeof createSales;
   createCompany: typeof createCompany;
   createStore: typeof createStore;
+  createCourse: typeof createCourse;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   menu: ReturnType<typeof getMenuMethod>;
@@ -303,6 +339,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createStore: async ({}, cb) => {
     await cb(createStore);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createCourse: async ({}, cb) => {
+    await cb(createCourse);
   },
   // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {

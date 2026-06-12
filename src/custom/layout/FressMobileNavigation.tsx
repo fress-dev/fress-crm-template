@@ -6,13 +6,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { Home, ListTodo, Plus, Settings, Store, Users } from "lucide-react";
+import {
+  BookOpen,
+  Home,
+  ListTodo,
+  Plus,
+  Settings,
+  Store,
+  Users,
+} from "lucide-react";
 import { useTranslate } from "ra-core";
 import { Link, matchPath, useLocation, useMatch } from "react-router";
 import { ContactCreateSheet } from "@/components/atomic-crm/contacts/ContactCreateSheet";
 import { useState } from "react";
 import { NoteCreateSheet } from "@/components/atomic-crm/notes/NoteCreateSheet";
 import { TaskCreateSheet } from "@/components/atomic-crm/tasks/TaskCreateSheet";
+import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPluginEnabled";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 
 export const MobileNavigation = () => {
@@ -32,11 +41,15 @@ export const MobileNavigation = () => {
     currentPath = "/deals";
   } else if (matchPath("/stores/*", location.pathname)) {
     currentPath = "/stores";
+  } else if (matchPath("/courses/*", location.pathname)) {
+    currentPath = "/courses";
   } else {
     currentPath = false;
   }
 
   const storesEnabled = isStoresPluginEnabled();
+  const coursesEnabled = isCoursesPluginEnabled();
+  const hasPluginTabs = storesEnabled || coursesEnabled;
 
   // Check if the app is running as a PWA (standalone mode)
   const isPwa = window.matchMedia("(display-mode: standalone)").matches;
@@ -72,7 +85,7 @@ export const MobileNavigation = () => {
               smart_count: 2,
             })}
             isActive={currentPath === "/contacts"}
-            compact={storesEnabled}
+            compact={hasPluginTabs}
           />
           {storesEnabled ? (
             <NavigationButton
@@ -83,12 +96,22 @@ export const MobileNavigation = () => {
               compact
             />
           ) : null}
+          {coursesEnabled ? (
+            <NavigationButton
+              href="/courses"
+              Icon={BookOpen}
+              label={translate("resources.courses.name", { smart_count: 2 })}
+              isActive={currentPath === "/courses"}
+              compact
+            />
+          ) : null}
           <CreateButton />
           <NavigationButton
             href="/tasks"
             Icon={ListTodo}
             label={translate("resources.tasks.name", { smart_count: 2 })}
             isActive={currentPath === "/tasks"}
+            compact={hasPluginTabs}
           />
           <SettingsButton />
         </>

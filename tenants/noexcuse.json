@@ -1,7 +1,7 @@
 {
   "id": "noexcuse",
   "title": "noexcuse CRM",
-  "plugins": ["stores"],
+  "plugins": ["stores", "courses"],
   "extensions": [],
   "hiddenResources": ["companies"],
   "labels": {
@@ -37,5 +37,23 @@
   "storeSeed": [
     { "name": "船橋店", "area_code": "funabashi" },
     { "name": "千葉店", "area_code": "chiba" }
+  ],
+  "courseSeed": [
+    {
+      "name": "パーソナルトレーニング 60分",
+      "courseType": "ticket",
+      "serviceKind": "training",
+      "durationMinutes": 60,
+      "storeNames": ["船橋店", "千葉店"],
+      "displayOrder": 10
+    },
+    {
+      "name": "ストレッチ 30分",
+      "courseType": "ticket",
+      "serviceKind": "stretch",
+      "durationMinutes": 30,
+      "storeNames": ["船橋店", "千葉店"],
+      "displayOrder": 20
+    }
   ]
 }
