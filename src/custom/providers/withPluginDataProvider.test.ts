@@ -62,4 +62,35 @@ describe("withPluginDataProvider", () => {
       sort: { field: "name", order: "ASC" },
     });
   });
+
+  it("courses 有効時は q を検索へ変換する", async () => {
+    loadTenantConfig.mockReturnValue({ plugins: ["courses"] });
+    getPlugin.mockImplementation((id: string) =>
+      id === "courses" ? { id: "courses" } : undefined,
+    );
+
+    const getList = vi.fn().mockResolvedValue({ data: [], total: 0 });
+    const dataProvider = {
+      getList,
+      getOne: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+    } as unknown as CrmDataProvider;
+    const wrapped = withPluginDataProvider(dataProvider);
+
+    await wrapped.getList("courses", {
+      filter: { q: "パーソナル" },
+      pagination: { page: 1, perPage: 25 },
+      sort: { field: "display_order", order: "ASC" },
+    });
+
+    expect(getList).toHaveBeenCalledWith("courses", {
+      filter: {
+        "@or": expect.objectContaining({ "name@ilike": "パーソナル" }),
+      },
+      pagination: { page: 1, perPage: 25 },
+      sort: { field: "display_order", order: "ASC" },
+    });
+  });
 });

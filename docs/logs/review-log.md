@@ -9,6 +9,40 @@
 
 ---
 
+## 2026-06-13 | feat/plugin-courses-master | コースマスタプラグイン | （PR 未作成）
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- `src/custom/plugins/courses/**` — CRUD 画面・dataProvider・seed・ユニットテスト
+- `supabase/migrations/20260612130000_courses_plugin.sql` — courses / course_stores
+- `src/custom/providers/applyFullTextSearch.ts` / `withPluginDataProvider.ts` — プラグイン向け dataProvider 合成
+- `e2e/courses.spec.ts` — 一覧・検索・UI 作成・更新・削除
+- `tenants/*.json` — courses プラグイン有効化・courseSeed
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `plugin-courses.md`（approved）と一致 |
+| コア保護 | **OK** — `src/root/**`・`src/components/**` 既存・既存 migrations 変更なし |
+| 拡張パターン | **OK** — `src/custom/` + `App.tsx` 縫い目 |
+| CRUD/dataProvider | **OK** — view 誤書き込みなし、検索 `q` 変換、course_stores 差分同期 |
+| 指摘対応 | **OK** — 同名検証接続、update ユニットテスト、e2e CRUD 拡張、`CourseFormToolbar` |
+| DoD | **OK** — `make pre-pr` 緑、`e2e/courses.spec.ts` ローカル PASS |
+
+### メモ
+
+- Select / Number を含む Card 内フォームで `SaveButton type="submit"` が効かないため、`CourseFormToolbar` で `type="button"` に統一
+- `cleanupCourseForSave` で Select 既定値を補完（未選択時も DB 制約を満たす）
+
+---
+
 ## 2026-06-10 | fix/tenant-smoke-e2e | tenant smoke e2e 追加 | [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11)
 
 | 項目 | 結果 |
