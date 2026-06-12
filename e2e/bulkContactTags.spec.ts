@@ -1,4 +1,5 @@
 import { test, expect } from "./fixtures";
+import { ja } from "./ja";
 
 test("user adds a tag to several contacts", async ({
   page,
@@ -32,12 +33,12 @@ test("user adds a tag to several contacts", async ({
 
   await page.goto("http://localhost:5175/");
 
-  await page.getByLabel("Email").fill("john@doe.com");
-  await page.getByLabel("Password").fill("password");
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByLabel(ja.email).fill("john@doe.com");
+  await page.getByLabel(ja.password).fill("password");
+  await page.getByRole("button", { name: ja.signIn }).click();
 
-  await expect(page).toHaveTitle(/Atomic CRM/);
-  await expect(page.getByRole("link", { name: "Contacts" })).toBeVisible();
+  await expect(page).toHaveTitle(new RegExp(ja.appTitle));
+  await expect(page.getByRole("link", { name: ja.contacts })).toBeVisible();
 
   await menu.goToContacts();
   await expect(page.getByText("Ada Lovelace")).toBeVisible();
@@ -45,14 +46,14 @@ test("user adds a tag to several contacts", async ({
 
   const checkboxes = page.getByRole("checkbox");
   await checkboxes.nth(1).click();
-  await page.getByRole("button", { name: /select all/i }).click();
+  await page.getByRole("button", { name: ja.selectAll }).click();
 
-  await page.getByRole("button", { name: /^Tag$/ }).click();
-  await page.getByRole("button", { name: "Create new tag" }).click();
-  await page.getByLabel("Tag name").fill("Prospect");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: ja.bulkTag }).click();
+  await page.getByRole("button", { name: ja.createNewTag }).click();
+  await page.getByLabel(ja.tagName).fill("Prospect");
+  await page.getByRole("button", { name: ja.save }).click();
 
-  await dismissToast("Tag added to 2 contacts");
+  await dismissToast(ja.tagAddedToast);
 
   await expect(
     page.getByText("Grace Hopper").locator("xpath=ancestor::a[1]"),

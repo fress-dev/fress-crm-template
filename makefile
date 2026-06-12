@@ -1,4 +1,4 @@
-.PHONY: build help
+.PHONY: build help dev supabase-migrate-database
 
 # Run silently, show output on failure
 run-silent = $1 >/tmp/atomic-crm-$2.log 2>&1 || (cat /tmp/atomic-crm-$2.log && false)
@@ -31,16 +31,22 @@ supabase-reset-database: ## reset (and clear!) the database
 start-app: ## start the app locally
 	npm run dev
 
+start-backlog: ## start local kanban backlog UI (tools/backlog, CRM と無関係)
+	cd tools/backlog && npm install && npm run dev
+
 start-app-e2e: ## start the app pointing to the e2e supabase instance
 	npx vite --port 5175 --force --mode e2e &
 
 stop-app-e2e:
-	kill $$(lsof -t -i:5175)
+	@pids="$$(lsof -t -i:5175 2>/dev/null || true)"; \
+	if [ -n "$$pids" ]; then kill $$pids; fi
 
 start-app-e2e-ci: build-e2e ## start the app pointing to the e2e supabase instance in CI mode (no open, no watch)
 	npx serve -l 5175 -L -s dist &
 
-start: start-supabase start-app ## start the stack locally
+dev: start ## alias: local dev stack (Supabase + Vite)
+
+start: start-supabase supabase-migrate-database start-app ## start the stack locally (pending migrations are applied)
 
 start-demo: ## start the app locally in demo mode
 	npm run dev:demo
@@ -95,9 +101,12 @@ supabase-deploy:
 	npx supabase db push
 	npx supabase functions deploy
 
-test-unit: test-app test-functions 
+test-unit: test-platform test-app test-functions
 
 test: test-unit
+
+test-platform:
+	npm run test:unit:platform
 
 test-app:
 	npm run test:unit:app
@@ -109,8 +118,25 @@ test-e2e: start-e2e
 	npx playwright test --ui
 
 test-e2e-ci: start-e2e-ci
+	@chmod +x scripts/sync-e2e-env.sh
+	@./scripts/sync-e2e-env.sh
 	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
 	npx playwright test
+
+test-e2e-tenant: start-supabase-e2e ## tenant smoke e2e. Usage: make test-e2e-tenant TENANT_ID=<id>
+	@test -n "$(TENANT_ID)" || (echo "TENANT_ID=<id> を指定してください" >&2; exit 1)
+	VITE_TENANT_ID=$(TENANT_ID) npx vite --port 5175 --force --mode e2e &
+	@chmod +x scripts/sync-e2e-env.sh
+	@./scripts/sync-e2e-env.sh
+	npx wait-on http-get://localhost:54341/auth/v1/health http-get://localhost:5175
+	TENANT_ID=$(TENANT_ID) VITE_TENANT_ID=$(TENANT_ID) npx playwright test e2e/tenantSmoke.spec.ts --project=chromium
+
+# PR 前の CI 相当チェック（e2e 除く。e2e は make pre-pr-e2e）
+pre-pr:
+	@./scripts/pre-pr-check.sh
+
+pre-pr-e2e: pre-pr
+	$(MAKE) test-e2e-ci
 
 lint:
 	npm run lint

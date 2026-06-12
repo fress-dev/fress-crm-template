@@ -1,11 +1,23 @@
 import { test as base, expect, type Page } from "@playwright/test";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const adminSupabase = createClient(
-  process.env.VITE_SUPABASE_URL ?? "http://127.0.0.1:54341",
-  process.env.SERVICE_ROLE_KEY!,
-  { auth: { autoRefreshToken: false, persistSession: false } },
-);
+import { ja } from "./ja";
+import { resolveServiceRoleKey, resolveSupabaseUrl } from "./resolveE2eEnv";
+
+let adminSupabase: SupabaseClient | null = null;
+
+const getAdminSupabase = () => {
+  if (!adminSupabase) {
+    adminSupabase = createClient(
+      resolveSupabaseUrl(),
+      resolveServiceRoleKey(),
+      {
+        auth: { autoRefreshToken: false, persistSession: false },
+      },
+    );
+  }
+  return adminSupabase;
+};
 
 // Tables in FK-safe deletion order (children before parents)
 const TABLES = [
@@ -14,6 +26,7 @@ const TABLES = [
   "deal_notes",
   "deals",
   "contacts",
+  "stores",
   "companies",
   "tags",
   "favicons_excluded_domains",
@@ -24,13 +37,13 @@ const TABLES = [
 async function resetDb() {
   for (const table of TABLES) {
     // Supabase client delete need a where clause to get executed, so we use one that will match on all rows (id is not null)
-    await adminSupabase.from(table).delete().not("id", "is", null);
+    await getAdminSupabase().from(table).delete().not("id", "is", null);
   }
 
   // Delete all auth users (cascades to sales via DB trigger)
-  const { data } = await adminSupabase.auth.admin.listUsers();
+  const { data } = await getAdminSupabase().auth.admin.listUsers();
   await Promise.all(
-    data.users.map((user) => adminSupabase.auth.admin.deleteUser(user.id)),
+    data.users.map((user) => getAdminSupabase().auth.admin.deleteUser(user.id)),
   );
 }
 
@@ -41,7 +54,7 @@ async function createUser({
   email: string;
   password: string;
 }) {
-  const { data, error } = await adminSupabase.auth.admin.createUser({
+  const { data, error } = await getAdminSupabase().auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -59,14 +72,16 @@ async function createSales({
   last_name,
   email,
   password,
+  administrator = false,
 }: {
   first_name: string;
   last_name: string;
   email: string;
   password: string;
+  administrator?: boolean;
 }) {
   const { data: userData, error: userError } =
-    await adminSupabase.auth.admin.createUser({
+    await getAdminSupabase().auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -76,9 +91,9 @@ async function createSales({
     throw new Error(`Failed to create sales: ${userError.message}`);
   }
 
-  const { data, error } = await adminSupabase
+  const { data, error } = await getAdminSupabase()
     .from("sales")
-    .update({ first_name, last_name, administrator: false })
+    .update({ first_name, last_name, administrator })
     .eq("user_id", userData.user?.id)
     .select()
     .single();
@@ -105,15 +120,17 @@ async function createNotes({
 }) {
   if (notes.length === 0) return;
 
-  const { error } = await adminSupabase.from("contact_notes").insert(
-    notes.map(({ text, date, status = "cold" }) => ({
-      contact_id: contactId,
-      sales_id: salesId,
-      text,
-      date,
-      status,
-    })),
-  );
+  const { error } = await getAdminSupabase()
+    .from("contact_notes")
+    .insert(
+      notes.map(({ text, date, status = "cold" }) => ({
+        contact_id: contactId,
+        sales_id: salesId,
+        text,
+        date,
+        status,
+      })),
+    );
 
   if (error) {
     throw new Error(`Failed to create notes: ${error.message}`);
@@ -127,7 +144,7 @@ async function createCompany({
   name: string;
   salesId: string | number;
 }) {
-  const { data, error } = await adminSupabase
+  const { data, error } = await getAdminSupabase()
     .from("companies")
     .insert({ name, sales_id: salesId })
     .select("id")
@@ -140,12 +157,46 @@ async function createCompany({
   return data;
 }
 
+async function createStore({ name }: { name: string }) {
+  const { data, error } = await getAdminSupabase()
+    .from("stores")
+    .insert({ name })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create store: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function resolveDefaultStoreId(): Promise<string | number | null> {
+  const { data: stores, error } = await getAdminSupabase()
+    .from("stores")
+    .select("id")
+    .order("id", { ascending: true })
+    .limit(1);
+
+  if (error) {
+    throw new Error(`Failed to list stores: ${error.message}`);
+  }
+
+  if (stores?.[0]?.id != null) {
+    return stores[0].id;
+  }
+
+  const store = await createStore({ name: "E2Eテスト店舗" });
+  return store.id;
+}
+
 async function createContact({
   first_name,
   last_name,
   title = "",
   company_id = null,
   sales_id,
+  store_id,
   notes = [],
 }: {
   first_name: string;
@@ -153,13 +204,17 @@ async function createContact({
   title?: string;
   company_id?: string | number | null;
   sales_id: string | number;
+  store_id?: string | number | null;
   notes?: {
     text: string;
     date?: string;
     status?: "cold" | "warm" | "hot";
   }[];
 }) {
-  const { data, error } = await adminSupabase
+  const resolvedStoreId =
+    store_id === undefined ? await resolveDefaultStoreId() : store_id;
+
+  const { data, error } = await getAdminSupabase()
     .from("contacts")
     .insert({
       first_name,
@@ -167,6 +222,7 @@ async function createContact({
       title,
       company_id,
       sales_id,
+      store_id: resolvedStoreId,
       first_seen: new Date().toISOString(),
       last_seen: new Date().toISOString(),
       has_newsletter: false,
@@ -195,17 +251,17 @@ async function createContact({
 
 const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
   goToDashboard: async () => {
-    await page.getByRole("link", { name: "Dashboard" }).click();
+    await page.getByRole("link", { name: ja.dashboard }).click();
     await page.waitForLoadState("networkidle");
   },
   goToContacts: async () => {
-    await page.getByRole("link", { name: "Contacts" }).click();
+    await page.getByRole("link", { name: ja.contacts }).click();
     await page.waitForLoadState("networkidle");
   },
 });
 
 const dismissToast = async (page: Page, content: string) => {
-  await expect(page.getByText(content)).toBeVisible();
+  await expect(page.getByText(content, { exact: true })).toBeVisible();
   await page.getByLabel("Close toast").first().click();
   // Since we are in optimistic UI, dismissing the toast trigger the request to the api linked to the toast message
   await page.waitForLoadState("networkidle");
@@ -216,6 +272,7 @@ export const test = base.extend<{
   createUser: typeof createUser;
   createSales: typeof createSales;
   createCompany: typeof createCompany;
+  createStore: typeof createStore;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   menu: ReturnType<typeof getMenuMethod>;
@@ -242,6 +299,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createCompany: async ({}, cb) => {
     await cb(createCompany);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createStore: async ({}, cb) => {
+    await cb(createStore);
   },
   // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {

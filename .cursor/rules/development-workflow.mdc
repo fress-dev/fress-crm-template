@@ -5,7 +5,9 @@ alwaysApply: true
 
 # 開発フロー（必須）
 
-新機能・拡張は AGENTS.md 末尾の「## 開発フロー」に従う。フェーズの状態は git ブランチと PR で表現する（状態管理ファイルは使わない）。
+新機能・拡張は AGENTS.md 末尾の「## 開発フロー」に従う。`feat/*` は [`docs/workflow/design/`](../../docs/workflow/design/) に設計書（`approved`）を先に作成する（1 設計書 = 1 PR）。[`docs/workflow/design/archive/`](../../docs/workflow/design/archive/) は参照しない。フェーズの状態は git ブランチと PR で表現する。
+
+マスタ管理・CRUD・検索・削除・dataProvider を触る場合は [`implementation-patterns.mdc`](./implementation-patterns.mdc) に従う。
 
 ## ブランチ戦略
 
@@ -13,7 +15,16 @@ alwaysApply: true
 |----------|------|
 | `main` | 本番相当。**直接コミット・push 禁止** |
 | `develop` | 開発統合。日常の PR マージ先 |
-| `feat/*` | タスク作業。`develop` から手動で作成 |
+| `feat/platform-<内容>` | コア。`develop` から作成 |
+| `feat/plugin-<機能名>-<内容>` | プラグイン（**優先**） |
+| `feat/plugin-realestate-*` / `feat/plugin-beauty-*` | 機能名で切れない業界専用ドメインのみ |
+| `fix/<内容>` | バグ修正 |
+
+命名の詳細・並行開発: [`docs/workflow/branch-strategy.md`](../../docs/workflow/branch-strategy.md)。フックで commit / push / PR / ブランチ作成時に検証する。
+
+レビュー後は [`docs/logs/review-log.md`](../../docs/logs/review-log.md) に追記。PR は `scripts/pr-body-with-review.sh` で本文生成する。
+
+**1ブランチ = 1タスク。** platform と plugin を同じブランチに混ぜない。
 
 ## 言語
 
@@ -22,6 +33,6 @@ alwaysApply: true
 ## 禁止
 
 - `main` 上でのコミット・日常開発
-- `approval_plan`（人間の計画承認）を飛ばした実装
+- 設計書の承認（`approved`）を飛ばした `feat/*` の実装
 - コアパス（`src/root/**`、既存 `src/components/**`、既存 migrations）の編集
 - コア既存ファイルのコメントを日本語化するための編集

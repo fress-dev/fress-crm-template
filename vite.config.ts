@@ -6,9 +6,14 @@ import { visualizer } from "rollup-plugin-visualizer";
 import createHtmlPlugin from "vite-plugin-simple-html";
 import { VitePWA } from "vite-plugin-pwa";
 
+import { customModuleOverrides } from "./src/custom/vite/customModuleOverrides";
+
 // https://vitejs.dev/config/
+const projectRoot = path.resolve(__dirname);
+
 export default defineConfig({
   plugins: [
+    customModuleOverrides(projectRoot),
     react(),
     tailwindcss(),
     visualizer({
@@ -62,7 +67,7 @@ export default defineConfig({
   resolve: {
     preserveSymlinks: true,
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(projectRoot, "./src"),
     },
   },
 });

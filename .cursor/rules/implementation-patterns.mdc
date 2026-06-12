@@ -1,0 +1,99 @@
+---
+description: CRUD・dataProvider・検索・削除の実装パターン
+alwaysApply: true
+---
+
+# 実装パターンルール
+
+マスタ管理・CRUD 画面を実装または変更するときは、コア保護に加えて以下を守る。
+
+## プラグインの独立性
+
+方針: [`docs/architecture/plugin-architecture.md`](../../docs/architecture/plugin-architecture.md) の「プラグインの有効化・停止・削除」。  
+人間の手順: [`docs/workflow/plugin-runbook.md`](../../docs/workflow/plugin-runbook.md)。teardown: [`docs/workflow/design/_template-teardown.md`](../../docs/workflow/design/_template-teardown.md)。
+
+| 操作 | JSON | migration | DB |
+|------|------|-----------|-----|
+| **有効化** | `plugins` に id を追加 | **追加 migration を人間が適用** | テーブル・カラム追加 |
+| **停止（通常 OFF）** | `plugins` から id を外す | **不要**（機能だけ止める） | **スキーマ・データは残す** |
+| **強制削除（例外）** | id を外す + コード整理 | **teardown 用の新規 migration**（DROP） | カラム・テーブル削除（データ消失） |
+
+- **現状**は JSON で管理。ON/OFF 画面は将来。**JSON 変更後、必要な migration は人間が実行**する。
+- 一度有効にしたら**通常は停止まで**。カラム DROP は誤導入など**強制削除のときだけ**。
+- プラグイン固有 UI は `isXxxPluginEnabled()` でガードし、無効時は**コア実装にフォールバック**する（例: `ContactInputs` → `ContactInputs.core`）。
+- コアテーブルへの追加カラムは **nullable**。必須は UI バリデーションのみ。DB `NOT NULL` は付けない。
+- `dataProvider` 拡張・シード・ナビ項目も有効時のみ適用する。
+- **依存関係**は `PluginDefinition.dependsOn` で明示する。
+- **残る結合（許容）**: Vite module override はビルド時差し替え。無効時もラッパーはバンドルされるが実行時ガードでコアに戻す。
+
+## CRUD 設計
+
+設計書に次を明記する。
+
+- 対象リソース名、対象テーブル、主キー。
+- 一覧 / 検索 / 作成 / 更新 / 削除の有無。
+- 読み取り先がテーブルか view か。書き込み先がテーブルか。
+- 検索対象カラム。`SearchInput source="q"` を使う場合の `beforeGetList` または同等処理。
+- 削除方式（物理削除 / 論理削除）と、関連データがある場合の挙動。
+- RLS の `select` / `insert` / `update` / `delete` 方針。
+- エラー時の通知・表示方針。
+
+## dataProvider
+
+- `supabaseDataProvider` の標準 CRUD に任せる前に、対象リソースが **view 読み取り + table 書き込み** かを確認する。
+- summary view を使う場合、`getList` / `getOne` は view、`create` / `update` / `delete` は実テーブルへ向ける。
+- view に `delete` / `update` / `create` を投げない。
+- 新リソースで custom dataProvider を追加したら、一覧・検索・作成・更新・削除の向き先を設計書と一致させる。
+
+## 検索
+
+- `SearchInput source="q"` を置く場合、`q` を DB カラムとして送らない。
+- `beforeGetList` で `q` を取り除き、実在する検索対象カラムの `@ilike` / `@or` フィルタに変換する。
+- 検索対象カラムは migration / view / table に存在するものだけにする。
+- 検索は空文字、ヒットあり、ヒットなしを確認する。
+
+## 削除
+
+- `DeleteButton` は `@/components/admin/delete-button` を使い、対象 record / resource の context がある場所に置く。
+- `FormToolbar` には削除ボタンが含まれない。編集画面に削除が必要なら別途配置する。
+- 削除対象の resource が view を指していないことを確認する。
+- 外部キー制約、RLS、関連データありの場合の挙動を確認する。
+- 削除後に一覧が古いまま残らないよう、既存の shadcn-admin-kit / ra-core の mutation・query 更新パターンに従う。
+
+## CRUD 画面レイアウト
+
+既存コア画面（担当者・取引先）のパターンを踏まえ、次を守る。
+
+| 画面 | コアの標準 | 使い方 |
+|------|-----------|--------|
+| Show / Edit | `flex gap-8` + メイン `flex-1` + 右 **Aside**（`w-92`） | Aside があるリソースはこの構図に合わせる |
+| Create | `lg:mr-72` | **Edit の Aside 幅に揃えるため**。Aside が無いリソースでは使わない |
+| 狭いマスタ（項目少・Aside なし） | `mx-auto w-full max-w-2xl` | Show / Edit / Create で**同じシェル**を共有し中央寄せ |
+
+### やってはいけないこと
+
+- Aside が無いのに `lg:mr-72` だけ付ける（右が空き、フォームが左に浮く）。
+- `max-w-2xl` だけ付けて左寄せのままにする（`mx-auto` なしで中途半端な位置になる）。
+- Show と Edit / Create で幅・寄せがバラバラ。
+
+### 実装の目安
+
+- Aside なしのプラグイン CRUD は `StorePageShell` のように共通ラッパーを切り、3 画面で同じ class を使う。
+- 将来 Aside を足す場合は `flex gap-8` + Aside に移行し、`lg:mr-72` / 中央寄せシェルは外す。
+
+## import の使い分け
+
+- 画面部品（`List`、`DataTable`、`CreateButton`、`SearchInput`、`DeleteButton`、入力・フィールド類）は `@/components/admin/...` から import する。
+- base / hooks / controller / form context（`EditBase`、`CreateBase`、`Form`、`useDataProvider`、`useNotify` 等）は `ra-core` から import する。
+- 新規実装では既存の近い画面を参照し、import 元を混在させない。
+
+## 確認
+
+CRUD を触る PR は、少なくとも次を手動確認または関連 e2e で確認する。
+
+- 一覧表示。
+- 検索: 空文字 / ヒットあり / ヒットなし。
+- 作成。
+- 更新。
+- 削除: 成功 / RLS または外部キー制約で失敗するケース。
+- エラー時に通知または画面表示が出ること。

@@ -1,0 +1,13 @@
+{
+  "id": "default",
+  "title": "お客様管理",
+  "plugins": ["stores"],
+  "extensions": [],
+  "hiddenResources": [],
+  "labels": {
+    "contacts": "担当者",
+    "deals": "商談",
+    "sales": "利用者",
+    "companies": "取引先企業"
+  }
+}

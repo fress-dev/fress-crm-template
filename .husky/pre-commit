@@ -1,1 +1,8 @@
+#!/bin/sh
+
+# ステージ済みファイルに Prettier + ESLint を適用（CI と同じルール）
+npx lint-staged
+
+# shadcn registry を再生成（変更があればコミットに含める）
 make registry-gen
+git add registry.json 2>/dev/null || true

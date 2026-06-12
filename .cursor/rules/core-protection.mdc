@@ -29,6 +29,7 @@ alwaysApply: true
 - UI は Shadcn UI + Tailwind、データ取得は TanStack Query の作法に従う。
 
 ## 完了前チェック
-- `make test` / `make test-e2e` が緑であること。
+- `make pre-pr` が緑であること（Prettier / lint / typecheck / unit / build）。
+- 触った画面の関連 e2e spec をローカルで実行すること。フル e2e は CI に任せる（`AGENTS.md` のテスト方針）。
 - コア保護パスの `git diff` が空であること。
 - 上記が満たせない場合は「完了」と宣言しない。

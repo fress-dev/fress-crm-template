@@ -9,17 +9,20 @@
 - 注意: 一般的な「react-admin ベース」の解説は v1.5.0 以降は当てはまらない。shadcn-admin-kit の API を使うこと。
 
 ## コマンド（clone 後に Makefile / package.json で実際の定義を確認して更新すること）
-- 開発起動: `make start`（Vite dev server + ローカル Supabase + Postgres/Docker, http://localhost:5173/）
+- 開発起動: `make start` / `make dev`（Supabase 起動 + 未適用マイグレーション適用 + Vite, http://localhost:5173/）
 - ユニットテスト: `make test`
 - e2e テスト: `make test-e2e`
-- 型チェック: `npx tsc --noEmit`
+- 型チェック: `npm run typecheck`（PR 前は `make pre-pr` に含まれる）
 - DB マイグレーション適用: `make supabase-migrate-database`
 - Lint: `npm run lint`（定義を確認）
 
 ## ディレクトリ規約（最重要）
+
+**現状のルールが常に優先。** [`docs/architecture/plugin-architecture.md`](docs/architecture/plugin-architecture.md) の `src/platform/**`・`src/plugins/**`・`tenants/**` は将来の目標レイアウト。platform 移行 PR がマージされるまで、新規コードは `src/custom/**` に置く。
+
 - **エントリ**: `src/App.tsx`
 - **設定ハブ**: `src/root/CRM.tsx`（ドメイン設定。原則ここは「読む」だけ。変更が必要なら props 注入で）
-- **カスタム実装の置き場所**: `src/custom/`（無ければ作る）。新規コンポーネント・ページ・hooks・ロジックはすべてここ。
+- **カスタム実装の置き場所（現状）**: `src/custom/`（無ければ作る）。新規コンポーネント・ページ・hooks・ロジックはすべてここ。
 - **Supabase**: `supabase/migrations/` は **追加のみ**。
 
 ### 触ってはいけない（コア）
@@ -39,24 +42,46 @@
 4. Supabase 側は新規テーブル・ビュー・RLS ポリシー・Edge Function の **追加** で対応
 5. 上記で不可能な場合のみ、コア変更を提案し **必ず人間の承認を得てから** 着手する
 
+プラグイン・テナント設定・カスタム層の設計判断に迷ったら [`docs/architecture/plugin-architecture.md`](docs/architecture/plugin-architecture.md) を先に読む。
+
+マスタ管理・CRUD・検索・削除・dataProvider を触る場合は [`.cursor/rules/implementation-patterns.mdc`](.cursor/rules/implementation-patterns.mdc) の実装パターンに従う。
+
+機能実装の依頼を受けたら、**先に [`docs/workflow/design/`](docs/workflow/design/) に設計書を書く**（[_template.md`](docs/workflow/design/_template.md) を使用）。**1 設計書 = 1 PR**。大きな依頼は分割案を提示してから各設計書を draft で作成する。`status: approved` になるまで**実装しない**。**実装完了〜PR 作成時**に設計書を `docs/workflow/design/archive/` へ移動し、以降**参照しない**（改修はコード優先。設計書に書いたが未実装の範囲は、必要になったら別の設計書を新規作成）。`docs/workflow/design/archive/` は読まない。`fix/*` の単純修正は除外可。
+
 ## 標準開発フロー
 
-新機能・拡張は **調査 → 計画 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
+新機能・拡張は **調査 → 設計書 → 承認 → 開発 → レビュー → テスト → PR → マージ** の順で進める。
 
-`develop` から `feat/*` ブランチを手動で作成して作業する。
+`develop` から作業ブランチを手動で作成する。命名は次のいずれか:
 
-**`main` は本番相当 — 直接コミットしない。** PR は `feat/*` → `develop`。
+- `feat/platform-<内容>` … コア（レジストリ・テナント設定・組み立て）
+- `feat/plugin-<機能名>-<内容>` … プラグイン（**優先**。例: `feat/plugin-appointments-form`）
+- `feat/plugin-realestate-<内容>` / `feat/plugin-beauty-<内容>` … 機能名で切れない業界専用ドメインのみ
+- `fix/<内容>` … バグ修正
 
-詳細: 本ファイル末尾の「## 開発フロー」および [`docs/development-workflow.md`](docs/development-workflow.md)
+**`main` は本番相当 — 直接コミットしない。** PR は作業ブランチ → `develop`。
+
+詳細: [`docs/harness/README.md`](docs/harness/README.md)、[`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)、[`docs/workflow/development.md`](docs/workflow/development.md)
 
 ## 上流追従
 - 上流を `upstream` リモートとして保持する。
 - カスタムは `src/custom/` と新規マイグレーションに隔離し、上流更新は rebase / merge で取り込める状態を維持する。
 
+## テスト
+- PR 前のローカルゲート: `make pre-pr`（Prettier / lint / `npm run typecheck` / unit / build）
+- e2e は触った画面の関連 spec だけ単体で回す:
+    `npx playwright test e2e/<対象>.spec.ts`
+- **フル e2e（`make test-e2e`）はローカル必須にしない。** PR 時に CI（`make test-e2e-ci`）が実行する。
+
+## 道具作成の方針
+- 新しいスクリプト／CLI／管理ツールを勝手に作らない。
+- コマンド一発で済むことはスクリプト化しない。
+- 手順は原則 AGENTS.md に文章で書く。道具が必要と判断したら、作る前に理由を述べて人間の承認を得る。
+
 ## 完了の定義（Definition of Done）
 作業を「完了」と宣言する前に、必ず以下を満たすこと:
-1. `make test` と `make test-e2e` が緑（コアのテストが落ちていない＝コア挙動を壊していない）
-2. `npx tsc --noEmit` が通る
+1. `make pre-pr` が緑（または同等: `make test` + `npm run typecheck` + lint）
+2. 触った画面に関連する e2e spec をローカルで実行した（フル e2e は CI に任せる）
 3. コアパス（上記「触ってはいけない」）の `git diff` が空であることを確認する
 4. 変更点と「なぜ縫い目側で実現できたか」を1〜2行で要約する
 
@@ -71,17 +96,19 @@
 | # | フェーズ | 担当 | 内容 |
 |---|----------|------|------|
 | 1 | 調査 | **@Explore**（ビルトイン） | 現状を調べる。実装はしない |
-| 2 | 計画 | **@planner** | 縦切り単位にタスクを分解する |
-| 3 | 承認 | **人間** | 計画を確認して OK を出す。**ここで必ず一度止まる** |
-| 4 | 開発 | **メインエージェント** | `develop` から `feat/*` を切り、`src/custom/` 配下のみで実装する |
-| 5 | レビュー | **@reviewer**（差分モード） | コア侵食・DoD・縫い目遵守を検査する |
-| 6 | テスト | **メインエージェント** | `make test` と `make test-e2e` を通す |
-| 7 | PR | **メインエージェント** | `gh pr create --base develop` で PR を作成する |
-| 8 | マージ承認 | **人間** | PR を確認してマージする |
+| 2 | 設計書 | **メインエージェント** | [`docs/workflow/design/<機能名>.md`](docs/workflow/design/) を `draft` で作成（必要なら @planner の分解を反映） |
+| 3 | 設計承認 | **人間** | 設計書を確認して OK。**ここで必ず一度止まる**。OK 後に `approved` に更新 |
+| 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する |
+| 5 | レビュー | **@reviewer** → **メインエージェント** | @reviewer は検査結果のみ返す（readonly）。メインが [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
+| 6 | テスト | **メインエージェント** | `make pre-pr` + 関連 e2e spec のみ（上記「## テスト」参照）。フル e2e は CI |
+| 7 | PR | **メインエージェント** | 設計書を `docs/workflow/design/archive/` へ移動 → `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
+| 8 | マージ承認 | **人間** | PR を確認してマージ |
 
 ### 補足
 
-- **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/*` → PR → `develop`）。
+- **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/platform-*` / `feat/plugin-*` / `fix/*` → PR → `develop`）。
+- **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)。
+- **`feat/plugin-*` の PR では platform（ベース）とハーネス設定（`AGENTS.md`、`.cursor/`、`docs/harness/`、`scripts/workflow-gate*` 等）を一緒に変更しない。** 必要なら `feat/platform-*` / `feat/platform-harness-*` で別 PR。platform を先にマージしてから plugin を着手する。
 - **サブエージェント（@Explore / @planner / @reviewer 等）は `.cursor/rules` を継承しない。** コア保護の要点は本ファイル（および各 `.cursor/agents/*.md`）に記載されている前提で動くこと。
 - DB 変更が必要な場合は **@db-migrator** を開発フェーズで呼び出す（追加専用マイグレーションのみ）。
 
