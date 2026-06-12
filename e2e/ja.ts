@@ -54,6 +54,7 @@ export const ja = {
   displayOrder: "表示順",
   courseStores: "提供店舗",
   stretch: "ストレッチ",
+  memberships: "契約",
   memberStore: "在籍店舗",
   delete: "削除",
   edit: "編集",
