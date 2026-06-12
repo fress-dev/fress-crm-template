@@ -35,6 +35,13 @@ export const storesPluginI18n = {
       status: {
         deleted: "削除済み",
       },
+      sales_scope: {
+        title: "担当店舗",
+        description:
+          "選択した店舗の会員のみ閲覧・編集できます。未選択の場合は全店舗にアクセスできます。",
+        loading: "担当店舗を読み込み中…",
+        no_stores: "有効な店舗がありません。先に店舗を登録してください。",
+      },
       validation: {
         name_required: "店舗名を入力してください",
         name_max_length: "店舗名は%{max}文字以内で入力してください",

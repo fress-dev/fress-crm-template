@@ -65,6 +65,21 @@ describe("applyStoresActiveFilter", () => {
   });
 });
 
+describe("withStoresDataProvider sales_stores", () => {
+  it("getSalesStoreIds / setSalesStoreIds を公開する", () => {
+    const base = {
+      getList: vi.fn(),
+      delete: vi.fn(),
+      update: vi.fn(),
+    } as unknown as CrmDataProvider;
+
+    const wrapped = withStoresDataProvider(base);
+
+    expect(typeof wrapped.getSalesStoreIds).toBe("function");
+    expect(typeof wrapped.setSalesStoreIds).toBe("function");
+  });
+});
+
 describe("withStoresDataProvider", () => {
   it("stores 以外は getList をそのまま委譲する", async () => {
     const getList = vi.fn().mockResolvedValue({ data: [], total: 0 });

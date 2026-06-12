@@ -30,7 +30,9 @@ import {
   getAuthProvider as defaultAuthProviderBuilder,
   getDataProvider as defaultDataProviderBuilder,
 } from "@/components/atomic-crm/providers/supabase";
-import sales from "@/components/atomic-crm/sales";
+import coreSales from "@/components/atomic-crm/sales";
+import storesSalesResource from "@/custom/plugins/stores/salesResource";
+import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { SettingsPageMobile } from "@/components/atomic-crm/settings/SettingsPageMobile";
 import { ProfilePage } from "@/components/atomic-crm/settings/ProfilePage";
 import { SettingsPage } from "@/components/atomic-crm/settings/SettingsPage";
@@ -120,6 +122,9 @@ const isVisible = (
   hiddenResources: HiddenResource[] | undefined,
   resource: HiddenResource,
 ) => !hiddenResources?.includes(resource);
+
+const resolveSalesResource = () =>
+  isStoresPluginEnabled() ? storesSalesResource : coreSales;
 
 export const FressCRM = ({
   companySectors = defaultCompanySectors,
@@ -291,7 +296,7 @@ const DesktopAdmin = (
       <Resource name="deal_notes" />
       <Resource name="tasks" />
       {isVisible(hiddenResources, "sales") ? (
-        <Resource name="sales" {...sales} />
+        <Resource name="sales" {...resolveSalesResource()} />
       ) : null}
       <Resource name="tags" />
       {renderPluginAdminChildren()}

@@ -30,6 +30,7 @@ const TABLES = [
   "contacts",
   "course_stores",
   "courses",
+  "sales_stores",
   "stores",
   "companies",
   "tags",
@@ -40,7 +41,11 @@ const TABLES = [
 
 async function resetDb() {
   for (const table of TABLES) {
-    // Supabase client delete need a where clause to get executed, so we use one that will match on all rows (id is not null)
+    // Supabase の delete は where 必須。sales_stores は id 列がないため sales_id で全削除する
+    if (table === "sales_stores") {
+      await getAdminSupabase().from(table).delete().not("sales_id", "is", null);
+      continue;
+    }
     await getAdminSupabase().from(table).delete().not("id", "is", null);
   }
 
@@ -69,6 +74,44 @@ async function createUser({
   }
 
   return data.user;
+}
+
+async function assignSalesStore({
+  salesEmail,
+  storeName,
+}: {
+  salesEmail: string;
+  storeName: string;
+}) {
+  const admin = getAdminSupabase();
+  const { data: sale, error: saleError } = await admin
+    .from("sales")
+    .select("id")
+    .eq("email", salesEmail)
+    .single();
+
+  if (saleError || !sale) {
+    throw new Error(`assignSalesStore: sales not found (${salesEmail})`);
+  }
+
+  const { data: store, error: storeError } = await admin
+    .from("stores")
+    .select("id")
+    .eq("name", storeName)
+    .single();
+
+  if (storeError || !store) {
+    throw new Error(`assignSalesStore: store not found (${storeName})`);
+  }
+
+  const { error } = await admin.from("sales_stores").upsert({
+    sales_id: sale.id,
+    store_id: store.id,
+  });
+
+  if (error) {
+    throw new Error(`assignSalesStore: ${error.message}`);
+  }
 }
 
 async function createSales({
@@ -356,6 +399,7 @@ export const test = base.extend<{
   resetDb: void;
   createUser: typeof createUser;
   createSales: typeof createSales;
+  assignSalesStore: typeof assignSalesStore;
   createCompany: typeof createCompany;
   createStore: typeof createStore;
   createCourse: typeof createCourse;
@@ -382,6 +426,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createSales: async ({}, cb) => {
     await cb(createSales);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  assignSalesStore: async ({}, cb) => {
+    await cb(assignSalesStore);
   },
   // eslint-disable-next-line no-empty-pattern
   createCompany: async ({}, cb) => {
