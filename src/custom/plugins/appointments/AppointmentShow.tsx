@@ -3,19 +3,42 @@ import { RecordField } from "@/components/admin/record-field";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { TextField } from "@/components/admin/text-field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShowBase } from "ra-core";
+import { Button } from "@/components/ui/button";
+import { ShowBase, useRecordContext, useTranslate } from "ra-core";
+import { Link } from "react-router";
+
+import { isSessionLogPluginEnabled } from "@/custom/plugins/sessionLog/isSessionLogPluginEnabled";
 
 import { AppointmentDeleteButton } from "./AppointmentDeleteButton";
 import { AppointmentPageShell } from "./AppointmentPageShell";
 import { AppointmentTypeField } from "./AppointmentTypeField";
 import { AppointmentDateTimeField } from "./AppointmentDateTimeField";
+import type { Appointment } from "./types";
 
 const EMPTY = "—";
+
+const SessionLogCreateLink = () => {
+  const record = useRecordContext<Appointment>();
+  const translate = useTranslate();
+
+  if (!isSessionLogPluginEnabled() || !record?.id) {
+    return null;
+  }
+
+  return (
+    <Button type="button" variant="outline" asChild>
+      <Link to={`/session_logs/create?appointment_id=${record.id}`}>
+        {translate("resources.session_logs.action.create_from_appointment")}
+      </Link>
+    </Button>
+  );
+};
 
 export const AppointmentShow = () => (
   <ShowBase>
     <AppointmentPageShell>
       <div className="flex justify-end gap-2 mb-4">
+        <SessionLogCreateLink />
         <EditButton />
         <AppointmentDeleteButton />
       </div>

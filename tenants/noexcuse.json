@@ -1,7 +1,14 @@
 {
   "id": "noexcuse",
   "title": "noexcuse CRM",
-  "plugins": ["stores", "courses", "memberships", "rooms", "appointments"],
+  "plugins": [
+    "stores",
+    "courses",
+    "memberships",
+    "rooms",
+    "appointments",
+    "session-log"
+  ],
   "extensions": [],
   "hiddenResources": ["companies"],
   "labels": {

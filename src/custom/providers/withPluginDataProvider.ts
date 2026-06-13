@@ -7,6 +7,8 @@ import { isMembershipsPluginEnabled } from "@/custom/plugins/memberships/isMembe
 import { withMembershipsDataProvider } from "@/custom/plugins/memberships/withMembershipsDataProvider";
 import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
 import { withRoomsDataProvider } from "@/custom/plugins/rooms/withRoomsDataProvider";
+import { isSessionLogPluginEnabled } from "@/custom/plugins/sessionLog/isSessionLogPluginEnabled";
+import { withSessionLogsDataProvider } from "@/custom/plugins/sessionLog/withSessionLogsDataProvider";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { withStoresDataProvider } from "@/custom/plugins/stores/withStoresDataProvider";
 
@@ -30,6 +32,9 @@ export const withPluginDataProvider = (
   }
   if (isAppointmentsPluginEnabled()) {
     wrapped = withAppointmentsDataProvider(wrapped);
+  }
+  if (isSessionLogPluginEnabled()) {
+    wrapped = withSessionLogsDataProvider(wrapped);
   }
 
   return wrapped;

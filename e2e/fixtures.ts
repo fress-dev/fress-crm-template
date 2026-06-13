@@ -25,6 +25,7 @@ const TABLES = [
   "contact_notes",
   "deal_notes",
   "deals",
+  "session_logs",
   "membership_tickets",
   "memberships",
   "appointments",
