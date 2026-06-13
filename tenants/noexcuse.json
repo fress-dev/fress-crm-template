@@ -1,15 +1,9 @@
 {
   "id": "noexcuse",
   "title": "noexcuse CRM",
-  "plugins": [
-    "stores",
-    "courses",
-    "memberships"
-  ],
+  "plugins": ["stores", "courses", "memberships"],
   "extensions": [],
-  "hiddenResources": [
-    "companies"
-  ],
+  "hiddenResources": ["companies"],
   "labels": {
     "contacts": "会員",
     "deals": "入会管理",
@@ -43,9 +37,7 @@
         "label": "離脱"
       }
     ],
-    "dealPipelineStatuses": [
-      "joined"
-    ],
+    "dealPipelineStatuses": ["joined"],
     "dealCategories": [
       {
         "value": "trial",
@@ -100,10 +92,7 @@
       "courseType": "ticket",
       "serviceKind": "training",
       "durationMinutes": 60,
-      "storeNames": [
-        "船橋店",
-        "千葉店"
-      ],
+      "storeNames": ["船橋店", "千葉店"],
       "displayOrder": 10
     },
     {
@@ -111,10 +100,7 @@
       "courseType": "ticket",
       "serviceKind": "stretch",
       "durationMinutes": 30,
-      "storeNames": [
-        "船橋店",
-        "千葉店"
-      ],
+      "storeNames": ["船橋店", "千葉店"],
       "displayOrder": 20
     }
   ]
