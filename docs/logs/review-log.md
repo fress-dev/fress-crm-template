@@ -9,6 +9,39 @@
 
 ---
 
+## 2026-06-14 | feat/plugin-session-log-master | セッション記録プラグイン | [PR #37](https://github.com/fress-dev/fress-crm-template/pull/37)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS**（分割・e2e 修正後） |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- `src/custom/plugins/sessionLog/**` — CRUD・チケット消費・dataProvider
+- `supabase/migrations/20260613160000_session_logs_plugin.sql` — session_logs テーブル
+- `e2e/sessionLogs.spec.ts` — 予約からのセッション記録・チケット消費
+- 縫い目 — bootstrapPlugins / withPluginDataProvider / i18n / FressHeader / tenants
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `plugin-session-log.md`（approved）と一致 |
+| コア保護 | **OK** — コアパス・既存 migrations 変更なし |
+| 1 PR = 1 プラグイン | **OK** — appointments 差分を除去し base を PR #26 に変更 |
+| CRUD/dataProvider | **OK** — チケット消費は RPC、論理削除 |
+| e2e 修正 | **OK** — `resetDb` auth ページング、karteHub プレースホルダ条件、stores URL 直指定 |
+| DoD | **OK** — `make pre-pr` 緑 |
+
+### メモ
+
+- マージ順: PR #26（appointments）→ PR #37（session-log）
+- sessionLogs spec は desktop 専用（mobile はナビ競合回避）
+
+---
+
 ## 2026-06-13 | feat/plugin-appointments-master | 予約プラグイン | [PR #26](https://github.com/fress-dev/fress-crm-template/pull/26)
 
 | 項目 | 結果 |
