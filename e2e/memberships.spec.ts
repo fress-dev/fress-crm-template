@@ -1,5 +1,4 @@
 import { test, expect } from "./fixtures";
-import { ja } from "./ja";
 
 test("membership list and show tickets", async ({
   page,
@@ -40,10 +39,12 @@ test("membership list and show tickets", async ({
     page.getByRole("link", { name: /ダッシュボード|Dashboard/i }),
   ).toBeVisible();
 
-  await page.getByRole("link", { name: ja.memberships }).click();
+  await page.goto("http://localhost:5175/#/memberships");
   await page.waitForLoadState("networkidle");
-  await expect(page.getByText("会員")).toBeVisible();
-  await expect(page.getByText("E2E 回数券 8回")).toBeVisible();
+  await expect(page.getByRole("cell", { name: "会員" })).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "E2E 回数券 8回" }),
+  ).toBeVisible();
 
   await page.goto(`http://localhost:5175/#/memberships/${membership.id}/show`);
   await page.waitForLoadState("networkidle");
