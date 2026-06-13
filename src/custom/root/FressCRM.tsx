@@ -30,7 +30,9 @@ import {
   getAuthProvider as defaultAuthProviderBuilder,
   getDataProvider as defaultDataProviderBuilder,
 } from "@/components/atomic-crm/providers/supabase";
-import sales from "@/components/atomic-crm/sales";
+import coreSales from "@/components/atomic-crm/sales";
+import storesSalesResource from "@/custom/plugins/stores/salesResource";
+import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { SettingsPageMobile } from "@/components/atomic-crm/settings/SettingsPageMobile";
 import { ProfilePage } from "@/components/atomic-crm/settings/ProfilePage";
 import { SettingsPage } from "@/components/atomic-crm/settings/SettingsPage";
@@ -56,7 +58,7 @@ import { StartPage } from "@/components/atomic-crm/login/StartPage.tsx";
 import { useIsMobile } from "@/hooks/use-mobile.ts";
 import { MobileTasksList } from "@/components/atomic-crm/tasks/MobileTasksList.tsx";
 import { ContactListMobile } from "@/components/atomic-crm/contacts/ContactList.tsx";
-import { ContactShow } from "@/components/atomic-crm/contacts/ContactShow.tsx";
+import { ContactShowWithKarte } from "@/custom/karte/ContactShow";
 import { CompanyShow } from "@/components/atomic-crm/companies/CompanyShow.tsx";
 import { NoteShowPage } from "@/components/atomic-crm/notes/NoteShowPage.tsx";
 import type { HiddenResource } from "@/custom/platform/tenant/types";
@@ -120,6 +122,9 @@ const isVisible = (
   hiddenResources: HiddenResource[] | undefined,
   resource: HiddenResource,
 ) => !hiddenResources?.includes(resource);
+
+const resolveSalesResource = () =>
+  isStoresPluginEnabled() ? storesSalesResource : coreSales;
 
 export const FressCRM = ({
   companySectors = defaultCompanySectors,
@@ -282,7 +287,7 @@ const DesktopAdmin = (
         <Resource name="deals" {...deals} />
       ) : null}
       {isVisible(hiddenResources, "contacts") ? (
-        <Resource name="contacts" {...contacts} />
+        <Resource name="contacts" {...contacts} show={ContactShowWithKarte} />
       ) : null}
       {isVisible(hiddenResources, "companies") ? (
         <Resource name="companies" {...companies} />
@@ -291,7 +296,7 @@ const DesktopAdmin = (
       <Resource name="deal_notes" />
       <Resource name="tasks" />
       {isVisible(hiddenResources, "sales") ? (
-        <Resource name="sales" {...sales} />
+        <Resource name="sales" {...resolveSalesResource()} />
       ) : null}
       <Resource name="tags" />
       {renderPluginAdminChildren()}
@@ -357,7 +362,7 @@ const MobileAdmin = (
           <Resource
             name="contacts"
             list={ContactListMobile}
-            show={ContactShow}
+            show={ContactShowWithKarte}
             recordRepresentation={contacts.recordRepresentation}
           >
             <Route path=":id/notes/:noteId" element={<NoteShowPage />} />

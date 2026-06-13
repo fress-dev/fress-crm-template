@@ -9,6 +9,9 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useConfigurationContext } from "@/components/atomic-crm/root/ConfigurationContext";
 import { ImportPage } from "@/components/atomic-crm/misc/ImportPage";
 import { ChangelogPage } from "@/components/atomic-crm/misc/ChangelogPage";
+import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPluginEnabled";
+import { isMembershipsPluginEnabled } from "@/custom/plugins/memberships/isMembershipsPluginEnabled";
+import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { isResourceHidden } from "@/custom/platform/tenant/isResourceHidden";
 import { loadTenantConfig } from "@/custom/platform/tenant/loadTenantConfig";
@@ -30,11 +33,20 @@ export const FressHeader = () => {
     currentPath = "/deals";
   } else if (matchPath("/stores/*", location.pathname)) {
     currentPath = "/stores";
+  } else if (matchPath("/courses/*", location.pathname)) {
+    currentPath = "/courses";
+  } else if (matchPath("/memberships/*", location.pathname)) {
+    currentPath = "/memberships";
+  } else if (matchPath("/rooms/*", location.pathname)) {
+    currentPath = "/rooms";
   } else {
     currentPath = false;
   }
 
   const storesEnabled = isStoresPluginEnabled();
+  const coursesEnabled = isCoursesPluginEnabled();
+  const membershipsEnabled = isMembershipsPluginEnabled();
+  const roomsEnabled = isRoomsPluginEnabled();
 
   return (
     <>
@@ -99,6 +111,33 @@ export const FressHeader = () => {
                       })}
                       to="/stores"
                       isActive={currentPath === "/stores"}
+                    />
+                  ) : null}
+                  {coursesEnabled ? (
+                    <NavigationTab
+                      label={translate("resources.courses.name", {
+                        smart_count: 2,
+                      })}
+                      to="/courses"
+                      isActive={currentPath === "/courses"}
+                    />
+                  ) : null}
+                  {membershipsEnabled ? (
+                    <NavigationTab
+                      label={translate("resources.memberships.name", {
+                        smart_count: 2,
+                      })}
+                      to="/memberships"
+                      isActive={currentPath === "/memberships"}
+                    />
+                  ) : null}
+                  {roomsEnabled ? (
+                    <NavigationTab
+                      label={translate("resources.rooms.name", {
+                        smart_count: 2,
+                      })}
+                      to="/rooms"
+                      isActive={currentPath === "/rooms"}
                     />
                   ) : null}
                 </nav>

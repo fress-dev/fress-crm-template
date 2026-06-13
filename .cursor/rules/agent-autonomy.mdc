@@ -1,0 +1,29 @@
+---
+description: DoD 達成後は push・PR 作成まで人間確認を待たない（MAIN / sub 全セッション共通）
+alwaysApply: true
+---
+
+# エージェント自律（push / PR）
+
+**MAIN・sub1・sub2・sub3 のどの Cursor セッションでも同じ。**
+
+## 方針
+
+DoD（`make pre-pr` 緑、触った画面の関連 e2e、コアパス diff 空）を満たしたら、**人間の push 前確認を待たず** 次まで進めてよい:
+
+1. 未コミットの変更があればコミット（メッセージは日本語）
+2. `git push -u origin HEAD`（作業ブランチ → remote）
+3. PR 未作成なら `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（タイトル・本文は日本語）
+
+## 人間が止めるポイント
+
+| フェーズ | 人間の判断 |
+|----------|------------|
+| 設計承認（`approved`） | **必須** — 実装前に一度止まる |
+| マージ承認 | **必須** — PR マージ前に確認 |
+| push / PR 作成 | **不要** — DoD 達成後はエージェントが進めてよい |
+
+## 例外
+
+- ユーザーが「コミットしないで」「push するな」「PR は作らないで」と**明示したとき**は従う
+- `main` への直接 push は従来どおり禁止（`develop` 向け PR のみ）

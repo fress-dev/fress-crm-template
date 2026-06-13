@@ -101,11 +101,12 @@
 | 4 | 開発 | **メインエージェント** | `develop` から命名規則どおりのブランチを切り、縫い目内で実装する |
 | 5 | レビュー | **@reviewer** → **メインエージェント** | @reviewer は検査結果のみ返す（readonly）。メインが [`docs/logs/review-log.md`](docs/logs/review-log.md) 先頭に追記。設計書と実装の差があれば設計書も更新 |
 | 6 | テスト | **メインエージェント** | `make pre-pr` + 関連 e2e spec のみ（上記「## テスト」参照）。フル e2e は CI |
-| 7 | PR | **メインエージェント** | 設計書を `docs/workflow/design/archive/` へ移動 → `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める） |
+| 7 | PR | **メインエージェント** | 設計書を `docs/workflow/design/archive/` へ移動 → `git push` → `gh pr create --base develop --body "$(./scripts/pr-body-with-review.sh)"`（設計書パスを本文に含める。**push / PR 前の人間確認は不要**） |
 | 8 | マージ承認 | **人間** | PR を確認してマージ |
 
 ### 補足
 
+- **push / PR 作成:** DoD 達成後は人間の push 前確認を待たず、コミット → push → PR 作成まで進めてよい（MAIN / sub 全セッション共通）。詳細は [`.cursor/rules/agent-autonomy.mdc`](.cursor/rules/agent-autonomy.mdc)。
 - **`main` へ直接 commit / push しない。** 日常の開発は `develop` 経由（`feat/platform-*` / `feat/plugin-*` / `fix/*` → PR → `develop`）。
 - **ベース改修と業界プラグインを同一ブランチに混ぜない。** 詳細は [`docs/workflow/branch-strategy.md`](docs/workflow/branch-strategy.md)。
 - **`feat/plugin-*` の PR では platform（ベース）とハーネス設定（`AGENTS.md`、`.cursor/`、`docs/harness/`、`scripts/workflow-gate*` 等）を一緒に変更しない。** 必要なら `feat/platform-*` / `feat/platform-harness-*` で別 PR。platform を先にマージしてから plugin を着手する。
@@ -145,3 +146,24 @@
 ### グローバル設定との関係
 
 Cursor のユーザールールで英語コミットが指定されていても、**本リポジトリでは本節が優先**する。
+
+## Cursor Cloud specific instructions
+
+Cloud VM は update script（`npm install` + `npx playwright install chromium`）が実行済みの状態で起動する。依存導入手順は不要。サービス起動時の非自明な注意点のみ以下に記す（標準コマンドは「## コマンド」「## テスト」を参照）。
+
+### サービス起動の順序と前提
+
+ローカルスタックは **Docker → Supabase → Vite** の順で立てる（`make start` がこの順を実行）。ただし Cloud VM では次の点に注意する。
+
+- **Docker デーモンは手動起動が必要。** snapshot に Docker 本体・設定は残るがプロセスは起動していない。Supabase の前に `sudo dockerd > /tmp/dockerd.log 2>&1 &` を実行し、ソケット権限を `sudo chmod 666 /var/run/docker.sock` で開ける。`docker info` の Storage Driver が `fuse-overlayfs` であることを確認（Docker 29 系のため `/etc/docker/daemon.json` で `containerd-snapshotter: false` を設定済み）。
+- Supabase は `npx supabase start`（または `make start`）。初回 `start` 時にマイグレーションと `supabase/seed.sql` が適用される。
+
+### Supabase 鍵と .env
+
+- `npx supabase start` が出力する Publishable キーはローカル既定の決定論的値 `sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH` で、再起動しても不変。`.env.development` にこの値を設定済みなので、起動後そのまま `npm run dev` で接続できる。
+- `scripts/sync-local-env.sh` は `sed -i ''`（BSD/macOS 専用）を使うため **Linux（Cloud VM）では動かない**。鍵を手で書く必要が出た場合は上記の固定値を `.env.development` の `VITE_SB_PUBLISHABLE_KEY` に入れる。
+
+### テスト実行の注意
+
+- アプリのユニットテスト（`make test` の `test:unit:app`）は **Vitest の Playwright ブラウザモード（chromium）** で動く。`npx playwright install chromium` 済みでないと起動に失敗する（update script に含めてある）。
+- 初回ユーザーは画面の初期セットアップ（最初の管理者作成）で登録する。連絡先（contacts）作成には **store プラグインの店舗が 1 件以上必要**（`Store` が必須項目）。先に「店舗」を 1 件作ってから連絡先を作る。

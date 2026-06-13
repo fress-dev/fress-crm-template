@@ -16,6 +16,12 @@ export async function goToContactsList(page: Page) {
   await page.waitForLoadState("networkidle");
 }
 
+/** コース一覧へ遷移する */
+export async function goToCoursesList(page: Page) {
+  await page.goto(`${E2E_BASE}/#/courses`);
+  await page.waitForLoadState("networkidle");
+}
+
 /** 空一覧は「店舗を登録」、一覧ツールバーは「新しい店舗」 */
 export async function openNewStoreForm(page: Page) {
   const createLink = page
@@ -61,6 +67,26 @@ export async function openNewContactFormOnMobileList(page: Page) {
       .getByRole("menuitem", { name: ja.contactForcedCaseName })
       .click();
   }
+  await page.waitForLoadState("networkidle");
+}
+
+/** 空一覧は「コースを登録」、一覧ツールバーは「新しいコース」 */
+export async function openNewCourseForm(page: Page) {
+  const createLink = page
+    .getByRole("link", { name: ja.newCourse })
+    .or(page.getByRole("link", { name: ja.createCourse }));
+
+  if (await createLink.first().isVisible()) {
+    try {
+      await createLink.first().click({ timeout: 5000 });
+      await page.waitForLoadState("networkidle");
+      return;
+    } catch {
+      // モバイル等でクリックできない場合は URL 直指定へフォールバック
+    }
+  }
+
+  await page.goto(`${E2E_BASE}/#/courses/create`);
   await page.waitForLoadState("networkidle");
 }
 

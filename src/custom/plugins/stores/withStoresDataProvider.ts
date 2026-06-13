@@ -1,5 +1,10 @@
+import type { Identifier } from "ra-core";
+
 import type { CrmDataProvider } from "@/components/atomic-crm/providers/types";
 import { applyFullTextSearch } from "@/custom/providers/applyFullTextSearch";
+
+import { fetchSalesStoreIds, replaceSalesStoreIds } from "./salesStores";
+import type { StoresDataProvider } from "./storesDataProviderTypes";
 
 /** 店舗一覧の SearchInput source="q" 用検索カラム */
 export const STORE_SEARCH_COLUMNS = [
@@ -41,7 +46,7 @@ export const applyStoresActiveFilter = <
 /** stores リソースの getList 検索・論理削除フィルタ、delete の UPDATE 化 */
 export const withStoresDataProvider = (
   dataProvider: CrmDataProvider,
-): CrmDataProvider => {
+): StoresDataProvider => {
   const getList = dataProvider.getList.bind(dataProvider);
   const deleteFn = dataProvider.delete.bind(dataProvider);
   const update = dataProvider.update.bind(dataProvider);
@@ -75,6 +80,12 @@ export const withStoresDataProvider = (
         },
         ...rest,
       );
+    },
+    async getSalesStoreIds(salesId: Identifier) {
+      return fetchSalesStoreIds(salesId);
+    },
+    async setSalesStoreIds(salesId: Identifier, storeIds: number[]) {
+      return replaceSalesStoreIds(salesId, storeIds);
     },
   };
 };

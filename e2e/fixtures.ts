@@ -25,7 +25,13 @@ const TABLES = [
   "contact_notes",
   "deal_notes",
   "deals",
+  "membership_tickets",
+  "memberships",
   "contacts",
+  "course_stores",
+  "courses",
+  "sales_stores",
+  "rooms",
   "stores",
   "companies",
   "tags",
@@ -36,7 +42,11 @@ const TABLES = [
 
 async function resetDb() {
   for (const table of TABLES) {
-    // Supabase client delete need a where clause to get executed, so we use one that will match on all rows (id is not null)
+    // Supabase の delete は where 必須。sales_stores は id 列がないため sales_id で全削除する
+    if (table === "sales_stores") {
+      await getAdminSupabase().from(table).delete().not("sales_id", "is", null);
+      continue;
+    }
     await getAdminSupabase().from(table).delete().not("id", "is", null);
   }
 
@@ -65,6 +75,44 @@ async function createUser({
   }
 
   return data.user;
+}
+
+async function assignSalesStore({
+  salesEmail,
+  storeName,
+}: {
+  salesEmail: string;
+  storeName: string;
+}) {
+  const admin = getAdminSupabase();
+  const { data: sale, error: saleError } = await admin
+    .from("sales")
+    .select("id")
+    .eq("email", salesEmail)
+    .single();
+
+  if (saleError || !sale) {
+    throw new Error(`assignSalesStore: sales not found (${salesEmail})`);
+  }
+
+  const { data: store, error: storeError } = await admin
+    .from("stores")
+    .select("id")
+    .eq("name", storeName)
+    .single();
+
+  if (storeError || !store) {
+    throw new Error(`assignSalesStore: store not found (${storeName})`);
+  }
+
+  const { error } = await admin.from("sales_stores").upsert({
+    sales_id: sale.id,
+    store_id: store.id,
+  });
+
+  if (error) {
+    throw new Error(`assignSalesStore: ${error.message}`);
+  }
 }
 
 async function createSales({
@@ -171,6 +219,87 @@ async function createStore({ name }: { name: string }) {
   return data;
 }
 
+async function createCourse({
+  name,
+  course_type = "ticket",
+  service_kind = "training",
+  duration_minutes = 60,
+  display_order = 100,
+}: {
+  name: string;
+  course_type?: "single" | "membership" | "ticket";
+  service_kind?: "training" | "stretch" | "training_and_stretch";
+  duration_minutes?: number;
+  display_order?: number;
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("courses")
+    .insert({
+      name,
+      course_type,
+      service_kind,
+      duration_minutes,
+      display_order,
+      is_active: true,
+    })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create course: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function createMembership({
+  contact_id,
+  course_id,
+  store_id = null,
+  ticket_count = 4,
+  status = "active",
+}: {
+  contact_id: string | number;
+  course_id: string | number;
+  store_id?: string | number | null;
+  ticket_count?: number;
+  status?: "active" | "completed" | "cancelled";
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("memberships")
+    .insert({
+      contact_id,
+      course_id,
+      store_id,
+      ticket_count,
+      status,
+    })
+    .select("id, ticket_count")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create membership: ${error.message}`);
+  }
+
+  for (let ticketNumber = 1; ticketNumber <= ticket_count; ticketNumber++) {
+    const { error: ticketError } = await getAdminSupabase()
+      .from("membership_tickets")
+      .insert({
+        membership_id: data.id,
+        contact_id,
+        ticket_number: ticketNumber,
+        status: "available",
+      });
+    if (ticketError) {
+      throw new Error(
+        `Failed to create membership ticket: ${ticketError.message}`,
+      );
+    }
+  }
+
+  return data;
+}
+
 async function resolveDefaultStoreId(): Promise<string | number | null> {
   const { data: stores, error } = await getAdminSupabase()
     .from("stores")
@@ -271,8 +400,11 @@ export const test = base.extend<{
   resetDb: void;
   createUser: typeof createUser;
   createSales: typeof createSales;
+  assignSalesStore: typeof assignSalesStore;
   createCompany: typeof createCompany;
   createStore: typeof createStore;
+  createCourse: typeof createCourse;
+  createMembership: typeof createMembership;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   menu: ReturnType<typeof getMenuMethod>;
@@ -297,12 +429,24 @@ export const test = base.extend<{
     await cb(createSales);
   },
   // eslint-disable-next-line no-empty-pattern
+  assignSalesStore: async ({}, cb) => {
+    await cb(assignSalesStore);
+  },
+  // eslint-disable-next-line no-empty-pattern
   createCompany: async ({}, cb) => {
     await cb(createCompany);
   },
   // eslint-disable-next-line no-empty-pattern
   createStore: async ({}, cb) => {
     await cb(createStore);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createCourse: async ({}, cb) => {
+    await cb(createCourse);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createMembership: async ({}, cb) => {
+    await cb(createMembership);
   },
   // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {

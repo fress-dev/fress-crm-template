@@ -9,6 +9,107 @@
 
 ---
 
+---
+
+## 2026-06-13 | feat/platform-karte-hub | 会員カルテハブ | [PR #32](https://github.com/fress-dev/fress-crm-template/pull/32)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | sub2 |
+
+### 変更の要約
+
+- `src/custom/karte/**` — Contact Show 差し替え・KarteHubPanel・i18n
+- `src/custom/platform/plugin/isPluginEnabled.ts` — テナント plugins + レジストリ参照
+- `src/custom/root/FressCRM.tsx` — ContactShow 注入
+- `e2e/karteHub.spec.ts` — デスクトップ / モバイルでハブ見出し・プレースホルダ表示
+- `docs/workflow/design/karte-hub.md` — 設計書（approved）
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `karte-hub.md`（approved）と一致。DB migration なし・入口 UI のみ |
+| コア保護 | **OK** — `src/root/**`・`src/components/**` 既存・既存 migrations 変更なし |
+| 拡張パターン | **OK** — `src/custom/` + `FressCRM.tsx` 縫い目。`isPluginEnabled()` でガード |
+| CRUD/dataProvider | **N/A** — 表示のみ。各プラグイン本体は別 PR |
+| DoD | **OK** — `make pre-pr` 緑、`e2e/karteHub.spec.ts` ローカル PASS（2 tests） |
+
+### メモ
+
+- デスクトップはメモ下にハブ、モバイルは「カルテ」タブ
+- 未実装プラグインはプレースホルダ表示。stores / deals は有効時に実データ入口
+
+---
+
+## 2026-06-13 | feat/plugin-stores-rls | 店舗スコープ RLS | [PR #30](https://github.com/fress-dev/fress-crm-template/pull/30)
+
+| 項目 | 結果 |
+|------|------|
+| モード | 差分 |
+| 判定 | **PASS**（軽微メモあり） |
+| 実施者 | @reviewer → メインエージェント |
+
+### 変更の要約
+
+- `sales_stores` テーブル + `can_access_store` 等の RLS 関数
+- `contacts` / `stores` の SELECT スコープ更新
+- `FressCRM` で sales リソース差し替え、担当店舗チェックボックス UI
+- `e2e/storesScope.spec.ts` — RLS 読み取り検証
+
+### 検査結果
+
+| 観点 | 結果 |
+|------|------|
+| コア保護 | **OK** — `src/components/**` diff なし |
+| 設計書整合 | **OK** — archive/plugin-stores-rls.md と実装範囲一致（差し替えは FressCRM 注入） |
+| migration | **OK** — 追加のみ |
+| e2e | **OK** — `storesScope.spec.ts` ローカル PASS |
+| DoD | **OK** — typecheck / platform unit / build / 関連 e2e |
+
+### 指摘・メモ（改善のタネ）
+
+- UI からの `setSalesStoreIds` 保存は e2e 未検証（service_role fixture で割当）。フォローアップで UI 保存 e2e を追加可
+- `sales_stores` reset は `sales_id` 条件で全削除に修正済み
+
+---
+
+## 2026-06-13 | feat/plugin-courses-master | コースマスタプラグイン | [PR #27](https://github.com/fress-dev/fress-crm-template/pull/27)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- `src/custom/plugins/courses/**` — CRUD 画面・dataProvider・seed・ユニットテスト
+- `supabase/migrations/20260612130000_courses_plugin.sql` — courses / course_stores
+- `src/custom/providers/applyFullTextSearch.ts` / `withPluginDataProvider.ts` — プラグイン向け dataProvider 合成
+- `e2e/courses.spec.ts` — 一覧・検索・UI 作成・更新・削除
+- `tenants/*.json` — courses プラグイン有効化・courseSeed
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `plugin-courses.md`（approved）と一致 |
+| コア保護 | **OK** — `src/root/**`・`src/components/**` 既存・既存 migrations 変更なし |
+| 拡張パターン | **OK** — `src/custom/` + `App.tsx` 縫い目 |
+| CRUD/dataProvider | **OK** — view 誤書き込みなし、検索 `q` 変換、course_stores 差分同期 |
+| 指摘対応 | **OK** — 同名検証接続、update ユニットテスト、e2e CRUD 拡張、`CourseFormToolbar` |
+| DoD | **OK** — `make pre-pr` 緑、`e2e/courses.spec.ts` ローカル PASS |
+
+### メモ
+
+- Select / Number を含む Card 内フォームで `SaveButton type="submit"` が効かないため、`CourseFormToolbar` で `type="button"` に統一
+- `cleanupCourseForSave` で Select 既定値を補完（未選択時も DB 制約を満たす）
+
+---
+
 ## 2026-06-10 | fix/tenant-smoke-e2e | tenant smoke e2e 追加 | [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11)
 
 | 項目 | 結果 |
