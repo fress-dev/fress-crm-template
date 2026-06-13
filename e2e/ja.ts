@@ -8,6 +8,8 @@ export const ja = {
   password: "パスワード",
   createAccount: "利用者を登録",
   signIn: "ログイン",
+  logout: "ログアウト",
+  salesUpdatedToast: "利用者情報を更新しました",
   whatsNext: "次にすること",
   stepDone: (step: number) => `${step}/3 完了`,
   installApp: "お客様管理の初期設定",
