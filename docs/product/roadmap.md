@@ -67,23 +67,22 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 
 | id | Salus 相当 | 優先度 | シナリオ | メモ |
 |----|-----------|--------|---------|------|
-| **karte-hub** | カルテ（会員ハブ） | P1 | A, B | Contact Show 拡張。他プラグインの入口 |
+| **karte-hub** | カルテ（会員ハブ） | P1 | A, B | Contact Show 拡張。[PR #32](https://github.com/fress-dev/fress-crm-template/pull/32) レビュー中 |
 
 **ブロック中（先に上記か依存の完了が必要）**
 
 | id | 待ち |
 |----|------|
-| plugin-memberships | plugin-courses（PR #27 レビュー中） |
-| plugin-session-log | appointments + memberships |
+| plugin-session-log | PR #26 マージ + 設計承認（[draft](../workflow/design/plugin-session-log.md) 作成済み） |
 | plugin-rooms | appointments と同時設計推奨 |
-| plugin-stores-rls | Phase 2（データ蓄積後） |
 
 **進行中**
 
 | id | PR / ブランチ |
 |----|--------------|
-| plugin-appointments | [PR #26](https://github.com/fress-dev/fress-crm-template/pull/26) `feat/plugin-appointments-master` |
-| plugin-courses | [PR #27](https://github.com/fress-dev/fress-crm-template/pull/27) `feat/plugin-courses-master` |
+| plugin-appointments | [PR #26](https://github.com/fress-dev/fress-crm-template/pull/26) `feat/plugin-appointments-master`（develop rebase 済み） |
+| plugin-session-log | 設計 draft `feat/plugin-session-log-design` |
+| karte-hub | [PR #32](https://github.com/fress-dev/fress-crm-template/pull/32) |
 
 ※ [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11) tenant smoke e2e はロードマップ未登録（e2e 整備のみ）  
 ※ [PR #13](https://github.com/fress-dev/fress-crm-template/pull/13) バックログ Kanban 復元（platform）

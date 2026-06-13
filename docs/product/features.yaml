@@ -47,7 +47,7 @@ decisions:
     question: 店舗の次に着手する P0（appointments / memberships / 縦切り）
     status: decided
     value: courses-and-appointments-in-review
-    notes: plugin-courses（PR #27）と plugin-appointments（PR #26）がレビュー中。マージ後は plugin-memberships が次候補
+    notes: courses / appointments マージ後は **plugin-session-log** が次候補（設計 draft 作成中）
 
 features:
   # --- コア + テナント設定（層: core / platform）---
@@ -229,7 +229,7 @@ features:
     salus: コースマスタ（Course）
     crm: コース種別・時間・トレーニング/ストレッチ
     layer: plugin
-    status: in-progress
+    status: done
     priority: P1
     depends_on: [plugin-stores-master]
     scenarios: [A, C]
@@ -242,12 +242,14 @@ features:
     salus: 契約・チケット（Contract / Ticket）
     crm: コース契約・回数券発行・消費
     layer: plugin
-    status: on-hold
+    status: done
     priority: P0
     depends_on: [plugin-courses, core-contacts-member]
     scenarios: [A, B]
-    design: null
-    notes: plugin-courses 完了後に設計着手。金額なし・回数券モデル。Deal 拡張か独立テーブルは設計時に決定
+    design: docs/workflow/design/plugin-memberships.md
+    pr: "#31"
+    branch: feat/plugin-memberships-master
+    notes: チケット消費は plugin-session-log で接続
 
   - id: plugin-appointments
     salus: スケジュール・予約（Schedule）
@@ -276,11 +278,13 @@ features:
     salus: セッション記録（Session）
     crm: 身体データ・種目・チケット再割当
     layer: plugin
-    status: on-hold
+    status: in-progress
     priority: P1
     depends_on: [plugin-appointments, plugin-memberships]
     scenarios: [B]
-    design: null
+    design: docs/workflow/design/plugin-session-log.md
+    branch: feat/plugin-session-log-design
+    notes: 設計 draft。実装は PR #26 マージ + 設計 approved 後
 
   - id: plugin-training-content
     salus: 種目マスタ・TrainingContent
