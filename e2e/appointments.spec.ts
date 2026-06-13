@@ -56,8 +56,6 @@ test("appointment CRUD and filters", async ({
 
   await page.getByLabel(ja.appointmentContact).click();
   await page.getByRole("option", { name: "予約 会員" }).click();
-  await page.getByLabel(ja.appointmentSales).click();
-  await page.getByRole("option", { name: "予約 担当" }).click();
   await page.getByLabel(ja.appointmentStore).click();
   await page.getByRole("option", { name: "予約テスト店" }).click();
   await page.getByLabel(ja.appointmentType).click();

@@ -1,4 +1,4 @@
-import { CreateBase, Form, useTranslate } from "ra-core";
+import { CreateBase, Form, useGetIdentity, useTranslate } from "ra-core";
 import { Card, CardContent } from "@/components/ui/card";
 import { CancelButton } from "@/components/admin/cancel-button";
 import { SaveButton } from "@/components/admin/form";
@@ -8,11 +8,12 @@ import { AppointmentPageShell } from "./AppointmentPageShell";
 
 export const AppointmentCreate = () => {
   const translate = useTranslate();
+  const { identity } = useGetIdentity();
 
   return (
     <CreateBase redirect="show">
       <AppointmentPageShell>
-        <Form>
+        <Form defaultValues={{ sales_id: identity?.id }}>
           <Card>
             <CardContent>
               <AppointmentInputs />
