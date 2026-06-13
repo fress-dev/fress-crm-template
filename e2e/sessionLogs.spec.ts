@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 
 test("session log from appointment consumes ticket", async ({
   page,
+  isMobile,
   createSales,
   createStore,
   createCourse,
@@ -12,6 +13,8 @@ test("session log from appointment consumes ticket", async ({
   createMembership,
   dismissToast,
 }) => {
+  test.skip(isMobile, "セッション記録 CRUD の主要検証は desktop で行う");
+
   const sales = await createSales({
     first_name: "セッション",
     last_name: "担当",
