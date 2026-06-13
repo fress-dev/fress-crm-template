@@ -51,11 +51,30 @@ async function resetDb() {
     await getAdminSupabase().from(table).delete().not("id", "is", null);
   }
 
-  // Delete all auth users (cascades to sales via DB trigger)
-  const { data } = await getAdminSupabase().auth.admin.listUsers();
-  await Promise.all(
-    data.users.map((user) => getAdminSupabase().auth.admin.deleteUser(user.id)),
-  );
+  // Delete all auth users (cascades to sales via DB trigger). listUsers はページングされるため全件削除する
+  let page = 1;
+  const perPage = 100;
+  while (true) {
+    const { data, error } = await getAdminSupabase().auth.admin.listUsers({
+      page,
+      perPage,
+    });
+    if (error) {
+      throw new Error(`resetDb listUsers: ${error.message}`);
+    }
+    if (data.users.length === 0) {
+      break;
+    }
+    await Promise.all(
+      data.users.map((user) =>
+        getAdminSupabase().auth.admin.deleteUser(user.id),
+      ),
+    );
+    if (data.users.length < perPage) {
+      break;
+    }
+    page += 1;
+  }
 }
 
 async function createUser({
