@@ -29,6 +29,7 @@ const TABLES = [
   "membership_tickets",
   "memberships",
   "appointments",
+  "rooms",
   "contacts",
   "course_stores",
   "courses",
@@ -221,6 +222,26 @@ async function createCompany({
 
   if (error) {
     throw new Error(`Failed to create company: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function createRoom({
+  store_id,
+  name,
+}: {
+  store_id: string | number;
+  name: string;
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("rooms")
+    .insert({ store_id, name })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create room: ${error.message}`);
   }
 
   return data;
@@ -424,6 +445,7 @@ export const test = base.extend<{
   assignSalesStore: typeof assignSalesStore;
   createCompany: typeof createCompany;
   createStore: typeof createStore;
+  createRoom: typeof createRoom;
   createCourse: typeof createCourse;
   createMembership: typeof createMembership;
   createContact: typeof createContact;
@@ -460,6 +482,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createStore: async ({}, cb) => {
     await cb(createStore);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createRoom: async ({}, cb) => {
+    await cb(createRoom);
   },
   // eslint-disable-next-line no-empty-pattern
   createCourse: async ({}, cb) => {

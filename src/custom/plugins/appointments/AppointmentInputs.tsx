@@ -7,6 +7,7 @@ import { TextInput } from "@/components/admin/text-input";
 import type { Sale } from "@/components/atomic-crm/types";
 import { ACTIVE_STORE_FILTER } from "@/custom/plugins/stores/withStoresDataProvider";
 
+import { AppointmentRoomInput } from "./AppointmentRoomInput";
 import { getAppointmentTypes } from "./appointmentTypes";
 import type { Appointment } from "./types";
 
@@ -74,6 +75,7 @@ export const AppointmentInputs = () => {
           emptyText="resources.appointments.fields.store_id"
         />
       </ReferenceInput>
+      <AppointmentRoomInput />
       <SelectInput
         source="type"
         choices={typeChoices}
