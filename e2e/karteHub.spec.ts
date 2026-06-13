@@ -33,7 +33,9 @@ test("contact show displays karte hub sections", async ({
     await page.getByRole("tab", { name: "カルテ" }).click();
   }
 
-  await expect(page.getByRole("heading", { name: "カルテ" })).toBeVisible();
+  await expect(
+    page.locator('[data-slot="card-title"]').filter({ hasText: "カルテ" }),
+  ).toBeVisible();
   await expect(
     page.getByText("契約・回数券プラグイン（準備中）"),
   ).toBeVisible();
