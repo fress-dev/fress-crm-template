@@ -9,6 +9,40 @@
 
 ---
 
+## 2026-06-13 | feat/plugin-memberships-master | 契約・回数券プラグイン | [PR #31](https://github.com/fress-dev/fress-crm-template/pull/31)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | sub1 |
+
+### 変更の要約
+
+- `src/custom/plugins/memberships/**` — 契約 CRUD 画面・チケット一覧・dataProvider・i18n・ユニットテスト
+- `supabase/migrations/20260613140000_memberships_plugin.sql` — memberships / membership_tickets
+- `src/custom/providers/withPluginDataProvider.ts` — memberships プラグイン合成
+- `e2e/memberships.spec.ts` / `e2e/fixtures.ts` — 一覧・詳細・チケット表示の e2e
+- `tenants/*.json` — memberships プラグイン有効化
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `plugin-memberships.md`（approved）と一致 |
+| コア保護 | **OK** — `src/root/**`・`src/components/**` 既存・既存 migrations 変更なし |
+| 拡張パターン | **OK** — `src/custom/` + `App.tsx` 縫い目 |
+| CRUD/dataProvider | **OK** — 契約作成時チケット自動発行、削除時 CASCADE、view 誤書き込みなし |
+| 依存関係 | **OK** — courses / stores / contacts 参照、プラグイン有効化ガード |
+| DoD | **OK** — `make pre-pr` 緑、`e2e/memberships.spec.ts` ローカル PASS（2/2） |
+
+### メモ
+
+- `origin/develop` への rebase はコンフリクトなし（already up to date）
+- CI e2e 含め SUCCESS 済み
+
+---
+
 ## 2026-06-13 | feat/plugin-courses-master | コースマスタプラグイン | [PR #27](https://github.com/fress-dev/fress-crm-template/pull/27)
 
 | 項目 | 結果 |
