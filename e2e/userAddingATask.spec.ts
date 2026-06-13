@@ -6,7 +6,7 @@ test.describe("user adding a task", () => {
     const sales = await createSales({
       first_name: "John",
       last_name: "Doe",
-      email: "john@doe.com",
+      email: "john-task@example.com",
       password: "password",
     });
 
@@ -42,7 +42,7 @@ test.describe("user adding a task", () => {
   });
   test("user adding a task", async ({ page, isMobile, menu, dismissToast }) => {
     await page.goto("http://localhost:5175/");
-    await page.getByLabel(ja.email).fill("john@doe.com");
+    await page.getByLabel(ja.email).fill("john-task@example.com");
     await page.getByLabel(ja.password).fill("password");
     await page.getByRole("button", { name: ja.signIn }).click();
 
