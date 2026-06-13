@@ -22,7 +22,8 @@ import { AppointmentEmpty } from "./AppointmentEmpty";
 import { AppointmentTypeField } from "./AppointmentTypeField";
 import { getAppointmentTypes } from "./appointmentTypes";
 import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
-import { ACTIVE_ROOM_FILTER } from "@/custom/plugins/rooms/withRoomsDataProvider";
+
+const ACTIVE_ROOM_FILTER = { del_flg: false } as const;
 
 const AppointmentListActions = () => (
   <TopToolbar>
