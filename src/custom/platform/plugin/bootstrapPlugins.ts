@@ -3,6 +3,7 @@ import { appointmentsPlugin } from "@/custom/plugins/appointments/plugin";
 import { coursesPlugin } from "@/custom/plugins/courses/plugin";
 import { membershipsPlugin } from "@/custom/plugins/memberships/plugin";
 import { roomsPlugin } from "@/custom/plugins/rooms/plugin";
+import { sessionLogPlugin } from "@/custom/plugins/sessionLog/plugin";
 import { storesPlugin } from "@/custom/plugins/stores/plugin";
 
 /**
@@ -15,4 +16,5 @@ export const bootstrapPlugins = (): void => {
   registerPlugin(membershipsPlugin);
   registerPlugin(roomsPlugin);
   registerPlugin(appointmentsPlugin);
+  registerPlugin(sessionLogPlugin);
 };

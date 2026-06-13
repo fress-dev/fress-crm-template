@@ -1,0 +1,21 @@
+export type SessionLog = {
+  id: number;
+  appointment_id?: number | null;
+  contact_id: number;
+  sales_id: number;
+  store_id?: number | null;
+  membership_ticket_id?: number | null;
+  performed_at: string;
+  weight_kg?: number | null;
+  body_fat_percent?: number | null;
+  visceral_fat_level?: number | null;
+  blood_pressure?: string | null;
+  waist_cm?: number | null;
+  basal_metabolism_kcal?: number | null;
+  muscle_mass_kg?: number | null;
+  body_age?: number | null;
+  body_water_percent?: number | null;
+  comment?: string | null;
+  del_flg: boolean;
+  created_at: string;
+};

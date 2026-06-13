@@ -9,6 +9,7 @@ import { appointmentsPluginI18n } from "@/custom/plugins/appointments/i18n";
 import { coursesPluginI18n } from "@/custom/plugins/courses/i18n";
 import { membershipsPluginI18n } from "@/custom/plugins/memberships/i18n";
 import { roomsPluginI18n } from "@/custom/plugins/rooms/i18n";
+import { sessionLogPluginI18n } from "@/custom/plugins/sessionLog/i18n";
 import { storesPluginI18n } from "@/custom/plugins/stores/i18n";
 import { karteHubI18n } from "@/custom/karte/i18n";
 
@@ -80,6 +81,7 @@ const japaneseCatalog = mergeTranslations(
   karteHubI18n,
   roomsPluginI18n,
   appointmentsPluginI18n,
+  sessionLogPluginI18n,
 );
 
 /** 本プロジェクトのデフォルトは日本語。ブラウザが en のときのみ英語を初期表示。 */

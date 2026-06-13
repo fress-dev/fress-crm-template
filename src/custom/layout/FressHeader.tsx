@@ -13,6 +13,7 @@ import { isAppointmentsPluginEnabled } from "@/custom/plugins/appointments/isApp
 import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPluginEnabled";
 import { isMembershipsPluginEnabled } from "@/custom/plugins/memberships/isMembershipsPluginEnabled";
 import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
+import { isSessionLogPluginEnabled } from "@/custom/plugins/sessionLog/isSessionLogPluginEnabled";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { isResourceHidden } from "@/custom/platform/tenant/isResourceHidden";
 import { loadTenantConfig } from "@/custom/platform/tenant/loadTenantConfig";
@@ -42,6 +43,8 @@ export const FressHeader = () => {
     currentPath = "/rooms";
   } else if (matchPath("/appointments/*", location.pathname)) {
     currentPath = "/appointments";
+  } else if (matchPath("/session_logs/*", location.pathname)) {
+    currentPath = "/session_logs";
   } else {
     currentPath = false;
   }
@@ -51,6 +54,7 @@ export const FressHeader = () => {
   const membershipsEnabled = isMembershipsPluginEnabled();
   const roomsEnabled = isRoomsPluginEnabled();
   const appointmentsEnabled = isAppointmentsPluginEnabled();
+  const sessionLogEnabled = isSessionLogPluginEnabled();
 
   return (
     <>
@@ -151,6 +155,15 @@ export const FressHeader = () => {
                       })}
                       to="/appointments"
                       isActive={currentPath === "/appointments"}
+                    />
+                  ) : null}
+                  {sessionLogEnabled ? (
+                    <NavigationTab
+                      label={translate("resources.session_logs.name", {
+                        smart_count: 2,
+                      })}
+                      to="/session_logs"
+                      isActive={currentPath === "/session_logs"}
                     />
                   ) : null}
                 </nav>
