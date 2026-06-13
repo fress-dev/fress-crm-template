@@ -1,7 +1,7 @@
 {
   "id": "default",
   "title": "お客様管理",
-  "plugins": ["stores", "courses", "memberships"],
+  "plugins": ["stores", "courses", "memberships", "rooms"],
   "extensions": [],
   "hiddenResources": [],
   "labels": {

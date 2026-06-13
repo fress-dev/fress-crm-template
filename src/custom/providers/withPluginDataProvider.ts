@@ -3,6 +3,8 @@ import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPlugin
 import { withCoursesDataProvider } from "@/custom/plugins/courses/withCoursesDataProvider";
 import { isMembershipsPluginEnabled } from "@/custom/plugins/memberships/isMembershipsPluginEnabled";
 import { withMembershipsDataProvider } from "@/custom/plugins/memberships/withMembershipsDataProvider";
+import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
+import { withRoomsDataProvider } from "@/custom/plugins/rooms/withRoomsDataProvider";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { withStoresDataProvider } from "@/custom/plugins/stores/withStoresDataProvider";
 
@@ -19,6 +21,9 @@ export const withPluginDataProvider = (
   }
   if (isMembershipsPluginEnabled()) {
     wrapped = withMembershipsDataProvider(wrapped);
+  }
+  if (isRoomsPluginEnabled()) {
+    wrapped = withRoomsDataProvider(wrapped);
   }
   return wrapped;
 };

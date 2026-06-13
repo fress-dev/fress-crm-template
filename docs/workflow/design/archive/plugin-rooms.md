@@ -1,6 +1,6 @@
 # plugin-rooms — 部屋マスタ
 
-> **status:** draft  
+> **status:** approved  
 > **層:** プラグイン  
 > **ブランチ（予定）:** `feat/plugin-rooms-master`（rooms CRUD）、`feat/plugin-appointments-room`（予約連携）  
 > **最終更新:** 2026-06-14  
@@ -205,4 +205,4 @@ Salus の部屋（Room）に相当する、**店舗配下のルームマスタ**
 
 | 日付 | 承認者 | 備考 |
 |------|--------|------|
-| | | status: draft — approved まで実装しない |
+| 2026-06-14 | 人間（タスク指示） | Phase 1 実装着手承認 |
