@@ -1,7 +1,7 @@
 {
   "id": "noexcuse",
   "title": "noexcuse CRM",
-  "plugins": ["stores", "courses", "memberships", "rooms"],
+  "plugins": ["stores", "courses", "memberships", "rooms", "appointments"],
   "extensions": [],
   "hiddenResources": ["companies"],
   "labels": {
@@ -103,5 +103,11 @@
       "storeNames": ["船橋店", "千葉店"],
       "displayOrder": 20
     }
+  ],
+  "appointmentTypes": [
+    { "id": "session", "label": "セッション" },
+    { "id": "counseling", "label": "カウンセリング" },
+    { "id": "trial", "label": "体験" },
+    { "id": "other", "label": "その他" }
   ]
 }

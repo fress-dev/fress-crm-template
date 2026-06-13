@@ -9,6 +9,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useConfigurationContext } from "@/components/atomic-crm/root/ConfigurationContext";
 import { ImportPage } from "@/components/atomic-crm/misc/ImportPage";
 import { ChangelogPage } from "@/components/atomic-crm/misc/ChangelogPage";
+import { isAppointmentsPluginEnabled } from "@/custom/plugins/appointments/isAppointmentsPluginEnabled";
 import { isCoursesPluginEnabled } from "@/custom/plugins/courses/isCoursesPluginEnabled";
 import { isMembershipsPluginEnabled } from "@/custom/plugins/memberships/isMembershipsPluginEnabled";
 import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
@@ -39,6 +40,8 @@ export const FressHeader = () => {
     currentPath = "/memberships";
   } else if (matchPath("/rooms/*", location.pathname)) {
     currentPath = "/rooms";
+  } else if (matchPath("/appointments/*", location.pathname)) {
+    currentPath = "/appointments";
   } else {
     currentPath = false;
   }
@@ -47,6 +50,7 @@ export const FressHeader = () => {
   const coursesEnabled = isCoursesPluginEnabled();
   const membershipsEnabled = isMembershipsPluginEnabled();
   const roomsEnabled = isRoomsPluginEnabled();
+  const appointmentsEnabled = isAppointmentsPluginEnabled();
 
   return (
     <>
@@ -138,6 +142,15 @@ export const FressHeader = () => {
                       })}
                       to="/rooms"
                       isActive={currentPath === "/rooms"}
+                    />
+                  ) : null}
+                  {appointmentsEnabled ? (
+                    <NavigationTab
+                      label={translate("resources.appointments.name", {
+                        smart_count: 2,
+                      })}
+                      to="/appointments"
+                      isActive={currentPath === "/appointments"}
                     />
                   ) : null}
                 </nav>

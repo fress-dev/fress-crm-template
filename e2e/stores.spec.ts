@@ -3,6 +3,7 @@ import { ja } from "./ja";
 import {
   goToContactsList,
   goToStoresList,
+  openNewContactForm,
   openNewStoreForm,
 } from "./storeHelpers";
 
@@ -53,13 +54,7 @@ test("store CRUD and contact store assignment", async ({
   await page.waitForLoadState("networkidle");
   await expect(page.getByRole("cell", { name: "千葉店" })).toBeVisible();
 
-  await goToContactsList(page);
-  if (isMobile) {
-    await page.getByRole("button", { name: ja.newContact }).click();
-  } else {
-    await page.getByRole("link", { name: ja.newContact }).click();
-  }
-  await page.waitForLoadState("networkidle");
+  await openNewContactForm(page, isMobile);
 
   await page.getByLabel(ja.femalePronoun).click();
   await page.getByLabel(ja.firstName).fill("会員");
