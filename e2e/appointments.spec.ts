@@ -44,10 +44,12 @@ test("appointment CRUD and filters", async ({
   await dismissToast(ja.createdToast);
 
   await goToContactsList(page);
-  await openNewContactForm(page);
+  await openNewContactForm(page, isMobile);
   await page.getByLabel(ja.femalePronoun).click();
   await page.getByLabel(ja.firstName).fill("予約");
   await page.getByLabel(ja.lastName).fill("会員");
+  await page.getByLabel(ja.memberStore).click();
+  await page.getByRole("option", { name: "予約テスト店" }).click();
   await page.getByRole("button", { name: ja.save }).click();
   await dismissToast(ja.createdToast);
 
@@ -78,7 +80,7 @@ test("appointment CRUD and filters", async ({
     page.getByRole("cell", { name: "体験予約テスト" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("cell", { name: ja.appointmentTypeTrial }),
+    page.getByRole("cell", { name: ja.appointmentTypeTrial, exact: true }),
   ).toBeVisible();
 
   await page.getByPlaceholder(ja.search).fill("体験予約");

@@ -9,6 +9,35 @@
 
 ---
 
+## 2026-06-13 | feat/plugin-appointments-master | 予約プラグイン | [PR #26](https://github.com/fress-dev/fress-crm-template/pull/26)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | メインエージェント |
+
+### 変更の要約
+
+- `src/custom/plugins/appointments/**` — CRUD・カレンダービュー・dataProvider
+- `supabase/migrations/20260613120000_appointments_plugin.sql` — appointments テーブル
+- `e2e/appointments.spec.ts` — CRUD・検索・論理削除
+- `tenants/*.json` — appointmentTypes 設定
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `plugin-appointments.md`（approved）と一致 |
+| コア保護 | **OK** — コアパス・既存 migrations 変更なし |
+| CRUD/dataProvider | **OK** — 論理削除、view 誤書き込みなし、検索 `q` 変換 |
+| e2e 修正 | **OK** — 会員作成時の在籍店舗選択、種別セル strict mode、`resetDb` に appointments 追加 |
+| DoD | **OK** — `make pre-pr` 緑、`e2e/appointments.spec.ts` ローカル PASS |
+
+### メモ
+
+- CI e2e 失敗原因: stores プラグイン有効時は会員作成に在籍店舗必須。タイトル「体験予約〜」と種別「体験」の部分一致も修正
+
 ---
 
 ## 2026-06-13 | feat/platform-karte-hub | 会員カルテハブ | [PR #32](https://github.com/fress-dev/fress-crm-template/pull/32)

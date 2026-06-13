@@ -27,6 +27,7 @@ const TABLES = [
   "deals",
   "membership_tickets",
   "memberships",
+  "appointments",
   "contacts",
   "course_stores",
   "courses",
