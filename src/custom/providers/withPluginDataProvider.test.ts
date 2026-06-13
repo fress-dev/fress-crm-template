@@ -93,4 +93,50 @@ describe("withPluginDataProvider", () => {
       sort: { field: "display_order", order: "ASC" },
     });
   });
+
+  it("rooms 有効時は del_flg デフォルトフィルタと論理削除を適用する", async () => {
+    loadTenantConfig.mockReturnValue({ plugins: ["rooms"] });
+    getPlugin.mockImplementation((id: string) =>
+      id === "rooms" ? { id: "rooms" } : undefined,
+    );
+
+    const getList = vi.fn().mockResolvedValue({ data: [], total: 0 });
+    const update = vi
+      .fn()
+      .mockResolvedValue({ data: { id: 1, del_flg: true } });
+    const deleteFn = vi.fn();
+    const dataProvider = {
+      getList,
+      update,
+      delete: deleteFn,
+    } as unknown as CrmDataProvider;
+    const wrapped = withPluginDataProvider(dataProvider);
+
+    await wrapped.getList("rooms", {
+      filter: { q: "ルームA" },
+      pagination: { page: 1, perPage: 25 },
+      sort: { field: "name", order: "ASC" },
+    });
+
+    expect(getList).toHaveBeenCalledWith("rooms", {
+      filter: {
+        del_flg: false,
+        "@or": expect.objectContaining({ "name@ilike": "ルームA" }),
+      },
+      pagination: { page: 1, perPage: 25 },
+      sort: { field: "name", order: "ASC" },
+    });
+
+    await wrapped.delete("rooms", {
+      id: 1,
+      previousData: { id: 1, name: "ルームA" },
+    });
+
+    expect(deleteFn).not.toHaveBeenCalled();
+    expect(update).toHaveBeenCalledWith("rooms", {
+      id: 1,
+      data: { del_flg: true },
+      previousData: { id: 1, name: "ルームA" },
+    });
+  });
 });

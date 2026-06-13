@@ -31,6 +31,7 @@ const TABLES = [
   "course_stores",
   "courses",
   "sales_stores",
+  "rooms",
   "stores",
   "companies",
   "tags",

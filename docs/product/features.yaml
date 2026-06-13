@@ -222,8 +222,9 @@ features:
     priority: P2
     depends_on: [plugin-stores-master, plugin-appointments]
     scenarios: [B]
-    design: null
-    notes: appointments と同時設計が望ましい
+    design: docs/workflow/design/plugin-rooms.md
+    branch: feat/plugin-rooms-design
+    notes: draft 設計済み（2026-06-14）。rooms CRUD は PR A、appointments.room_id は PR B に分割推奨
 
   - id: plugin-courses
     salus: コースマスタ（Course）
