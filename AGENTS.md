@@ -146,3 +146,24 @@
 ### グローバル設定との関係
 
 Cursor のユーザールールで英語コミットが指定されていても、**本リポジトリでは本節が優先**する。
+
+## Cursor Cloud specific instructions
+
+Cloud VM は update script（`npm install` + `npx playwright install chromium`）が実行済みの状態で起動する。依存導入手順は不要。サービス起動時の非自明な注意点のみ以下に記す（標準コマンドは「## コマンド」「## テスト」を参照）。
+
+### サービス起動の順序と前提
+
+ローカルスタックは **Docker → Supabase → Vite** の順で立てる（`make start` がこの順を実行）。ただし Cloud VM では次の点に注意する。
+
+- **Docker デーモンは手動起動が必要。** snapshot に Docker 本体・設定は残るがプロセスは起動していない。Supabase の前に `sudo dockerd > /tmp/dockerd.log 2>&1 &` を実行し、ソケット権限を `sudo chmod 666 /var/run/docker.sock` で開ける。`docker info` の Storage Driver が `fuse-overlayfs` であることを確認（Docker 29 系のため `/etc/docker/daemon.json` で `containerd-snapshotter: false` を設定済み）。
+- Supabase は `npx supabase start`（または `make start`）。初回 `start` 時にマイグレーションと `supabase/seed.sql` が適用される。
+
+### Supabase 鍵と .env
+
+- `npx supabase start` が出力する Publishable キーはローカル既定の決定論的値 `sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH` で、再起動しても不変。`.env.development` にこの値を設定済みなので、起動後そのまま `npm run dev` で接続できる。
+- `scripts/sync-local-env.sh` は `sed -i ''`（BSD/macOS 専用）を使うため **Linux（Cloud VM）では動かない**。鍵を手で書く必要が出た場合は上記の固定値を `.env.development` の `VITE_SB_PUBLISHABLE_KEY` に入れる。
+
+### テスト実行の注意
+
+- アプリのユニットテスト（`make test` の `test:unit:app`）は **Vitest の Playwright ブラウザモード（chromium）** で動く。`npx playwright install chromium` 済みでないと起動に失敗する（update script に含めてある）。
+- 初回ユーザーは画面の初期セットアップ（最初の管理者作成）で登録する。連絡先（contacts）作成には **store プラグインの店舗が 1 件以上必要**（`Store` が必須項目）。先に「店舗」を 1 件作ってから連絡先を作る。
