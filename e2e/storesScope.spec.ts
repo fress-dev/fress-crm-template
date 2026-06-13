@@ -42,7 +42,7 @@ test.describe("店舗スコープ RLS", () => {
       administrator: true,
     });
 
-    await createSales({
+    const staff = await createSales({
       first_name: "Staff",
       last_name: "Funabashi",
       email: "scope-staff@example.com",
@@ -64,14 +64,10 @@ test.describe("店舗スコープ RLS", () => {
     await page.getByRole("button", { name: ja.createStore }).click();
     await dismissToast(ja.createdToast);
 
-    await page.goto(`${E2E_BASE}/#/sales`);
-    await page.waitForLoadState("networkidle");
-    await page.getByRole("row", { name: /Staff Funabashi/ }).click();
+    await page.goto(`${E2E_BASE}/#/sales/${staff.id}`);
     await page.waitForLoadState("networkidle");
 
     await expect(page.getByText("担当店舗")).toBeVisible();
-    await page.goBack();
-    await page.waitForLoadState("networkidle");
 
     await assignSalesStore({
       salesEmail: "scope-staff@example.com",

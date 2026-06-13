@@ -3,8 +3,8 @@ import { ja } from "./ja";
 import fs from "node:fs";
 import path from "node:path";
 
-const noexcuse = JSON.parse(
-  fs.readFileSync(path.resolve("tenants/noexcuse.json"), "utf8"),
+const tenantConfig = JSON.parse(
+  fs.readFileSync(path.resolve("tenants/default.json"), "utf8"),
 ) as { plugins: string[] };
 
 test("contact show displays karte hub sections", async ({
@@ -45,10 +45,10 @@ test("contact show displays karte hub sections", async ({
   // default テナントは stores / memberships 有効。memberships 有効時はプレースホルダ非表示
   await expect(page.getByRole("heading", { name: "在籍店舗" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "入会管理" })).toBeVisible();
-  if (!noexcuse.plugins.includes("appointments")) {
+  if (!tenantConfig.plugins.includes("appointments")) {
     await expect(page.getByText("予約プラグイン（準備中）")).toBeVisible();
   }
-  if (!noexcuse.plugins.includes("session-log")) {
+  if (!tenantConfig.plugins.includes("session-log")) {
     await expect(
       page.getByText("セッション記録プラグイン（準備中）"),
     ).toBeVisible();
