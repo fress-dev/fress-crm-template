@@ -1,6 +1,11 @@
 import { test, expect } from "./fixtures";
 import { ja } from "./ja";
-import noexcuse from "../tenants/noexcuse.json";
+import fs from "node:fs";
+import path from "node:path";
+
+const noexcuse = JSON.parse(
+  fs.readFileSync(path.resolve("tenants/noexcuse.json"), "utf8"),
+) as { plugins: string[] };
 
 test("contact show displays karte hub sections", async ({
   page,
