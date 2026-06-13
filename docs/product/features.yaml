@@ -306,11 +306,12 @@ features:
     salus: カルテ（Karte）— 会員ハブ
     crm: Contact Show 拡張（契約・予約・セッションへの入口）
     layer: custom
-    status: not-started
+    status: in-progress
     priority: P1
     depends_on: [core-contacts-member, plugin-stores-master]
     scenarios: [A, B]
-    design: null
+    design: docs/workflow/design/karte-hub.md
+    branch: feat/platform-karte-hub
     notes: 各プラグイン未実装時はプレースホルダ可。縦切りの見通し用
 
   # --- Salus に無い / 任意 ---

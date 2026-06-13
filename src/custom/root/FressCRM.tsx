@@ -58,7 +58,7 @@ import { StartPage } from "@/components/atomic-crm/login/StartPage.tsx";
 import { useIsMobile } from "@/hooks/use-mobile.ts";
 import { MobileTasksList } from "@/components/atomic-crm/tasks/MobileTasksList.tsx";
 import { ContactListMobile } from "@/components/atomic-crm/contacts/ContactList.tsx";
-import { ContactShow } from "@/components/atomic-crm/contacts/ContactShow.tsx";
+import { ContactShowWithKarte } from "@/custom/karte/ContactShow";
 import { CompanyShow } from "@/components/atomic-crm/companies/CompanyShow.tsx";
 import { NoteShowPage } from "@/components/atomic-crm/notes/NoteShowPage.tsx";
 import type { HiddenResource } from "@/custom/platform/tenant/types";
@@ -287,7 +287,7 @@ const DesktopAdmin = (
         <Resource name="deals" {...deals} />
       ) : null}
       {isVisible(hiddenResources, "contacts") ? (
-        <Resource name="contacts" {...contacts} />
+        <Resource name="contacts" {...contacts} show={ContactShowWithKarte} />
       ) : null}
       {isVisible(hiddenResources, "companies") ? (
         <Resource name="companies" {...companies} />
@@ -362,7 +362,7 @@ const MobileAdmin = (
           <Resource
             name="contacts"
             list={ContactListMobile}
-            show={ContactShow}
+            show={ContactShowWithKarte}
             recordRepresentation={contacts.recordRepresentation}
           >
             <Route path=":id/notes/:noteId" element={<NoteShowPage />} />

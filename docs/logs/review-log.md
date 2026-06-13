@@ -9,6 +9,41 @@
 
 ---
 
+---
+
+## 2026-06-13 | feat/platform-karte-hub | 会員カルテハブ | [PR #32](https://github.com/fress-dev/fress-crm-template/pull/32)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **PASS** |
+| 実施者 | sub2 |
+
+### 変更の要約
+
+- `src/custom/karte/**` — Contact Show 差し替え・KarteHubPanel・i18n
+- `src/custom/platform/plugin/isPluginEnabled.ts` — テナント plugins + レジストリ参照
+- `src/custom/root/FressCRM.tsx` — ContactShow 注入
+- `e2e/karteHub.spec.ts` — デスクトップ / モバイルでハブ見出し・プレースホルダ表示
+- `docs/workflow/design/karte-hub.md` — 設計書（approved）
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| 設計書整合 | **OK** — `karte-hub.md`（approved）と一致。DB migration なし・入口 UI のみ |
+| コア保護 | **OK** — `src/root/**`・`src/components/**` 既存・既存 migrations 変更なし |
+| 拡張パターン | **OK** — `src/custom/` + `FressCRM.tsx` 縫い目。`isPluginEnabled()` でガード |
+| CRUD/dataProvider | **N/A** — 表示のみ。各プラグイン本体は別 PR |
+| DoD | **OK** — `make pre-pr` 緑、`e2e/karteHub.spec.ts` ローカル PASS（2 tests） |
+
+### メモ
+
+- デスクトップはメモ下にハブ、モバイルは「カルテ」タブ
+- 未実装プラグインはプレースホルダ表示。stores / deals は有効時に実データ入口
+
+---
+
 ## 2026-06-13 | feat/plugin-stores-rls | 店舗スコープ RLS | [PR #30](https://github.com/fress-dev/fress-crm-template/pull/30)
 
 | 項目 | 結果 |

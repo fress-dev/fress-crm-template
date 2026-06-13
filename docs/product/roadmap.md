@@ -67,9 +67,9 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 
 | id | Salus 相当 | 優先度 | シナリオ | メモ |
 |----|-----------|--------|---------|------|
-| **karte-hub** | カルテ（会員ハブ） | P1 | A, B | Contact Show 拡張。他プラグインの入口 |
+| **plugin-session-log** | セッション記録 | P1 | A, B | appointments + memberships 後 |
 
-**ブロック中（先に上記か依存の完了が必要）**
+**ブロック中（先に依存の完了が必要）**
 
 | id | 待ち |
 |----|------|
@@ -82,8 +82,10 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 
 | id | PR / ブランチ |
 |----|--------------|
+| karte-hub | [PR #32](https://github.com/fress-dev/fress-crm-template/pull/32) `feat/platform-karte-hub` |
 | plugin-appointments | [PR #26](https://github.com/fress-dev/fress-crm-template/pull/26) `feat/plugin-appointments-master` |
 | plugin-courses | [PR #27](https://github.com/fress-dev/fress-crm-template/pull/27) `feat/plugin-courses-master` |
+| plugin-memberships | [PR #31](https://github.com/fress-dev/fress-crm-template/pull/31) `feat/plugin-memberships-master` |
 
 ※ [PR #11](https://github.com/fress-dev/fress-crm-template/pull/11) tenant smoke e2e はロードマップ未登録（e2e 整備のみ）  
 ※ [PR #13](https://github.com/fress-dev/fress-crm-template/pull/13) バックログ Kanban 復元（platform）
@@ -146,7 +148,7 @@ AI は依頼時に `features.yaml` を読み、`docs/workflow/design/_template.m
 | on-hold | plugin-session-log | Session | 身体データ・実施記録 | P1 |
 | on-hold | plugin-rooms | Room | 部屋 | P2 |
 | on-hold | plugin-training-content | 種目 | TrainingContent | P2 |
-| not-started | karte-hub | Karte | Contact Show ハブ | P1 |
+| in-progress | karte-hub | Karte | Contact Show ハブ | P1 |
 | on-hold | plugin-schedule-bulk | ScheduleBulk | 一括予約 | P3 |
 | on-hold | plugin-body-graph | Graph | 身体グラフ | P3 |
 | on-hold | plugin-payments | — | 決済（将来） | — |
