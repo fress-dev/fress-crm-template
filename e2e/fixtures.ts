@@ -25,6 +25,8 @@ const TABLES = [
   "contact_notes",
   "deal_notes",
   "deals",
+  "membership_tickets",
+  "memberships",
   "contacts",
   "course_stores",
   "courses",
@@ -206,6 +208,54 @@ async function createCourse({
   return data;
 }
 
+async function createMembership({
+  contact_id,
+  course_id,
+  store_id = null,
+  ticket_count = 4,
+  status = "active",
+}: {
+  contact_id: string | number;
+  course_id: string | number;
+  store_id?: string | number | null;
+  ticket_count?: number;
+  status?: "active" | "completed" | "cancelled";
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("memberships")
+    .insert({
+      contact_id,
+      course_id,
+      store_id,
+      ticket_count,
+      status,
+    })
+    .select("id, ticket_count")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create membership: ${error.message}`);
+  }
+
+  for (let ticketNumber = 1; ticketNumber <= ticket_count; ticketNumber++) {
+    const { error: ticketError } = await getAdminSupabase()
+      .from("membership_tickets")
+      .insert({
+        membership_id: data.id,
+        contact_id,
+        ticket_number: ticketNumber,
+        status: "available",
+      });
+    if (ticketError) {
+      throw new Error(
+        `Failed to create membership ticket: ${ticketError.message}`,
+      );
+    }
+  }
+
+  return data;
+}
+
 async function resolveDefaultStoreId(): Promise<string | number | null> {
   const { data: stores, error } = await getAdminSupabase()
     .from("stores")
@@ -309,6 +359,7 @@ export const test = base.extend<{
   createCompany: typeof createCompany;
   createStore: typeof createStore;
   createCourse: typeof createCourse;
+  createMembership: typeof createMembership;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   menu: ReturnType<typeof getMenuMethod>;
@@ -343,6 +394,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createCourse: async ({}, cb) => {
     await cb(createCourse);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createMembership: async ({}, cb) => {
+    await cb(createMembership);
   },
   // eslint-disable-next-line no-empty-pattern
   createContact: async ({}, cb) => {

@@ -6,6 +6,7 @@ import { raSupabaseEnglishMessages } from "ra-supabase-language-english";
 import { englishCrmMessages } from "@/components/atomic-crm/providers/commons/englishCrmMessages";
 
 import { coursesPluginI18n } from "@/custom/plugins/courses/i18n";
+import { membershipsPluginI18n } from "@/custom/plugins/memberships/i18n";
 import { storesPluginI18n } from "@/custom/plugins/stores/i18n";
 
 import { japaneseCrmMessages } from "./japaneseCrmMessages";
@@ -72,6 +73,7 @@ const japaneseCatalog = mergeTranslations(
   japaneseCrmMessages,
   storesPluginI18n,
   coursesPluginI18n,
+  membershipsPluginI18n,
 );
 
 /** 本プロジェクトのデフォルトは日本語。ブラウザが en のときのみ英語を初期表示。 */

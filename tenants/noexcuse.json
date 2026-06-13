@@ -1,7 +1,7 @@
 {
   "id": "noexcuse",
   "title": "noexcuse CRM",
-  "plugins": ["stores", "courses"],
+  "plugins": ["stores", "courses", "memberships"],
   "extensions": [],
   "hiddenResources": ["companies"],
   "labels": {
@@ -12,31 +12,79 @@
   },
   "crm": {
     "dealStages": [
-      { "value": "applied", "label": "申込受付" },
-      { "value": "trial-booked", "label": "体験予約" },
-      { "value": "trial-done", "label": "体験済" },
-      { "value": "considering", "label": "検討中" },
-      { "value": "joined", "label": "入会" },
-      { "value": "churned", "label": "離脱" }
+      {
+        "value": "applied",
+        "label": "申込受付"
+      },
+      {
+        "value": "trial-booked",
+        "label": "体験予約"
+      },
+      {
+        "value": "trial-done",
+        "label": "体験済"
+      },
+      {
+        "value": "considering",
+        "label": "検討中"
+      },
+      {
+        "value": "joined",
+        "label": "入会"
+      },
+      {
+        "value": "churned",
+        "label": "離脱"
+      }
     ],
     "dealPipelineStatuses": ["joined"],
     "dealCategories": [
-      { "value": "trial", "label": "体験" },
-      { "value": "membership", "label": "入会" },
-      { "value": "other", "label": "その他" }
+      {
+        "value": "trial",
+        "label": "体験"
+      },
+      {
+        "value": "membership",
+        "label": "入会"
+      },
+      {
+        "value": "other",
+        "label": "その他"
+      }
     ],
     "taskTypes": [
-      { "value": "none", "label": "なし" },
-      { "value": "trial-follow-up", "label": "体験後連絡" },
-      { "value": "renewal", "label": "更新案内" },
-      { "value": "pause-follow-up", "label": "休会フォロー" },
-      { "value": "call", "label": "電話" }
+      {
+        "value": "none",
+        "label": "なし"
+      },
+      {
+        "value": "trial-follow-up",
+        "label": "体験後連絡"
+      },
+      {
+        "value": "renewal",
+        "label": "更新案内"
+      },
+      {
+        "value": "pause-follow-up",
+        "label": "休会フォロー"
+      },
+      {
+        "value": "call",
+        "label": "電話"
+      }
     ],
     "currency": "JPY"
   },
   "storeSeed": [
-    { "name": "船橋店", "area_code": "funabashi" },
-    { "name": "千葉店", "area_code": "chiba" }
+    {
+      "name": "船橋店",
+      "area_code": "funabashi"
+    },
+    {
+      "name": "千葉店",
+      "area_code": "chiba"
+    }
   ],
   "courseSeed": [
     {
