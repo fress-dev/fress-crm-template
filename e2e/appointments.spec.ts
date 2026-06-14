@@ -1,11 +1,6 @@
 import { test, expect } from "./fixtures";
 import { ja } from "./ja";
-import {
-  goToContactsList,
-  goToStoresList,
-  openNewContactForm,
-  openNewStoreForm,
-} from "./storeHelpers";
+import { goToContactsList, openNewContactForm } from "./storeHelpers";
 import {
   goToAppointmentsList,
   openNewAppointmentForm,
@@ -20,6 +15,9 @@ test("appointment CRUD and filters", async ({
   page,
   isMobile,
   createSales,
+  createStore,
+  createRoom,
+  assignSalesStore,
   dismissToast,
 }) => {
   test.skip(isMobile, "予約 CRUD の主要検証は desktop で行う");
@@ -31,17 +29,18 @@ test("appointment CRUD and filters", async ({
     password: "password",
   });
 
+  const store = await createStore({ name: "予約テスト店" });
+  await assignSalesStore({
+    salesEmail: "appointment-admin@example.com",
+    storeName: "予約テスト店",
+  });
+  await createRoom({ store_id: store.id, name: "ルームA" });
+
   await page.goto("http://localhost:5175/");
   await page.getByLabel(ja.email).fill("appointment-admin@example.com");
   await page.getByLabel(ja.password).fill("password");
   await page.getByRole("button", { name: ja.signIn }).click();
   await page.waitForLoadState("networkidle");
-
-  await goToStoresList(page);
-  await openNewStoreForm(page);
-  await page.getByLabel(ja.storeName).fill("予約テスト店");
-  await page.getByRole("button", { name: ja.createStore }).click();
-  await dismissToast(ja.createdToast);
 
   await goToContactsList(page);
   await openNewContactForm(page, isMobile);
@@ -60,6 +59,8 @@ test("appointment CRUD and filters", async ({
   await page.getByRole("option", { name: "予約 会員" }).click();
   await page.getByLabel(ja.appointmentStore).click();
   await page.getByRole("option", { name: "予約テスト店" }).click();
+  await page.getByLabel(ja.appointmentRoom).click();
+  await page.getByRole("option", { name: "ルームA" }).click();
   await page.getByLabel(ja.appointmentType).click();
   await page.getByRole("option", { name: ja.appointmentTypeTrial }).click();
 
@@ -82,6 +83,7 @@ test("appointment CRUD and filters", async ({
   await expect(
     page.getByRole("cell", { name: ja.appointmentTypeTrial, exact: true }),
   ).toBeVisible();
+  await expect(page.getByRole("cell", { name: "ルームA" })).toBeVisible();
 
   await page.getByPlaceholder(ja.search).fill("体験予約");
   await page.waitForLoadState("networkidle");
@@ -91,6 +93,7 @@ test("appointment CRUD and filters", async ({
 
   await page.getByRole("cell", { name: "体験予約テスト" }).click();
   await page.waitForLoadState("networkidle");
+  await expect(page.getByText("ルームA")).toBeVisible();
   await page.getByRole("link", { name: ja.edit }).click();
   await page.waitForLoadState("networkidle");
   await page.getByLabel(ja.appointmentTitle).fill("体験予約更新");

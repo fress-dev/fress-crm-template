@@ -3,6 +3,7 @@ export type Appointment = {
   contact_id?: number | null;
   sales_id: number;
   store_id?: number | null;
+  room_id?: number | null;
   start_at: string;
   end_at: string;
   type: string;

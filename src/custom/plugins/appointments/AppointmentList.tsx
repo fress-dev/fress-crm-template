@@ -21,6 +21,9 @@ import { AppointmentDateTimeField } from "./AppointmentDateTimeField";
 import { AppointmentEmpty } from "./AppointmentEmpty";
 import { AppointmentTypeField } from "./AppointmentTypeField";
 import { getAppointmentTypes } from "./appointmentTypes";
+import { isRoomsPluginEnabled } from "@/custom/plugins/rooms/isRoomsPluginEnabled";
+
+const ACTIVE_ROOM_FILTER = { del_flg: false } as const;
 
 const AppointmentListActions = () => (
   <TopToolbar>
@@ -36,6 +39,7 @@ export const AppointmentList = () => {
     id: item.id,
     name: item.label,
   }));
+  const roomsEnabled = isRoomsPluginEnabled();
 
   const filters = [
     <SearchInput source="q" alwaysOn key="q" />,
@@ -67,6 +71,21 @@ export const AppointmentList = () => {
         placeholder={translate("resources.appointments.fields.store_id")}
       />
     </ReferenceInput>,
+    ...(roomsEnabled
+      ? [
+          <ReferenceInput
+            source="room_id"
+            reference="rooms"
+            filter={ACTIVE_ROOM_FILTER}
+            key="room_id"
+          >
+            <AutocompleteInput
+              label={false}
+              placeholder={translate("resources.appointments.fields.room_id")}
+            />
+          </ReferenceInput>,
+        ]
+      : []),
     <SelectInput
       source="type"
       key="type"
@@ -143,6 +162,13 @@ export const AppointmentList = () => {
               <TextField source="name" />
             </ReferenceField>
           </DataTable.Col>
+          {roomsEnabled ? (
+            <DataTable.Col source="room_id">
+              <ReferenceField source="room_id" reference="rooms">
+                <TextField source="name" empty="—" />
+              </ReferenceField>
+            </DataTable.Col>
+          ) : null}
         </DataTable>
       ) : (
         <AppointmentCalendar />

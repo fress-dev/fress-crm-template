@@ -7,6 +7,7 @@ export const appointmentsPluginI18n = {
         contact_id: "会員",
         sales_id: "担当スタッフ",
         store_id: "店舗",
+        room_id: "部屋",
         start_at: "開始日時",
         end_at: "終了日時",
         type: "種別",

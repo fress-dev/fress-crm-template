@@ -68,6 +68,7 @@ export const ja = {
   appointmentContact: "会員",
   appointmentSales: "担当スタッフ",
   appointmentStore: "店舗",
+  appointmentRoom: "部屋",
   appointmentType: "種別",
   appointmentTypeTrial: "体験",
   appointmentStartAt: "開始日時",
