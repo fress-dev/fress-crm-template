@@ -70,6 +70,32 @@ export async function openNewContactFormOnMobileList(page: Page) {
   await page.waitForLoadState("networkidle");
 }
 
+/** 種目一覧へ遷移する */
+export async function goToTrainingGroupsList(page: Page) {
+  await page.goto(`${E2E_BASE}/#/training_groups`);
+  await page.waitForLoadState("networkidle");
+}
+
+/** 空一覧は「種目を登録」、一覧ツールバーは「新しい種目」 */
+export async function openNewTrainingGroupForm(page: Page) {
+  const createLink = page
+    .getByRole("link", { name: ja.newTrainingGroup })
+    .or(page.getByRole("link", { name: ja.createTrainingGroup }));
+
+  if (await createLink.first().isVisible()) {
+    try {
+      await createLink.first().click({ timeout: 5000 });
+      await page.waitForLoadState("networkidle");
+      return;
+    } catch {
+      // モバイル等でクリックできない場合は URL 直指定へフォールバック
+    }
+  }
+
+  await page.goto(`${E2E_BASE}/#/training_groups/create`);
+  await page.waitForLoadState("networkidle");
+}
+
 /** 空一覧は「コースを登録」、一覧ツールバーは「新しいコース」 */
 export async function openNewCourseForm(page: Page) {
   const createLink = page

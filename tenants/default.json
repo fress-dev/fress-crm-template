@@ -7,7 +7,8 @@
     "memberships",
     "rooms",
     "appointments",
-    "session-log"
+    "session-log",
+    "training-content"
   ],
   "extensions": [],
   "hiddenResources": [],
