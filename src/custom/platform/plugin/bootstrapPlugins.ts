@@ -5,6 +5,7 @@ import { membershipsPlugin } from "@/custom/plugins/memberships/plugin";
 import { roomsPlugin } from "@/custom/plugins/rooms/plugin";
 import { sessionLogPlugin } from "@/custom/plugins/sessionLog/plugin";
 import { storesPlugin } from "@/custom/plugins/stores/plugin";
+import { trainingContentPlugin } from "@/custom/plugins/trainingContent/plugin";
 
 /**
  * プラグインの静的登録エントリポイント。
@@ -17,4 +18,5 @@ export const bootstrapPlugins = (): void => {
   registerPlugin(roomsPlugin);
   registerPlugin(appointmentsPlugin);
   registerPlugin(sessionLogPlugin);
+  registerPlugin(trainingContentPlugin);
 };

@@ -7,6 +7,7 @@ import { PlainJapaneseConfigurationSync } from "@/custom/configuration/PlainJapa
 import { FressLayout } from "@/custom/layout/FressLayout";
 import { CourseSeedSync } from "@/custom/plugins/courses/CourseSeedSync";
 import { StoreSeedSync } from "@/custom/plugins/stores/StoreSeedSync";
+import { TrainingContentSeedSync } from "@/custom/plugins/trainingContent/TrainingContentSeedSync";
 
 const PlainJapaneseLayoutShell = ({
   children,
@@ -19,6 +20,7 @@ const PlainJapaneseLayoutShell = ({
     <PlainJapaneseConfigurationSync />
     <StoreSeedSync />
     <CourseSeedSync />
+    <TrainingContentSeedSync />
     {mobile ? (
       <MobileLayout>{children}</MobileLayout>
     ) : (

@@ -11,6 +11,8 @@ import { isSessionLogPluginEnabled } from "@/custom/plugins/sessionLog/isSession
 import { withSessionLogsDataProvider } from "@/custom/plugins/sessionLog/withSessionLogsDataProvider";
 import { isStoresPluginEnabled } from "@/custom/plugins/stores/isStoresPluginEnabled";
 import { withStoresDataProvider } from "@/custom/plugins/stores/withStoresDataProvider";
+import { isTrainingContentPluginEnabled } from "@/custom/plugins/trainingContent/isTrainingContentPluginEnabled";
+import { withTrainingContentDataProvider } from "@/custom/plugins/trainingContent/withTrainingContentDataProvider";
 
 /** 有効プラグイン向けの dataProvider 拡張を合成する（無効時は素通し） */
 export const withPluginDataProvider = (
@@ -35,6 +37,9 @@ export const withPluginDataProvider = (
   }
   if (isSessionLogPluginEnabled()) {
     wrapped = withSessionLogsDataProvider(wrapped);
+  }
+  if (isTrainingContentPluginEnabled()) {
+    wrapped = withTrainingContentDataProvider(wrapped);
   }
 
   return wrapped;

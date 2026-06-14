@@ -7,7 +7,8 @@
     "memberships",
     "rooms",
     "appointments",
-    "session-log"
+    "session-log",
+    "training-content"
   ],
   "extensions": [],
   "hiddenResources": ["companies"],
@@ -116,5 +117,23 @@
     { "id": "counseling", "label": "カウンセリング" },
     { "id": "trial", "label": "体験" },
     { "id": "other", "label": "その他" }
+  ],
+  "trainingContentSeed": [
+    {
+      "name": "胸",
+      "displayOrder": 10,
+      "groups": [
+        { "name": "ベンチプレス", "displayOrder": 10 },
+        { "name": "チェストプレス", "displayOrder": 20 }
+      ]
+    },
+    {
+      "name": "脚",
+      "displayOrder": 20,
+      "groups": [
+        { "name": "スクワット", "displayOrder": 10 },
+        { "name": "レッグプレス", "displayOrder": 20 }
+      ]
+    }
   ]
 }
