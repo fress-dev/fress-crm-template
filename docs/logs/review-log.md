@@ -9,6 +9,41 @@
 
 ---
 
+## 2026-06-14 | feat/plugin-training-content-master | 種目マスタ（Phase 1） | [PR #41 設計](https://github.com/fress-dev/fress-crm-template/pull/41)
+
+| 項目 | 結果 |
+|------|------|
+| モード | **差分** |
+| 判定 | **要修正 → 修正済み**（Critical なし） |
+| 実施者 | メインエージェント（@reviewer 検査） |
+
+### 変更の要約
+
+- `supabase/migrations/20260615120000_training_content_plugin.sql` — `training_types` / `training_groups` テーブル・RLS・updated_at トリガ
+- `src/custom/plugins/trainingContent/**` — 種目カテゴリ / 種目の CRUD・dataProvider 検索・i18n・seed・ユニットテスト
+- 縫い目: `bootstrapPlugins` / `withPluginDataProvider` / `i18nProvider` / `PlainJapaneseLayout` / `tenant/types`
+- `tenants/default.json` / `tenants/noexcuse.json` に `training-content` を有効化（noexcuse は seed 付き）
+- `e2e/trainingContent.spec.ts` + `e2e/fixtures.ts` ヘルパー
+
+### 検査結果
+
+| 項目 | 結果 |
+|------|------|
+| コア保護 | OK（`src/root/**`・既存 `src/components/**`・既存 migrations 非変更） |
+| プラグイン独立性 | OK（`isTrainingContentPluginEnabled` ガード、無効時素通し） |
+| CRUD / dataProvider | OK（courses 準拠。`q`→`@or @ilike`、table 直読み書き） |
+| RLS / migration | OK（追加のみ、authenticated CRUD、`on delete restrict`） |
+| i18n / 命名・日本語規約 | OK |
+
+### 指摘と対応
+
+- **[要修正] `dependsOn: ["session-log"]` の依存方向が逆** → 種目マスタは session-log を FK 参照せず単独で成立するため `dependsOn` を削除。将来 session-log 側がセッション行で `training_groups` を参照する段階で session-log に追加する方針をコメントで明記。
+- [軽微] 種目削除確認文が Phase 1 に存在しない FK 参照を前提にしていた → 「この種目を削除します。よろしいですか？」へ修正。
+- [軽微] `TrainingTypeInputs.tsx` の重複 import を 1 文へ統合。
+- [プロセス] 設計書は PR 作成時に `docs/workflow/design/archive/` へ配置。
+
+---
+
 ## 2026-06-14 | feat/plugin-session-log-master | セッション記録プラグイン | [PR #37](https://github.com/fress-dev/fress-crm-template/pull/37)
 
 | 項目 | 結果 |

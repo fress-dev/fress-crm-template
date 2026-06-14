@@ -70,8 +70,7 @@ export const trainingContentPluginI18n = {
       },
       confirm: {
         delete_title: "「%{name}」を削除",
-        delete_content:
-          "この種目を削除します。セッション記録などで参照されている場合は削除できません。",
+        delete_content: "この種目を削除します。よろしいですか？",
       },
       validation: {
         name_required: "種目名を入力してください",

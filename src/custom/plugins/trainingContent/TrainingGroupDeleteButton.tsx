@@ -52,7 +52,7 @@ export const TrainingGroupDeleteButton = () => {
         }}
         contentTranslateOptions={{
           name,
-          _: "この種目を削除します。セッション記録などで参照されている場合は削除できません。",
+          _: "この種目を削除します。よろしいですか？",
         }}
         onConfirm={onConfirm}
         onClose={() => setOpen(false)}

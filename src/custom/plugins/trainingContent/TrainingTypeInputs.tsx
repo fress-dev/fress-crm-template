@@ -4,8 +4,8 @@ import { TextInput } from "@/components/admin/text-input";
 import { useRecordContext } from "ra-core";
 import { useMemo } from "react";
 
-import { cleanupTrainingTypeForSave } from "./trainingContentModel";
 import {
+  cleanupTrainingTypeForSave,
   validateTrainingDisplayOrder,
   validateTrainingNameMaxLength,
   validateTrainingNameRequired,
