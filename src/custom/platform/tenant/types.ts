@@ -19,6 +19,22 @@ export type CourseSeedEntry = {
   isActive?: boolean;
 };
 
+/** 初回セットアップ用の種目シード（運用開始後は管理画面で編集） */
+export type TrainingGroupSeedEntry = {
+  name: string;
+  description?: string;
+  displayOrder?: number;
+  isActive?: boolean;
+};
+
+/** 初回セットアップ用の種目カテゴリ（部位）シード */
+export type TrainingTypeSeedEntry = {
+  name: string;
+  displayOrder?: number;
+  isActive?: boolean;
+  groups?: TrainingGroupSeedEntry[];
+};
+
 type LabeledValueConfig = {
   value: string;
   label: string;
@@ -66,4 +82,6 @@ export type TenantConfig = {
   courseSeed?: CourseSeedEntry[];
   /** appointments プラグイン有効時の予約種別 */
   appointmentTypes?: AppointmentTypeConfig[];
+  /** training-content プラグイン有効時の初回種目データ */
+  trainingContentSeed?: TrainingTypeSeedEntry[];
 };

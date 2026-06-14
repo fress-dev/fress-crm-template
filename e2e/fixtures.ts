@@ -25,6 +25,8 @@ const TABLES = [
   "contact_notes",
   "deal_notes",
   "deals",
+  "training_groups",
+  "training_types",
   "session_logs",
   "membership_tickets",
   "memberships",
@@ -293,6 +295,56 @@ async function createCourse({
   return data;
 }
 
+async function createTrainingType({
+  name,
+  display_order = 100,
+}: {
+  name: string;
+  display_order?: number;
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("training_types")
+    .insert({ name, display_order, is_active: true })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create training type: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function createTrainingGroup({
+  training_type_id,
+  name,
+  description = null,
+  display_order = 100,
+}: {
+  training_type_id: string | number;
+  name: string;
+  description?: string | null;
+  display_order?: number;
+}) {
+  const { data, error } = await getAdminSupabase()
+    .from("training_groups")
+    .insert({
+      training_type_id,
+      name,
+      description,
+      display_order,
+      is_active: true,
+    })
+    .select("id, name")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create training group: ${error.message}`);
+  }
+
+  return data;
+}
+
 async function createMembership({
   contact_id,
   course_id,
@@ -446,6 +498,8 @@ export const test = base.extend<{
   createStore: typeof createStore;
   createRoom: typeof createRoom;
   createCourse: typeof createCourse;
+  createTrainingType: typeof createTrainingType;
+  createTrainingGroup: typeof createTrainingGroup;
   createMembership: typeof createMembership;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
@@ -489,6 +543,14 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createCourse: async ({}, cb) => {
     await cb(createCourse);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createTrainingType: async ({}, cb) => {
+    await cb(createTrainingType);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createTrainingGroup: async ({}, cb) => {
+    await cb(createTrainingGroup);
   },
   // eslint-disable-next-line no-empty-pattern
   createMembership: async ({}, cb) => {
