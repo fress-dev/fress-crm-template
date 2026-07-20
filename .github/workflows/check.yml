@@ -38,7 +38,7 @@ jobs:
               run: npm ci
 
             - name: 🔬 Lint
-              uses: wearerequired/lint-action@v2
+              uses: wearerequired/lint-action@v3
               with:
                   eslint: true
                   eslint_args: "**/*.{mjs,ts,tsx}"
